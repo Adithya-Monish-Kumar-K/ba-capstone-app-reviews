@@ -1,0 +1,7 @@
+{
+  "raw_rows": 15000,
+  "after_dedupe": 15000,
+  "after_empty_removed": 15000,
+  "after_non_english_removed": 14988,
+  "final_rows": 14988
+}
