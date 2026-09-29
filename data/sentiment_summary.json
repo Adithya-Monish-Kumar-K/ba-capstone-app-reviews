@@ -1,0 +1,271 @@
+{
+  "total_reviews": 14988,
+  "validation": {
+    "pearson_correlation": 0.6016,
+    "pearson_pvalue": 0.0,
+    "spearman_correlation": 0.5647,
+    "spearman_pvalue": 0.0,
+    "overall_alignment_accuracy": 71.95,
+    "classification_report": {
+      "Negative": {
+        "precision": 0.9353494463626623,
+        "recall": 0.7072380266474613,
+        "f1-score": 0.805454452247911,
+        "support": 11108.0
+      },
+      "Neutral": {
+        "precision": 0.07819548872180451,
+        "recall": 0.08981001727115717,
+        "f1-score": 0.08360128617363344,
+        "support": 579.0
+      },
+      "Positive": {
+        "precision": 0.48548278190411887,
+        "recall": 0.8712511360193881,
+        "f1-score": 0.6235230352303524,
+        "support": 3301.0
+      },
+      "accuracy": 0.7195089404857219,
+      "macro avg": {
+        "precision": 0.4996759056628619,
+        "recall": 0.5560997266460022,
+        "f1-score": 0.5041929245506322,
+        "support": 14988.0
+      },
+      "weighted avg": {
+        "precision": 0.8031568922626016,
+        "recall": 0.7195089404857219,
+        "f1-score": 0.7374995155831148,
+        "support": 14988.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "Negative",
+        "Neutral",
+        "Positive"
+      ],
+      "matrix": [
+        [
+          7856,
+          492,
+          2760
+        ],
+        [
+          239,
+          52,
+          288
+        ],
+        [
+          304,
+          121,
+          2876
+        ]
+      ]
+    },
+    "per_rating_stats": [
+      {
+        "star_rating": 1,
+        "review_count": 10366,
+        "mean_compound": -0.355,
+        "median_compound": -0.5574,
+        "std_compound": 0.5608,
+        "pct_negative": 71.87,
+        "pct_neutral": 4.03,
+        "pct_positive": 24.1
+      },
+      {
+        "star_rating": 2,
+        "review_count": 742,
+        "mean_compound": -0.1355,
+        "median_compound": -0.1779,
+        "std_compound": 0.5482,
+        "pct_negative": 54.72,
+        "pct_neutral": 9.97,
+        "pct_positive": 35.31
+      },
+      {
+        "star_rating": 3,
+        "review_count": 579,
+        "mean_compound": 0.0685,
+        "median_compound": 0.0446,
+        "std_compound": 0.5787,
+        "pct_negative": 41.28,
+        "pct_neutral": 8.98,
+        "pct_positive": 49.74
+      },
+      {
+        "star_rating": 4,
+        "review_count": 673,
+        "mean_compound": 0.399,
+        "median_compound": 0.5777,
+        "std_compound": 0.5292,
+        "pct_negative": 19.02,
+        "pct_neutral": 6.54,
+        "pct_positive": 74.44
+      },
+      {
+        "star_rating": 5,
+        "review_count": 2628,
+        "mean_compound": 0.6731,
+        "median_compound": 0.8268,
+        "std_compound": 0.3898,
+        "pct_negative": 6.7,
+        "pct_neutral": 2.93,
+        "pct_positive": 90.37
+      }
+    ]
+  },
+  "aggregation": {
+    "by_app": [
+      {
+        "app_name": "Myntra",
+        "total_reviews": 2998,
+        "mean_compound": 0.0625,
+        "pct_negative": 47.33,
+        "pct_neutral": 1.77,
+        "pct_positive": 50.9,
+        "avg_star_rating": 2.65
+      },
+      {
+        "app_name": "Paytm",
+        "total_reviews": 2998,
+        "mean_compound": -0.0352,
+        "pct_negative": 49.7,
+        "pct_neutral": 6.97,
+        "pct_positive": 43.33,
+        "avg_star_rating": 2.06
+      },
+      {
+        "app_name": "PhonePe",
+        "total_reviews": 2995,
+        "mean_compound": 0.0813,
+        "pct_negative": 40.8,
+        "pct_neutral": 6.44,
+        "pct_positive": 52.75,
+        "avg_star_rating": 2.46
+      },
+      {
+        "app_name": "Swiggy",
+        "total_reviews": 3000,
+        "mean_compound": -0.3795,
+        "pct_negative": 73.8,
+        "pct_neutral": 3.4,
+        "pct_positive": 22.8,
+        "avg_star_rating": 1.21
+      },
+      {
+        "app_name": "Zomato",
+        "total_reviews": 2997,
+        "mean_compound": -0.2969,
+        "pct_negative": 68.54,
+        "pct_neutral": 3.6,
+        "pct_positive": 27.86,
+        "avg_star_rating": 1.43
+      }
+    ],
+    "by_issue_category": [
+      {
+        "issue_category": "crash_bugs_stability",
+        "review_count": 938,
+        "pct_of_reviews": 6.26,
+        "mean_compound": -0.1023,
+        "pct_negative": 53.09,
+        "pct_positive": 37.85,
+        "avg_star_rating": 1.71
+      },
+      {
+        "issue_category": "payment_refund",
+        "review_count": 2278,
+        "pct_of_reviews": 15.2,
+        "mean_compound": -0.3794,
+        "pct_negative": 73.57,
+        "pct_positive": 24.06,
+        "avg_star_rating": 1.27
+      },
+      {
+        "issue_category": "delivery_delay",
+        "review_count": 2301,
+        "pct_of_reviews": 15.35,
+        "mean_compound": -0.4369,
+        "pct_negative": 76.71,
+        "pct_positive": 20.38,
+        "avg_star_rating": 1.23
+      },
+      {
+        "issue_category": "order_quality_fulfillment",
+        "review_count": 996,
+        "pct_of_reviews": 6.65,
+        "mean_compound": -0.5043,
+        "pct_negative": 81.83,
+        "pct_positive": 16.16,
+        "avg_star_rating": 1.13
+      },
+      {
+        "issue_category": "cancellation_return",
+        "review_count": 2923,
+        "pct_of_reviews": 19.5,
+        "mean_compound": -0.3483,
+        "pct_negative": 72.19,
+        "pct_positive": 25.9,
+        "avg_star_rating": 1.56
+      },
+      {
+        "issue_category": "customer_support",
+        "review_count": 5150,
+        "pct_of_reviews": 34.36,
+        "mean_compound": -0.331,
+        "pct_negative": 70.6,
+        "pct_positive": 27.2,
+        "avg_star_rating": 1.19
+      },
+      {
+        "issue_category": "account_login_otp",
+        "review_count": 356,
+        "pct_of_reviews": 2.38,
+        "mean_compound": -0.1699,
+        "pct_negative": 59.27,
+        "pct_positive": 34.83,
+        "avg_star_rating": 1.49
+      },
+      {
+        "issue_category": "pricing_charges_fraud",
+        "review_count": 1414,
+        "pct_of_reviews": 9.43,
+        "mean_compound": -0.4445,
+        "pct_negative": 76.94,
+        "pct_positive": 20.16,
+        "avg_star_rating": 1.3
+      },
+      {
+        "issue_category": "ui_ux_update",
+        "review_count": 364,
+        "pct_of_reviews": 2.43,
+        "mean_compound": 0.1389,
+        "pct_negative": 39.56,
+        "pct_positive": 53.85,
+        "avg_star_rating": 2.71
+      }
+    ],
+    "monthly_data_points": 216
+  },
+  "sentiment_distribution": {
+    "negative_pct": 56.04,
+    "neutral_pct": 4.44,
+    "positive_pct": 39.52
+  },
+  "output_files": {
+    "dataset": "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\app_reviews_tagged.csv",
+    "charts": [
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\charts\\01_sentiment_validation_by_rating.png",
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\charts\\02_sentiment_distribution_by_app.png",
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\charts\\03_sentiment_by_issue_category.png",
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\charts\\04_sentiment_trend_monthly.png"
+    ],
+    "tables": [
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\sentiment_aggregation_by_app.csv",
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\sentiment_aggregation_by_issue.csv",
+      "C:\\Users\\krish\\Downloads\\BA_Project\\ba-capstone-app-reviews\\data\\sentiment_validation_by_rating.csv"
+    ]
+  }
+}
