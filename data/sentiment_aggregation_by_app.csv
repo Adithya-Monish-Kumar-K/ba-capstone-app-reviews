@@ -1,0 +1,6 @@
+app_name,total_reviews,mean_compound,pct_negative,pct_neutral,pct_positive,avg_star_rating
+Swiggy,3000,-0.3795,73.8,3.4,22.8,1.21
+Zomato,2997,-0.2969,68.54,3.6,27.86,1.43
+Paytm,2998,-0.0352,49.7,6.97,43.33,2.06
+Myntra,2998,0.0625,47.33,1.77,50.9,2.65
+PhonePe,2995,0.0813,40.8,6.44,52.75,2.46
