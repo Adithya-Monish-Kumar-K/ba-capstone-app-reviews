@@ -169,6 +169,68 @@ Because the classifier operates on the reduced SVD representation, the model fea
 
 ---
 
+## 7A. Detailed Findings and Model Comparison
+
+### Overall classification performance
+
+The two classifiers show strong performance across the reported evaluation metrics.
+
+| Metric | Logistic Regression | Random Forest |
+|---|---:|---:|
+| Accuracy | 0.8926 | 0.9059 |
+| Precision | 0.9485 | 0.9045 |
+| Recall | 0.9041 | 0.9761 |
+| F1 Score | 0.9258 | 0.9390 |
+| ROC-AUC | 0.9513 | 0.9439 |
+| PR-AUC | 0.9798 | 0.9738 |
+
+The results show that the models have different precision-recall characteristics. Logistic Regression has higher precision, meaning that a larger proportion of its reviews predicted as problematic are actually problematic. Random Forest has higher recall, meaning that it identifies a larger proportion of the actual problematic reviews.
+
+The F1 scores summarize this precision-recall balance and are 0.9258 for Logistic Regression and 0.9390 for Random Forest.
+
+### Confusion-matrix findings
+
+The confusion-matrix counts provide a more detailed view of classification errors.
+
+| Model | True Negative | False Positive | False Negative | True Positive |
+|---|---:|---:|---:|---:|
+| Logistic Regression | 667 | 109 | 213 | 2009 |
+| Random Forest | 547 | 229 | 53 | 2169 |
+
+For Logistic Regression, 2,009 problematic reviews were correctly identified, while 213 problematic reviews were classified as non-problematic. The model produced 109 false positives.
+
+For Random Forest, 2,169 problematic reviews were correctly identified and only 53 problematic reviews were classified as non-problematic. It produced 229 false positives.
+
+These results illustrate the trade-off between false positives and false negatives. In this dataset, the models therefore provide different error profiles despite both achieving strong overall performance.
+
+### Threshold-based evaluation
+
+The ROC and Precision-Recall curves evaluate model behaviour across different classification thresholds rather than only the default prediction threshold.
+
+The ROC-AUC values of 0.9513 for Logistic Regression and 0.9439 for Random Forest indicate strong separation between the two target classes across thresholds.
+
+The PR-AUC values of 0.9798 for Logistic Regression and 0.9738 for Random Forest provide an additional view of precision-recall behaviour for the problematic-review classification task.
+
+### Interpretation of model features
+
+The Logistic Regression interpretation is based on model coefficients, while the Random Forest interpretation uses impurity-based feature importance.
+
+Because the predictive pipeline applies TF-IDF followed by SVD, the classifier operates on the resulting reduced feature representation rather than directly on individual raw words.
+
+The TF-IDF interpretation therefore provides complementary information about the original text vocabulary. It should not be interpreted as a direct list of classifier coefficients for individual words.
+
+### Practical interpretation
+
+The evaluation indicates that problematic-review detection can be approached using a combination of text-derived and structural review features.
+
+The evaluation outputs provide three complementary levels of analysis:
+
+1. **Classification performance** — accuracy, precision, recall, F1, ROC-AUC and PR-AUC.
+2. **Prediction errors** — true positives, true negatives, false positives and false negatives.
+3. **Feature interpretation** — model feature importance and TF-IDF/SVD term analysis.
+
+Together, these outputs provide a reproducible basis for understanding classifier behaviour and the engineered feature representation.
+
 ## 8. Reproducibility outputs
 
 The modeling stage produces the following files:
@@ -229,3 +291,5 @@ The modeling stage produces the following files:
 ## 11. Summary
 
 The predictive modeling stage converts the engineered review representation into a binary problematic-review classifier using Logistic Regression and Random Forest. Both models achieve strong test-set discrimination, while their confusion matrices demonstrate different precision-recall trade-offs. Evaluation charts and interpretation outputs provide reproducible evidence for comparing model behaviour and understanding the engineered feature space.
+
+---
