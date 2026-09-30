@@ -1,0 +1,1006 @@
+{
+  "input_rows": 14988,
+  "common_window": {
+    "months": [
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08",
+      "2026-09"
+    ],
+    "min_reviews_per_app_month": 50,
+    "partial_month": "2026-09"
+  },
+  "data_quality": {
+    "rows": 14988,
+    "columns": 28,
+    "null_counts": {
+      "app_version": 449
+    },
+    "app_version_missing_pct": 3.0,
+    "duplicate_review_ids": 0,
+    "date_min": "2018-09-15 01:01:48",
+    "date_max": "2026-09-18 22:48:04",
+    "zero_thumbs_pct": 40.54,
+    "thumbs_up_max": 46743,
+    "review_length_words": {
+      "count": 14988.0,
+      "mean": 52.7,
+      "std": 25.65,
+      "min": 2.0,
+      "25%": 31.0,
+      "50%": 53.0,
+      "75%": 75.0,
+      "max": 223.0
+    },
+    "very_short_reviews_le3_words_pct": 0.02,
+    "untagged_reviews_pct": 34.61,
+    "outliers_iqr": {
+      "thumbs_up": {
+        "fence_low": -4.5,
+        "fence_high": 7.5,
+        "n_outside": 1897,
+        "pct_outside": 12.66,
+        "max": 46743.0,
+        "p99": 399.3899999999976
+      },
+      "review_length": {
+        "fence_low": -35.0,
+        "fence_high": 141.0,
+        "n_outside": 9,
+        "pct_outside": 0.06,
+        "max": 223.0,
+        "p99": 98.0
+      },
+      "sentiment_compound": {
+        "fence_low": -2.73,
+        "fence_high": 2.53,
+        "n_outside": 0,
+        "pct_outside": 0.0,
+        "max": 0.9932,
+        "p99": 0.977
+      }
+    },
+    "outlier_policy": "No rows removed. thumbs_up outliers are genuine viral reviews (kept, handled with medians / log1p / rank statistics); review_length and sentiment_compound outliers are few and plausible."
+  },
+  "coverage_by_app": [
+    {
+      "app_name": "Swiggy",
+      "reviews": "3000",
+      "first_review": "2025-08-14 21:38:40",
+      "last_review": "2026-09-18 21:13:16",
+      "months_covered": "10",
+      "distinct_versions": "26",
+      "version_missing_pct": "0.067",
+      "mean_rating": "1.211",
+      "median_thumbs_up": "0.0",
+      "median_length_words": "59.0"
+    },
+    {
+      "app_name": "Zomato",
+      "reviews": "2997",
+      "first_review": "2026-03-22 11:16:36",
+      "last_review": "2026-09-18 22:43:44",
+      "months_covered": "7",
+      "distinct_versions": "39",
+      "version_missing_pct": "0.033",
+      "mean_rating": "1.428",
+      "median_thumbs_up": "1.0",
+      "median_length_words": "55.0"
+    },
+    {
+      "app_name": "Myntra",
+      "reviews": "2998",
+      "first_review": "2024-11-06 11:54:38",
+      "last_review": "2026-09-18 13:17:45",
+      "months_covered": "8",
+      "distinct_versions": "24",
+      "version_missing_pct": "0.033",
+      "mean_rating": "2.649",
+      "median_thumbs_up": "1.0",
+      "median_length_words": "52.0"
+    },
+    {
+      "app_name": "Paytm",
+      "reviews": "2998",
+      "first_review": "2018-09-15 01:01:48",
+      "last_review": "2026-09-18 18:52:06",
+      "months_covered": "95",
+      "distinct_versions": "202",
+      "version_missing_pct": "7.138",
+      "mean_rating": "2.063",
+      "median_thumbs_up": "2.0",
+      "median_length_words": "47.0"
+    },
+    {
+      "app_name": "PhonePe",
+      "reviews": "2995",
+      "first_review": "2018-09-15 10:09:46",
+      "last_review": "2026-09-18 22:48:04",
+      "months_covered": "96",
+      "distinct_versions": "177",
+      "version_missing_pct": "7.713",
+      "mean_rating": "2.463",
+      "median_thumbs_up": "2.0",
+      "median_length_words": "43.0"
+    }
+  ],
+  "rating_distribution_pct": {
+    "All apps": {
+      "1": 69.16,
+      "2": 4.95,
+      "3": 3.86,
+      "4": 4.49,
+      "5": 17.53
+    },
+    "Swiggy": {
+      "1": 90.47,
+      "2": 3.73,
+      "3": 2.17,
+      "4": 1.47,
+      "5": 2.17
+    },
+    "Zomato": {
+      "1": 83.68,
+      "2": 4.64,
+      "3": 2.97,
+      "4": 2.64,
+      "5": 6.07
+    },
+    "Myntra": {
+      "1": 54.24,
+      "2": 3.04,
+      "3": 2.57,
+      "4": 3.87,
+      "5": 36.29
+    },
+    "Paytm": {
+      "1": 64.54,
+      "2": 6.5,
+      "3": 5.07,
+      "4": 5.87,
+      "5": 18.01
+    },
+    "PhonePe": {
+      "1": 52.85,
+      "2": 6.84,
+      "3": 6.54,
+      "4": 8.61,
+      "5": 25.14
+    }
+  },
+  "sample_vs_public_rating": {
+    "Swiggy": {
+      "public_rating": 4.496,
+      "sample_mean_rating": 1.211,
+      "gap": 3.284
+    },
+    "Zomato": {
+      "public_rating": 4.561,
+      "sample_mean_rating": 1.428,
+      "gap": 3.134
+    },
+    "Myntra": {
+      "public_rating": 4.602,
+      "sample_mean_rating": 2.649,
+      "gap": 1.952
+    },
+    "Paytm": {
+      "public_rating": 4.664,
+      "sample_mean_rating": 2.063,
+      "gap": 2.601
+    },
+    "PhonePe": {
+      "public_rating": 4.432,
+      "sample_mean_rating": 2.463,
+      "gap": 1.968
+    }
+  },
+  "rating_vs_app_chi2": {
+    "chi2": 2228.1,
+    "dof": 16,
+    "p": 0.0,
+    "cramers_v": 0.193
+  },
+  "review_length": {
+    "spearman_score_vs_length": -0.3178,
+    "spearman_p": 0.0,
+    "median_words_by_score": {
+      "1": 59.0,
+      "2": 53.0,
+      "3": 45.0,
+      "4": 36.0,
+      "5": 30.0
+    },
+    "spearman_length_vs_thumbs": 0.3638
+  },
+  "thumbs_up": {
+    "gini": 0.969,
+    "top1pct_share_of_upvotes": 85.08,
+    "share_of_upvotes_by_score_pct": {
+      "1": 42.67,
+      "2": 7.02,
+      "3": 4.3,
+      "4": 23.47,
+      "5": 22.53
+    },
+    "mean": 32.61,
+    "median": 1.0,
+    "mean_by_app": {
+      "Swiggy": 2.8,
+      "Zomato": 3.7,
+      "Myntra": 2.8,
+      "Paytm": 33.6,
+      "PhonePe": 120.3
+    }
+  },
+  "strongest_correlations": [
+    {
+      "a": "sentiment_compound",
+      "b": "sentiment_neg",
+      "spearman": -0.815
+    },
+    {
+      "a": "sentiment_compound",
+      "b": "sentiment_pos",
+      "spearman": 0.722
+    },
+    {
+      "a": "score",
+      "b": "sentiment_compound",
+      "spearman": 0.565
+    },
+    {
+      "a": "score",
+      "b": "sentiment_neg",
+      "spearman": -0.532
+    },
+    {
+      "a": "score",
+      "b": "sentiment_pos",
+      "spearman": 0.493
+    },
+    {
+      "a": "score",
+      "b": "issue_count",
+      "spearman": -0.448
+    }
+  ],
+  "issue_priority": {
+    "crash_bugs_stability": {
+      "label": "Crash & Stability",
+      "n": 938,
+      "prevalence_pct": 6.258,
+      "mean_score": 1.706,
+      "mean_sentiment": -0.102,
+      "pct_1_2_star": 79.744,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 89.433,
+      "pct_50plus_thumbs": 5.864
+    },
+    "payment_refund": {
+      "label": "Payment & Refund",
+      "n": 2278,
+      "prevalence_pct": 15.199,
+      "mean_score": 1.267,
+      "mean_sentiment": -0.379,
+      "pct_1_2_star": 92.976,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 31.836,
+      "pct_50plus_thumbs": 1.888
+    },
+    "delivery_delay": {
+      "label": "Delivery Delay",
+      "n": 2301,
+      "prevalence_pct": 15.352,
+      "mean_score": 1.226,
+      "mean_sentiment": -0.437,
+      "pct_1_2_star": 93.916,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 6.273,
+      "pct_50plus_thumbs": 0.739
+    },
+    "order_quality_fulfillment": {
+      "label": "Order Quality",
+      "n": 996,
+      "prevalence_pct": 6.645,
+      "mean_score": 1.129,
+      "mean_sentiment": -0.504,
+      "pct_1_2_star": 96.787,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 3.16,
+      "pct_50plus_thumbs": 0.301
+    },
+    "cancellation_return": {
+      "label": "Cancellation & Return",
+      "n": 2923,
+      "prevalence_pct": 19.502,
+      "mean_score": 1.562,
+      "mean_sentiment": -0.348,
+      "pct_1_2_star": 85.7,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 5.217,
+      "pct_50plus_thumbs": 0.924
+    },
+    "customer_support": {
+      "label": "Customer Support",
+      "n": 5150,
+      "prevalence_pct": 34.361,
+      "mean_score": 1.192,
+      "mean_sentiment": -0.331,
+      "pct_1_2_star": 94.932,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 25.085,
+      "pct_50plus_thumbs": 2.35
+    },
+    "account_login_otp": {
+      "label": "Account / Login / OTP",
+      "n": 356,
+      "prevalence_pct": 2.375,
+      "mean_score": 1.489,
+      "mean_sentiment": -0.17,
+      "pct_1_2_star": 85.112,
+      "median_thumbs": 2.0,
+      "mean_thumbs": 60.042,
+      "pct_50plus_thumbs": 5.899
+    },
+    "pricing_charges_fraud": {
+      "label": "Pricing & Fraud",
+      "n": 1414,
+      "prevalence_pct": 9.434,
+      "mean_score": 1.298,
+      "mean_sentiment": -0.445,
+      "pct_1_2_star": 91.231,
+      "median_thumbs": 1.0,
+      "mean_thumbs": 5.844,
+      "pct_50plus_thumbs": 1.132
+    },
+    "ui_ux_update": {
+      "label": "UI/UX & Update",
+      "n": 364,
+      "prevalence_pct": 2.429,
+      "mean_score": 2.714,
+      "mean_sentiment": 0.139,
+      "pct_1_2_star": 52.198,
+      "median_thumbs": 2.0,
+      "mean_thumbs": 295.212,
+      "pct_50plus_thumbs": 8.242
+    }
+  },
+  "issue_prevalence_by_app_pct": {
+    "Swiggy": {
+      "Crash & Stability": 3.47,
+      "Payment & Refund": 24.33,
+      "Delivery Delay": 28.5,
+      "Order Quality": 11.6,
+      "Cancellation & Return": 30.73,
+      "Customer Support": 47.93,
+      "Account / Login / OTP": 1.07,
+      "Pricing & Fraud": 13.17,
+      "UI/UX & Update": 0.83
+    },
+    "Zomato": {
+      "Crash & Stability": 1.84,
+      "Payment & Refund": 19.55,
+      "Delivery Delay": 29.53,
+      "Order Quality": 12.38,
+      "Cancellation & Return": 17.78,
+      "Customer Support": 44.71,
+      "Account / Login / OTP": 0.4,
+      "Pricing & Fraud": 13.51,
+      "UI/UX & Update": 0.63
+    },
+    "Myntra": {
+      "Crash & Stability": 2.0,
+      "Payment & Refund": 12.94,
+      "Delivery Delay": 15.78,
+      "Order Quality": 8.11,
+      "Cancellation & Return": 40.13,
+      "Customer Support": 30.59,
+      "Account / Login / OTP": 0.73,
+      "Pricing & Fraud": 7.77,
+      "UI/UX & Update": 1.9
+    },
+    "Paytm": {
+      "Crash & Stability": 17.04,
+      "Payment & Refund": 8.84,
+      "Delivery Delay": 1.67,
+      "Order Quality": 1.07,
+      "Cancellation & Return": 5.94,
+      "Customer Support": 26.92,
+      "Account / Login / OTP": 6.2,
+      "Pricing & Fraud": 6.64,
+      "UI/UX & Update": 4.87
+    },
+    "PhonePe": {
+      "Crash & Stability": 6.94,
+      "Payment & Refund": 10.32,
+      "Delivery Delay": 1.27,
+      "Order Quality": 0.07,
+      "Cancellation & Return": 2.9,
+      "Customer Support": 21.64,
+      "Account / Login / OTP": 3.47,
+      "Pricing & Fraud": 6.08,
+      "UI/UX & Update": 3.91
+    }
+  },
+  "issue_vs_app_chi2": [
+    {
+      "issue": "crash_bugs_stability",
+      "chi2": 829.4,
+      "p_value": 3.347257744694143e-178,
+      "cramers_v": 0.235
+    },
+    {
+      "issue": "payment_refund",
+      "chi2": 399.6,
+      "p_value": 3.403117079428384e-85,
+      "cramers_v": 0.163
+    },
+    {
+      "issue": "delivery_delay",
+      "chi2": 1752.1,
+      "p_value": 0.0,
+      "cramers_v": 0.342
+    },
+    {
+      "issue": "order_quality_fulfillment",
+      "chi2": 647.1,
+      "p_value": 9.75789312448192e-139,
+      "cramers_v": 0.208
+    },
+    {
+      "issue": "cancellation_return",
+      "chi2": 1935.9,
+      "p_value": 0.0,
+      "cramers_v": 0.359
+    },
+    {
+      "issue": "customer_support",
+      "chi2": 695.0,
+      "p_value": 4.2827986393873e-149,
+      "cramers_v": 0.215
+    },
+    {
+      "issue": "account_login_otp",
+      "chi2": 312.5,
+      "p_value": 2.19046281688833e-66,
+      "cramers_v": 0.144
+    },
+    {
+      "issue": "pricing_charges_fraud",
+      "chi2": 183.9,
+      "p_value": 1.065819615726508e-38,
+      "cramers_v": 0.111
+    },
+    {
+      "issue": "ui_ux_update",
+      "chi2": 179.5,
+      "p_value": 9.63226205779098e-38,
+      "cramers_v": 0.109
+    }
+  ],
+  "issue_cooccurrence_top_pairs": [
+    {
+      "issue_a": "crash_bugs_stability",
+      "issue_b": "ui_ux_update",
+      "co_count": 74,
+      "lift": 3.25
+    },
+    {
+      "issue_a": "payment_refund",
+      "issue_b": "order_quality_fulfillment",
+      "co_count": 321,
+      "lift": 2.12
+    },
+    {
+      "issue_a": "payment_refund",
+      "issue_b": "cancellation_return",
+      "co_count": 858,
+      "lift": 1.93
+    },
+    {
+      "issue_a": "order_quality_fulfillment",
+      "issue_b": "customer_support",
+      "co_count": 611,
+      "lift": 1.79
+    },
+    {
+      "issue_a": "delivery_delay",
+      "issue_b": "cancellation_return",
+      "co_count": 800,
+      "lift": 1.78
+    },
+    {
+      "issue_a": "order_quality_fulfillment",
+      "issue_b": "pricing_charges_fraud",
+      "co_count": 151,
+      "lift": 1.61
+    }
+  ],
+  "issue_cooccurrence_bottom_pairs": [
+    {
+      "issue_a": "order_quality_fulfillment",
+      "issue_b": "account_login_otp",
+      "co_count": 5,
+      "lift": 0.21
+    },
+    {
+      "issue_a": "delivery_delay",
+      "issue_b": "ui_ux_update",
+      "co_count": 7,
+      "lift": 0.13
+    },
+    {
+      "issue_a": "order_quality_fulfillment",
+      "issue_b": "ui_ux_update",
+      "co_count": 2,
+      "lift": 0.08
+    }
+  ],
+  "issue_any_by_rating_pct": {
+    "1\u2605": 79.1,
+    "2\u2605": 56.47,
+    "3\u2605": 45.94,
+    "4\u2605": 35.66,
+    "5\u2605": 25.76
+  },
+  "cancellation_tag_on_5star": {
+    "count": 333,
+    "myntra_share_pct": 92.2
+  },
+  "taxonomy_gap": {
+    "low_star_reviews": 11108,
+    "low_star_untagged": 2490,
+    "low_star_untagged_pct": 22.42,
+    "terms": [
+      "notifications",
+      "malicious",
+      "make payments",
+      "pop",
+      "scan",
+      "installed",
+      "detected",
+      "scanner",
+      "cards",
+      "qr code",
+      "default",
+      "coins",
+      "facing problem",
+      "playstore",
+      "connection",
+      "rewards"
+    ],
+    "median_words_untagged": 42.0,
+    "median_words_tagged": 62.0
+  },
+  "monthly_rating_change_first_to_last_full_month": {
+    "Swiggy": 0.117,
+    "Zomato": -0.155,
+    "Myntra": 0.28,
+    "Paytm": 0.718,
+    "PhonePe": 0.726
+  },
+  "rating_differs_by_app": {
+    "kruskal_H": 2101.3,
+    "kruskal_p": 0.0,
+    "chi2": 2405.4,
+    "chi2_p": 0.0,
+    "cramers_v": 0.213,
+    "window_n": 13253
+  },
+  "regime_shift": {
+    "start": "2026-07-01",
+    "median_length_pre_post": {
+      "Swiggy": [
+        73.0,
+        53.0
+      ],
+      "Zomato": [
+        70.0,
+        47.0
+      ],
+      "Myntra": [
+        66.0,
+        45.0
+      ],
+      "Paytm": [
+        41.0,
+        26.0
+      ],
+      "PhonePe": [
+        40.0,
+        20.0
+      ]
+    },
+    "rating_change_raw": {
+      "Swiggy": 0.107,
+      "Zomato": -0.034,
+      "Myntra": 0.412,
+      "Paytm": 0.635,
+      "PhonePe": 0.799
+    },
+    "rating_change_length_adjusted": {
+      "Swiggy": 0.015,
+      "Zomato": -0.195,
+      "Myntra": -0.075,
+      "Paytm": 0.379,
+      "PhonePe": 0.179
+    },
+    "issue_rate_change_raw_pp": {
+      "Swiggy": -7.1,
+      "Zomato": -10.4,
+      "Myntra": -15.8,
+      "Paytm": -8.7,
+      "PhonePe": -14.6
+    },
+    "issue_rate_change_length_adjusted_pp": {
+      "Swiggy": -2.7,
+      "Zomato": -5.2,
+      "Myntra": -2.9,
+      "Paytm": -1.7,
+      "PhonePe": -1.2
+    },
+    "interpretation": "Reviews/day rise 2.9x and median review length falls 27-50% in all five apps in July 2026. Issue-tag rate changes of -16 to -7 pp shrink to -5 to -1 pp after standardising to each app's own review-length mix, so most apparent post-July change is a length-composition effect of the collection rather than a change in the apps.",
+    "reviews_per_day_ratio_post_vs_pre": 2.92,
+    "median_length_shrink_pct": {
+      "Swiggy": 27.4,
+      "Zomato": 32.9,
+      "Myntra": 31.8,
+      "Paytm": 36.6,
+      "PhonePe": 50.0
+    }
+  },
+  "version_analysis": {
+    "versions_with_min_n": 84,
+    "min_n": 30,
+    "worse_than_average": [
+      {
+        "app_name": "Swiggy",
+        "app_version": "4.109.1",
+        "n": 130,
+        "mean_rating": 1.08
+      },
+      {
+        "app_name": "Zomato",
+        "app_version": "19.7.3",
+        "n": 111,
+        "mean_rating": 1.22
+      },
+      {
+        "app_name": "Myntra",
+        "app_version": "4.2605.21",
+        "n": 253,
+        "mean_rating": 2.31
+      },
+      {
+        "app_name": "Myntra",
+        "app_version": "4.2606.11",
+        "n": 97,
+        "mean_rating": 2.25
+      },
+      {
+        "app_name": "Myntra",
+        "app_version": "4.2607.43",
+        "n": 234,
+        "mean_rating": 2.37
+      },
+      {
+        "app_name": "Paytm",
+        "app_version": "10.79.1",
+        "n": 242,
+        "mean_rating": 1.72
+      },
+      {
+        "app_name": "Paytm",
+        "app_version": "10.80.0",
+        "n": 107,
+        "mean_rating": 1.71
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.04.24.0",
+        "n": 133,
+        "mean_rating": 2.13
+      }
+    ],
+    "better_than_average": [
+      {
+        "app_name": "Myntra",
+        "app_version": "4.2606.30",
+        "n": 316,
+        "mean_rating": 2.96
+      },
+      {
+        "app_name": "Paytm",
+        "app_version": "10.82.6",
+        "n": 34,
+        "mean_rating": 3.15
+      },
+      {
+        "app_name": "Paytm",
+        "app_version": "10.82.7",
+        "n": 76,
+        "mean_rating": 2.66
+      },
+      {
+        "app_name": "Paytm",
+        "app_version": "10.83.10",
+        "n": 83,
+        "mean_rating": 2.45
+      },
+      {
+        "app_name": "Paytm",
+        "app_version": "10.83.12",
+        "n": 492,
+        "mean_rating": 2.77
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.06.12.0",
+        "n": 173,
+        "mean_rating": 2.86
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.06.19.0",
+        "n": 229,
+        "mean_rating": 2.79
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.07.03.0",
+        "n": 526,
+        "mean_rating": 3.26
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.07.10.0",
+        "n": 244,
+        "mean_rating": 3.1
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.08.14.0",
+        "n": 106,
+        "mean_rating": 3.54
+      },
+      {
+        "app_name": "PhonePe",
+        "app_version": "26.08.28.0",
+        "n": 86,
+        "mean_rating": 3.34
+      }
+    ],
+    "caveat": "Reviews are attributed to the reviewer's installed version, not the version at posting time; PhonePe mixes two version schemes.",
+    "expected_false_flags_per_direction": 1.9
+  },
+  "version_issue_signals": [
+    {
+      "app_name": "Swiggy",
+      "app_version": "4.109.1",
+      "issue": "delivery_delay",
+      "version_pct": 36.9,
+      "app_baseline_pct": 28.5
+    },
+    {
+      "app_name": "Zomato",
+      "app_version": "19.7.3",
+      "issue": "delivery_delay",
+      "version_pct": 42.3,
+      "app_baseline_pct": 29.5
+    },
+    {
+      "app_name": "Zomato",
+      "app_version": "19.7.3",
+      "issue": "order_quality_fulfillment",
+      "version_pct": 18.9,
+      "app_baseline_pct": 12.4
+    },
+    {
+      "app_name": "Zomato",
+      "app_version": "19.7.3",
+      "issue": "customer_support",
+      "version_pct": 57.7,
+      "app_baseline_pct": 44.7
+    },
+    {
+      "app_name": "Myntra",
+      "app_version": "4.2605.21",
+      "issue": "cancellation_return",
+      "version_pct": 48.6,
+      "app_baseline_pct": 40.1
+    },
+    {
+      "app_name": "Myntra",
+      "app_version": "4.2605.21",
+      "issue": "customer_support",
+      "version_pct": 37.2,
+      "app_baseline_pct": 30.6
+    },
+    {
+      "app_name": "Myntra",
+      "app_version": "4.2606.11",
+      "issue": "delivery_delay",
+      "version_pct": 24.7,
+      "app_baseline_pct": 15.8
+    },
+    {
+      "app_name": "Myntra",
+      "app_version": "4.2606.11",
+      "issue": "customer_support",
+      "version_pct": 41.2,
+      "app_baseline_pct": 30.6
+    },
+    {
+      "app_name": "Myntra",
+      "app_version": "4.2607.43",
+      "issue": "pricing_charges_fraud",
+      "version_pct": 12.0,
+      "app_baseline_pct": 7.8
+    },
+    {
+      "app_name": "Paytm",
+      "app_version": "10.79.1",
+      "issue": "payment_refund",
+      "version_pct": 4.1,
+      "app_baseline_pct": 8.8
+    },
+    {
+      "app_name": "Paytm",
+      "app_version": "10.79.1",
+      "issue": "cancellation_return",
+      "version_pct": 2.1,
+      "app_baseline_pct": 5.9
+    }
+  ],
+  "version_issue_summary": {
+    "flagged_versions": 8,
+    "elevated_signals": 9,
+    "operational_signals": 8,
+    "crash_or_ui_signals": 0,
+    "versions_with_no_specific_signal": 2
+  },
+  "statistical_tests": {
+    "rating_vs_app_chi2": {
+      "chi2": 2228.1,
+      "dof": 16,
+      "p": 0.0,
+      "cramers_v": 0.193
+    },
+    "rating_by_app_kruskal": {
+      "H": 1834.3,
+      "p": 0.0
+    },
+    "thumbs_up_tagged_vs_untagged": {
+      "median_tagged": 1.0,
+      "median_untagged": 1.0,
+      "mannwhitney_p": 2.7771757696066534e-22,
+      "rank_biserial": -0.0926
+    },
+    "length_tagged_vs_untagged": {
+      "median_tagged": 61.0,
+      "median_untagged": 34.0,
+      "mannwhitney_p": 0.0
+    },
+    "spearman_length_vs_thumbs": {
+      "rho": 0.3638,
+      "p": 0.0
+    },
+    "spearman_sentiment_vs_thumbs": {
+      "rho": -0.0127,
+      "p": 0.11969792851554893
+    },
+    "rating_effect_of_each_issue": {
+      "crash_bugs_stability": {
+        "mean_score_with": 1.706,
+        "mean_score_without": 1.98,
+        "rank_biserial": 0.06,
+        "p": 0.00015463606574535606
+      },
+      "payment_refund": {
+        "mean_score_with": 1.267,
+        "mean_score_without": 2.087,
+        "rank_biserial": 0.254,
+        "p": 8.890409880724703e-125
+      },
+      "delivery_delay": {
+        "mean_score_with": 1.226,
+        "mean_score_without": 2.096,
+        "rank_biserial": 0.258,
+        "p": 7.970791595700846e-130
+      },
+      "order_quality_fulfillment": {
+        "mean_score_with": 1.129,
+        "mean_score_without": 2.022,
+        "rank_biserial": 0.272,
+        "p": 1.227520393960455e-69
+      },
+      "cancellation_return": {
+        "mean_score_with": 1.562,
+        "mean_score_without": 2.06,
+        "rank_biserial": 0.16,
+        "p": 2.7586952250382983e-61
+      },
+      "customer_support": {
+        "mean_score_with": 1.192,
+        "mean_score_without": 2.366,
+        "rank_biserial": 0.359,
+        "p": 0.0
+      },
+      "account_login_otp": {
+        "mean_score_with": 1.489,
+        "mean_score_without": 1.974,
+        "rank_biserial": 0.133,
+        "p": 1.4315208527585534e-07
+      },
+      "pricing_charges_fraud": {
+        "mean_score_with": 1.298,
+        "mean_score_without": 2.032,
+        "rank_biserial": 0.214,
+        "p": 2.177167017004499e-59
+      },
+      "ui_ux_update": {
+        "mean_score_with": 2.714,
+        "mean_score_without": 1.944,
+        "rank_biserial": -0.237,
+        "p": 2.1187395036650005e-21
+      }
+    }
+  },
+  "charts": [
+    {
+      "file": "data/charts/eda/eda_01_coverage_timeline.png",
+      "title": "Three apps are almost entirely 2026 reviews; only Paytm and PhonePe reach back to 2018"
+    },
+    {
+      "file": "data/charts/eda/eda_02_ratings_and_sample_bias.png",
+      "title": "69% of sampled reviews are 1\u2605, and every app sits 2.0\u20133.3 stars below its public rating"
+    },
+    {
+      "file": "data/charts/eda/eda_03_length_and_upvotes.png",
+      "title": "Unhappy users write twice as much (59 vs 30 words); upvotes are winner-take-all (top 1% = 85%)"
+    },
+    {
+      "file": "data/charts/eda/eda_04_correlation_matrix.png",
+      "title": "Issue tags track review length (\u03c1=0.40); upvotes ignore rating and sentiment"
+    },
+    {
+      "file": "data/charts/eda/eda_05_issue_priority.png",
+      "title": "Customer Support is the largest problem (34%, 1.19\u2605); Order Quality is the most damaging (1.13\u2605)"
+    },
+    {
+      "file": "data/charts/eda/eda_06_issue_by_app.png",
+      "title": "Each app has its own failure fingerprint: delivery for food apps, returns for Myntra, crashes for Paytm"
+    },
+    {
+      "file": "data/charts/eda/eda_07_issue_cooccurrence.png",
+      "title": "Crash & Stability + UI/UX & Update co-occur 3.2\u00d7 more than chance (n=74)"
+    },
+    {
+      "file": "data/charts/eda/eda_08_issue_by_rating.png",
+      "title": "Tags track rating (79% of 1\u2605 vs 26% of 5\u2605); 5\u2605 'Cancellation & Return' is a false-positive cluster"
+    },
+    {
+      "file": "data/charts/eda/eda_09_taxonomy_gap.png",
+      "title": "22% of 1\u20132\u2605 reviews have no issue tag; security-scan alerts, QR/scan and notifications are the gaps"
+    },
+    {
+      "file": "data/charts/eda/eda_10_monthly_trend.png",
+      "title": "Swiggy and Zomato never exceed 1.6\u2605; other apps' gains after July shrink to -0.08\u2026+0.38\u2605 once review length is controlled"
+    },
+    {
+      "file": "data/charts/eda/eda_11_july_regime_shift.png",
+      "title": "In July 2026 all five apps shift together: 2.9\u00d7 more reviews per day, 27\u201350% shorter; issue rates barely move within length bands"
+    },
+    {
+      "file": "data/charts/eda/eda_12_app_versions.png",
+      "title": "8 of 84 versions rate significantly worse than their app's mean (~2 expected by chance); version is confounded with time"
+    },
+    {
+      "file": "data/charts/eda/eda_13_version_issue_mix.png",
+      "title": "Worse-rated versions show more fulfilment/support complaints (8 of 9 signals), never crash or UI (0)"
+    }
+  ]
+}
