@@ -231,6 +231,25 @@ The evaluation outputs provide three complementary levels of analysis:
 
 Together, these outputs provide a reproducible basis for understanding classifier behaviour and the engineered feature representation.
 
+## 7B. Model Comparison for Interpretation
+
+| Aspect | Logistic Regression | Random Forest |
+|---|---|---|
+| Accuracy | 0.8926 | 0.9059 |
+| Precision | 0.9485 | 0.9045 |
+| Recall | 0.9041 | 0.9761 |
+| F1 Score | 0.9258 | 0.9390 |
+| ROC-AUC | 0.9513 | 0.9439 |
+| PR-AUC | 0.9798 | 0.9738 |
+| Main error pattern | More false negatives | More false positives |
+| Interpretation focus | Coefficient-based feature influence | Tree-based feature importance |
+
+The comparison shows that the two classifiers exhibit different error profiles. Logistic Regression has higher precision and slightly higher ROC-AUC and PR-AUC, while Random Forest has higher accuracy, recall, and F1 score. This indicates that the choice of model affects the balance between false-positive and false-negative predictions.
+
+For interpretation, Logistic Regression provides coefficient-based evidence about the direction and magnitude of feature contributions. Random Forest provides impurity-based feature importance, which captures how strongly features contribute to decisions across the ensemble. These interpretations should be considered complementary rather than directly equivalent.
+
+The final interpretation should therefore consider both predictive performance and the type of evidence provided by each model. The TF-IDF term analysis provides an additional language-level view of the text data, while the classifiers themselves operate on the reduced SVD feature representation.
+
 ## 8. Reproducibility outputs
 
 The modeling stage produces the following files:
