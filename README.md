@@ -14,7 +14,7 @@ Each pipeline stage is owned end-to-end by one person — see `Team_Work_Split.p
 | Text Mining (Issue Tagging + Sentiment) | Person 2 | Done (issues #101–#103) |
 | Exploratory Data Analysis (EDA) | Person 3 | Done (issues #104–#106 + follow-ups) |
 | Predictive Modeling (Feature Engineering + Classifier) | Person 4 | Planned — issues #107–#110 |
-| Time-Series + Dashboard + Final Assembly | Person 5 | Planned — issues #111–#114 |
+| Time-Series + Dashboard + Final Assembly | Person 5 | Time-series done (issue #111); dashboard and assembly planned — issues #112–#114 |
 
 ## Stage contents
 
@@ -38,8 +38,13 @@ Each pipeline stage is owned end-to-end by one person — see `Team_Work_Split.p
 | `data/eda/version_metrics.csv` | Rating per app version (≥30 reviews) with z-scores, a shortlist of unusual builds for Person 5 | Person 3 |
 | `data/eda_summary.json` | Every number quoted in `EDA.md`, plus statistical tests | Person 3 |
 | `EDA.md` | EDA methodology, findings, limitations, and implications for Persons 4–5 | Person 3 |
+| `scripts/13_time_series_forecast.py` | Weekly aggregation, hold-out backtest of five baseline forecast models, 4-week forecasts, 8 charts | Person 5 |
+| `data/timeseries/` | Weekly per-app and pooled metrics, backtest forecasts, accuracy table, 4-week forecasts | Person 5 |
+| `data/charts/timeseries/` | 8 time-series charts (`ts_01_…` to `ts_08_…`) | Person 5 |
+| `data/timeseries_summary.json` | Every number quoted in `TIME_SERIES.md`, plus trend tests and the issue-spike scan | Person 5 |
+| `TIME_SERIES.md` | Time-series methodology, forecast results, limitations, and combined insights across stages | Person 5 |
 
-See `DATA_SOURCES.md` for data collection details, `TEXT_MINING.md` for text mining methodology and `EDA.md` for the exploratory analysis.
+See `DATA_SOURCES.md` for data collection details, `TEXT_MINING.md` for text mining methodology, `EDA.md` for the exploratory analysis and `TIME_SERIES.md` for the weekly trends and forecasts.
 
 ## Reproducing the pipeline
 
@@ -56,6 +61,9 @@ python scripts/04_sentiment_analysis.py # computes VADER sentiment, validation, 
 
 # Stage 4: Exploratory Data Analysis (reads app_reviews_tagged.csv, writes charts/tables/summary)
 python scripts/05_eda.py              # ~10 s; 13 charts in data/charts/eda/, summary in data/eda_summary.json
+
+# Stage 6: Time-Series (reads app_reviews_tagged.csv, writes weekly tables, forecasts and charts)
+python scripts/13_time_series_forecast.py   # 8 charts in data/charts/timeseries/, tables in data/timeseries/
 ```
 
 ## Handoff to Person 3 (EDA) & Person 4 (Predictive Modeling)
