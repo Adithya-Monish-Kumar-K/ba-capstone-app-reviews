@@ -1,0 +1,1840 @@
+{
+  "input": {
+    "file": "data/app_reviews_tagged.csv",
+    "date_column": "review_date",
+    "rows": 14988,
+    "first_review": "2018-09-15 01:01:48",
+    "last_review": "2026-09-18 22:48:04"
+  },
+  "weekly_aggregation": {
+    "week_definition": "Monday-Sunday (pandas W-SUN), labelled by week_start",
+    "min_reviews_per_app_week": 30,
+    "common_window": [
+      "2026-04-20",
+      "2026-09-07"
+    ],
+    "common_window_weeks": 21,
+    "weeks_pre_shift": 10,
+    "weeks_post_shift": 11,
+    "regime_shift_date": "2026-07-01",
+    "first_post_shift_week": "2026-06-29",
+    "partial_week_excluded": "2026-09-14"
+  },
+  "coverage": {
+    "Swiggy": {
+      "first_week": "2025-08-11",
+      "weeks_spanned": 58,
+      "weeks_with_no_reviews": 28,
+      "weeks_below_min_n_outside_window": 33,
+      "weeks_outside_window": 36,
+      "window_reviews": 2796,
+      "window_weekly_n_min": 39,
+      "window_weekly_n_max": 237
+    },
+    "Zomato": {
+      "first_week": "2026-03-16",
+      "weeks_spanned": 27,
+      "weeks_with_no_reviews": 0,
+      "weeks_below_min_n_outside_window": 2,
+      "weeks_outside_window": 5,
+      "window_reviews": 2788,
+      "window_weekly_n_min": 50,
+      "window_weekly_n_max": 231
+    },
+    "Myntra": {
+      "first_week": "2024-11-04",
+      "weeks_spanned": 98,
+      "weeks_with_no_reviews": 70,
+      "weeks_below_min_n_outside_window": 75,
+      "weeks_outside_window": 76,
+      "window_reviews": 2839,
+      "window_weekly_n_min": 47,
+      "window_weekly_n_max": 312
+    },
+    "Paytm": {
+      "first_week": "2018-09-10",
+      "weeks_spanned": 419,
+      "weeks_with_no_reviews": 93,
+      "weeks_below_min_n_outside_window": 394,
+      "weeks_outside_window": 397,
+      "window_reviews": 1966,
+      "window_weekly_n_min": 38,
+      "window_weekly_n_max": 251
+    },
+    "PhonePe": {
+      "first_week": "2018-09-10",
+      "weeks_spanned": 419,
+      "weeks_with_no_reviews": 102,
+      "weeks_below_min_n_outside_window": 397,
+      "weeks_outside_window": 397,
+      "window_reviews": 2039,
+      "window_weekly_n_min": 38,
+      "window_weekly_n_max": 187
+    },
+    "_total": {
+      "reviews": 14988,
+      "reviews_in_window": 12428,
+      "pct_reviews_in_window": 82.9,
+      "reviews_in_partial_week": 330
+    }
+  },
+  "length_band_sparsity": {
+    "cells": 420,
+    "empty_cells": 38,
+    "cells_under_5_reviews": 65
+  },
+  "trend_statistics": {
+    "Swiggy": {
+      "pct_low_star": {
+        "mean_pre_shift": 97.764,
+        "mean_post_shift": 93.418,
+        "change_post_minus_pre": -4.346,
+        "min": 91.457,
+        "max": 100.0,
+        "weekly_sd_post_shift": 1.217,
+        "kendall_tau_window": -0.501,
+        "kendall_p_window": 0.001513286872362135,
+        "kendall_tau_post_shift": -0.091,
+        "kendall_p_post_shift": 0.7611503928170594
+      },
+      "mean_rating": {
+        "mean_pre_shift": 1.106,
+        "mean_post_shift": 1.234,
+        "change_post_minus_pre": 0.129,
+        "min": 1.048,
+        "max": 1.302,
+        "weekly_sd_post_shift": 0.049,
+        "kendall_tau_window": 0.638,
+        "kendall_p_window": 1.6154145401213247e-05,
+        "kendall_tau_post_shift": 0.127,
+        "kendall_p_post_shift": 0.6480954385121052
+      },
+      "pct_negative_sentiment": {
+        "mean_pre_shift": 78.808,
+        "mean_post_shift": 72.509,
+        "change_post_minus_pre": -6.299,
+        "min": 67.476,
+        "max": 86.207,
+        "weekly_sd_post_shift": 2.774,
+        "kendall_tau_window": -0.467,
+        "kendall_p_window": 0.002610658821815261,
+        "kendall_tau_post_shift": -0.164,
+        "kendall_p_post_shift": 0.5422593494468494
+      },
+      "pct_has_issue": {
+        "mean_pre_shift": 89.363,
+        "mean_post_shift": 81.884,
+        "change_post_minus_pre": -7.479,
+        "min": 75.893,
+        "max": 96.552,
+        "weekly_sd_post_shift": 2.984,
+        "kendall_tau_window": -0.619,
+        "kendall_p_window": 3.2223416855434434e-05,
+        "kendall_tau_post_shift": -0.236,
+        "kendall_p_post_shift": 0.3587114698573032
+      },
+      "median_length": {
+        "mean_pre_shift": 74.25,
+        "mean_post_shift": 53.409,
+        "change_post_minus_pre": -20.841,
+        "min": 50.0,
+        "max": 80.5,
+        "weekly_sd_post_shift": 2.719,
+        "kendall_tau_window": -0.718,
+        "kendall_p_window": 6.493973216483792e-06,
+        "kendall_tau_post_shift": -0.337,
+        "kendall_p_post_shift": 0.15729920705028505
+      },
+      "review_count": {
+        "mean_pre_shift": 55.4,
+        "mean_post_shift": 203.818,
+        "change_post_minus_pre": 148.418,
+        "min": 39.0,
+        "max": 237.0,
+        "weekly_sd_post_shift": 19.292,
+        "kendall_tau_window": 0.683,
+        "kendall_p_window": 1.559373300523895e-05,
+        "kendall_tau_post_shift": 0.491,
+        "kendall_p_post_shift": 0.04053235730319064
+      }
+    },
+    "Zomato": {
+      "pct_low_star": {
+        "mean_pre_shift": 88.885,
+        "mean_post_shift": 88.486,
+        "change_post_minus_pre": -0.398,
+        "min": 80.0,
+        "max": 94.828,
+        "weekly_sd_post_shift": 1.663,
+        "kendall_tau_window": 0.072,
+        "kendall_p_window": 0.6504331829330904,
+        "kendall_tau_post_shift": -0.018,
+        "kendall_p_post_shift": 1.0
+      },
+      "mean_rating": {
+        "mean_pre_shift": 1.42,
+        "mean_post_shift": 1.415,
+        "change_post_minus_pre": -0.005,
+        "min": 1.19,
+        "max": 1.707,
+        "weekly_sd_post_shift": 0.054,
+        "kendall_tau_window": -0.105,
+        "kendall_p_window": 0.5306221632230573,
+        "kendall_tau_post_shift": -0.055,
+        "kendall_p_post_shift": 0.8792698312489979
+      },
+      "pct_negative_sentiment": {
+        "mean_pre_shift": 68.459,
+        "mean_post_shift": 68.656,
+        "change_post_minus_pre": 0.197,
+        "min": 57.333,
+        "max": 74.667,
+        "weekly_sd_post_shift": 2.728,
+        "kendall_tau_window": 0.067,
+        "kendall_p_window": 0.6981882790943121,
+        "kendall_tau_post_shift": 0.055,
+        "kendall_p_post_shift": 0.8792698312489979
+      },
+      "pct_has_issue": {
+        "mean_pre_shift": 87.528,
+        "mean_post_shift": 75.605,
+        "change_post_minus_pre": -11.922,
+        "min": 67.407,
+        "max": 92.727,
+        "weekly_sd_post_shift": 3.999,
+        "kendall_tau_window": -0.514,
+        "kendall_p_window": 0.0007974184228657132,
+        "kendall_tau_post_shift": -0.091,
+        "kendall_p_post_shift": 0.7611503928170594
+      },
+      "median_length": {
+        "mean_pre_shift": 71.0,
+        "mean_post_shift": 48.182,
+        "change_post_minus_pre": -22.818,
+        "min": 45.0,
+        "max": 78.5,
+        "weekly_sd_post_shift": 2.926,
+        "kendall_tau_window": -0.699,
+        "kendall_p_window": 1.2444051759706874e-05,
+        "kendall_tau_post_shift": -0.506,
+        "kendall_p_post_shift": 0.03696700181810579
+      },
+      "review_count": {
+        "mean_pre_shift": 62.9,
+        "mean_post_shift": 196.273,
+        "change_post_minus_pre": 133.373,
+        "min": 50.0,
+        "max": 231.0,
+        "weekly_sd_post_shift": 28.499,
+        "kendall_tau_window": 0.683,
+        "kendall_p_window": 1.559373300523895e-05,
+        "kendall_tau_post_shift": 0.455,
+        "kendall_p_post_shift": 0.06017015392015392
+      }
+    },
+    "Myntra": {
+      "pct_low_star": {
+        "mean_pre_shift": 63.583,
+        "mean_post_shift": 54.309,
+        "change_post_minus_pre": -9.273,
+        "min": 49.708,
+        "max": 74.074,
+        "weekly_sd_post_shift": 5.63,
+        "kendall_tau_window": -0.219,
+        "kendall_p_window": 0.17632511106950258,
+        "kendall_tau_post_shift": 0.164,
+        "kendall_p_post_shift": 0.5422593494468494
+      },
+      "mean_rating": {
+        "mean_pre_shift": 2.384,
+        "mean_post_shift": 2.772,
+        "change_post_minus_pre": 0.388,
+        "min": 2.049,
+        "max": 2.953,
+        "weekly_sd_post_shift": 0.223,
+        "kendall_tau_window": 0.238,
+        "kendall_p_window": 0.14032300106204762,
+        "kendall_tau_post_shift": -0.236,
+        "kendall_p_post_shift": 0.3587114698573032
+      },
+      "pct_negative_sentiment": {
+        "mean_pre_shift": 51.337,
+        "mean_post_shift": 45.061,
+        "change_post_minus_pre": -6.276,
+        "min": 37.288,
+        "max": 61.728,
+        "weekly_sd_post_shift": 5.456,
+        "kendall_tau_window": -0.19,
+        "kendall_p_window": 0.2422003751553922,
+        "kendall_tau_post_shift": 0.2,
+        "kendall_p_post_shift": 0.4453821448613115
+      },
+      "pct_has_issue": {
+        "mean_pre_shift": 78.78,
+        "mean_post_shift": 62.591,
+        "change_post_minus_pre": -16.188,
+        "min": 56.327,
+        "max": 87.234,
+        "weekly_sd_post_shift": 3.875,
+        "kendall_tau_window": -0.667,
+        "kendall_p_window": 5.320800461842107e-06,
+        "kendall_tau_post_shift": -0.382,
+        "kendall_p_post_shift": 0.12097096961680295
+      },
+      "median_length": {
+        "mean_pre_shift": 66.5,
+        "mean_post_shift": 45.545,
+        "change_post_minus_pre": -20.955,
+        "min": 40.0,
+        "max": 70.5,
+        "weekly_sd_post_shift": 4.275,
+        "kendall_tau_window": -0.641,
+        "kendall_p_window": 5.658744691561051e-05,
+        "kendall_tau_post_shift": -0.245,
+        "kendall_p_post_shift": 0.30457524588675045
+      },
+      "review_count": {
+        "mean_pre_shift": 63.2,
+        "mean_post_shift": 200.636,
+        "change_post_minus_pre": 137.436,
+        "min": 47.0,
+        "max": 312.0,
+        "weekly_sd_post_shift": 56.045,
+        "kendall_tau_window": 0.788,
+        "kendall_p_window": 6.203705381039517e-07,
+        "kendall_tau_post_shift": 0.697,
+        "kendall_p_post_shift": 0.003004262239398284
+      }
+    },
+    "Paytm": {
+      "pct_low_star": {
+        "mean_pre_shift": 74.548,
+        "mean_post_shift": 60.776,
+        "change_post_minus_pre": -13.772,
+        "min": 53.608,
+        "max": 81.25,
+        "weekly_sd_post_shift": 6.193,
+        "kendall_tau_window": -0.6,
+        "kendall_p_window": 6.197815797657387e-05,
+        "kendall_tau_post_shift": -0.236,
+        "kendall_p_post_shift": 0.3587114698573032
+      },
+      "mean_rating": {
+        "mean_pre_shift": 1.894,
+        "mean_post_shift": 2.489,
+        "change_post_minus_pre": 0.595,
+        "min": 1.637,
+        "max": 2.804,
+        "weekly_sd_post_shift": 0.25,
+        "kendall_tau_window": 0.61,
+        "kendall_p_window": 4.488590985954883e-05,
+        "kendall_tau_post_shift": 0.309,
+        "kendall_p_post_shift": 0.21834651074234407
+      },
+      "pct_negative_sentiment": {
+        "mean_pre_shift": 55.864,
+        "mean_post_shift": 39.964,
+        "change_post_minus_pre": -15.9,
+        "min": 30.702,
+        "max": 61.856,
+        "weekly_sd_post_shift": 5.802,
+        "kendall_tau_window": -0.648,
+        "kendall_p_window": 1.1272480241395602e-05,
+        "kendall_tau_post_shift": -0.382,
+        "kendall_p_post_shift": 0.12097096961680295
+      },
+      "pct_has_issue": {
+        "mean_pre_shift": 52.985,
+        "mean_post_shift": 44.31,
+        "change_post_minus_pre": -8.675,
+        "min": 39.13,
+        "max": 69.811,
+        "weekly_sd_post_shift": 5.062,
+        "kendall_tau_window": -0.434,
+        "kendall_p_window": 0.005974573069446725,
+        "kendall_tau_post_shift": -0.055,
+        "kendall_p_post_shift": 0.8792698312489979
+      },
+      "median_length": {
+        "mean_pre_shift": 40.9,
+        "mean_post_shift": 25.864,
+        "change_post_minus_pre": -15.036,
+        "min": 22.0,
+        "max": 52.5,
+        "weekly_sd_post_shift": 3.37,
+        "kendall_tau_window": -0.541,
+        "kendall_p_window": 0.0006928772212816037,
+        "kendall_tau_post_shift": -0.661,
+        "kendall_p_post_shift": 0.005707739050591368
+      },
+      "review_count": {
+        "mean_pre_shift": 67.4,
+        "mean_post_shift": 117.455,
+        "change_post_minus_pre": 50.055,
+        "min": 38.0,
+        "max": 251.0,
+        "weekly_sd_post_shift": 53.127,
+        "kendall_tau_window": 0.52,
+        "kendall_p_window": 0.0009913639098877028,
+        "kendall_tau_post_shift": 0.455,
+        "kendall_p_post_shift": 0.06017015392015392
+      }
+    },
+    "PhonePe": {
+      "pct_low_star": {
+        "mean_pre_shift": 65.694,
+        "mean_post_shift": 43.485,
+        "change_post_minus_pre": -22.209,
+        "min": 34.211,
+        "max": 80.0,
+        "weekly_sd_post_shift": 6.809,
+        "kendall_tau_window": -0.61,
+        "kendall_p_window": 4.488590985954883e-05,
+        "kendall_tau_post_shift": -0.455,
+        "kendall_p_post_shift": 0.06017015392015392
+      },
+      "mean_rating": {
+        "mean_pre_shift": 2.234,
+        "mean_post_shift": 3.079,
+        "change_post_minus_pre": 0.845,
+        "min": 1.783,
+        "max": 3.452,
+        "weekly_sd_post_shift": 0.261,
+        "kendall_tau_window": 0.59,
+        "kendall_p_window": 8.485777524296407e-05,
+        "kendall_tau_post_shift": 0.345,
+        "kendall_p_post_shift": 0.16457331248997917
+      },
+      "pct_negative_sentiment": {
+        "mean_pre_shift": 45.172,
+        "mean_post_shift": 30.133,
+        "change_post_minus_pre": -15.039,
+        "min": 21.711,
+        "max": 57.746,
+        "weekly_sd_post_shift": 6.168,
+        "kendall_tau_window": -0.486,
+        "kendall_p_window": 0.0016536849962757597,
+        "kendall_tau_post_shift": -0.127,
+        "kendall_p_post_shift": 0.6480954385121052
+      },
+      "pct_has_issue": {
+        "mean_pre_shift": 44.77,
+        "mean_post_shift": 30.497,
+        "change_post_minus_pre": -14.273,
+        "min": 15.789,
+        "max": 53.333,
+        "weekly_sd_post_shift": 6.442,
+        "kendall_tau_window": -0.648,
+        "kendall_p_window": 1.1272480241395602e-05,
+        "kendall_tau_post_shift": -0.345,
+        "kendall_p_post_shift": 0.16457331248997917
+      },
+      "median_length": {
+        "mean_pre_shift": 41.0,
+        "mean_post_shift": 20.455,
+        "change_post_minus_pre": -20.545,
+        "min": 16.0,
+        "max": 46.0,
+        "weekly_sd_post_shift": 2.743,
+        "kendall_tau_window": -0.705,
+        "kendall_p_window": 9.769530468405007e-06,
+        "kendall_tau_post_shift": -0.534,
+        "kendall_p_post_shift": 0.02653980309404356
+      },
+      "review_count": {
+        "mean_pre_shift": 57.6,
+        "mean_post_shift": 133.0,
+        "change_post_minus_pre": 75.4,
+        "min": 38.0,
+        "max": 187.0,
+        "weekly_sd_post_shift": 24.743,
+        "kendall_tau_window": 0.749,
+        "kendall_p_window": 2.104933456420301e-06,
+        "kendall_tau_post_shift": 0.367,
+        "kendall_p_post_shift": 0.11834981273562825
+      }
+    },
+    "All apps": {
+      "pct_low_star": {
+        "mean_pre_shift": 77.93,
+        "mean_post_shift": 71.125,
+        "change_post_minus_pre": -6.805,
+        "min": 66.791,
+        "max": 81.525,
+        "weekly_sd_post_shift": 2.647,
+        "kendall_tau_window": -0.524,
+        "kendall_p_window": 0.0006175346201348531,
+        "kendall_tau_post_shift": -0.418,
+        "kendall_p_post_shift": 0.08656124739458072
+      },
+      "mean_rating": {
+        "mean_pre_shift": 1.812,
+        "mean_post_shift": 2.085,
+        "change_post_minus_pre": 0.273,
+        "min": 1.715,
+        "max": 2.25,
+        "weekly_sd_post_shift": 0.1,
+        "kendall_tau_window": 0.581,
+        "kendall_p_window": 0.00011523782003130422,
+        "kendall_tau_post_shift": 0.382,
+        "kendall_p_post_shift": 0.12097096961680295
+      },
+      "pct_negative_sentiment": {
+        "mean_pre_shift": 59.853,
+        "mean_post_shift": 54.313,
+        "change_post_minus_pre": -5.54,
+        "min": 48.363,
+        "max": 66.862,
+        "weekly_sd_post_shift": 2.745,
+        "kendall_tau_window": -0.476,
+        "kendall_p_window": 0.0020837475205855343,
+        "kendall_tau_post_shift": -0.309,
+        "kendall_p_post_shift": 0.21834651074234407
+      },
+      "pct_has_issue": {
+        "mean_pre_shift": 70.406,
+        "mean_post_shift": 62.867,
+        "change_post_minus_pre": -7.539,
+        "min": 57.717,
+        "max": 77.273,
+        "weekly_sd_post_shift": 2.801,
+        "kendall_tau_window": -0.733,
+        "kendall_p_window": 2.6309911973522423e-07,
+        "kendall_tau_post_shift": -0.6,
+        "kendall_p_post_shift": 0.00994553671637005
+      },
+      "median_length": {
+        "mean_pre_shift": 60.3,
+        "mean_post_shift": 42.273,
+        "change_post_minus_pre": -18.027,
+        "min": 37.0,
+        "max": 64.5,
+        "weekly_sd_post_shift": 2.687,
+        "kendall_tau_window": -0.693,
+        "kendall_p_window": 1.620648211164782e-05,
+        "kendall_tau_post_shift": -0.636,
+        "kendall_p_post_shift": 0.008586004646014814
+      },
+      "review_count": {
+        "mean_pre_shift": 306.5,
+        "mean_post_shift": 851.182,
+        "change_post_minus_pre": 544.682,
+        "min": 239.0,
+        "max": 1069.0,
+        "weekly_sd_post_shift": 138.387,
+        "kendall_tau_window": 0.838,
+        "kendall_p_window": 4.2029248808588833e-10,
+        "kendall_tau_post_shift": 0.709,
+        "kendall_p_post_shift": 0.0015912097162097162
+      }
+    }
+  },
+  "signal_agreement_with_low_star": {
+    "Swiggy": {
+      "pct_negative_sentiment": {
+        "r_levels": 0.495,
+        "r_weekly_changes": 0.315
+      },
+      "pct_has_issue": {
+        "r_levels": 0.649,
+        "r_weekly_changes": 0.161
+      }
+    },
+    "Zomato": {
+      "pct_negative_sentiment": {
+        "r_levels": 0.577,
+        "r_weekly_changes": 0.428
+      },
+      "pct_has_issue": {
+        "r_levels": 0.056,
+        "r_weekly_changes": 0.023
+      }
+    },
+    "Myntra": {
+      "pct_negative_sentiment": {
+        "r_levels": 0.893,
+        "r_weekly_changes": 0.895
+      },
+      "pct_has_issue": {
+        "r_levels": 0.675,
+        "r_weekly_changes": 0.754
+      }
+    },
+    "Paytm": {
+      "pct_negative_sentiment": {
+        "r_levels": 0.818,
+        "r_weekly_changes": 0.116
+      },
+      "pct_has_issue": {
+        "r_levels": 0.689,
+        "r_weekly_changes": 0.385
+      }
+    },
+    "PhonePe": {
+      "pct_negative_sentiment": {
+        "r_levels": 0.832,
+        "r_weekly_changes": 0.712
+      },
+      "pct_has_issue": {
+        "r_levels": 0.806,
+        "r_weekly_changes": 0.507
+      }
+    },
+    "All apps": {
+      "pct_negative_sentiment": {
+        "r_levels": 0.818,
+        "r_weekly_changes": 0.664
+      },
+      "pct_has_issue": {
+        "r_levels": 0.825,
+        "r_weekly_changes": 0.439
+      }
+    }
+  },
+  "issue_statistics": {
+    "Swiggy": {
+      "crash_bugs_stability": {
+        "mean_pre_shift": 2.23,
+        "mean_post_shift": 3.84,
+        "kendall_tau_post_shift": 0.091,
+        "kendall_p_post_shift": 0.7611503928170594
+      },
+      "payment_refund": {
+        "mean_pre_shift": 26.86,
+        "mean_post_shift": 23.94,
+        "kendall_tau_post_shift": -0.055,
+        "kendall_p_post_shift": 0.8792698312489979
+      },
+      "delivery_delay": {
+        "mean_pre_shift": 35.5,
+        "mean_post_shift": 26.64,
+        "kendall_tau_post_shift": -0.018,
+        "kendall_p_post_shift": 1.0
+      },
+      "order_quality_fulfillment": {
+        "mean_pre_shift": 13.92,
+        "mean_post_shift": 11.35,
+        "kendall_tau_post_shift": -0.455,
+        "kendall_p_post_shift": 0.06017015392015392
+      },
+      "cancellation_return": {
+        "mean_pre_shift": 37.03,
+        "mean_post_shift": 29.02,
+        "kendall_tau_post_shift": -0.236,
+        "kendall_p_post_shift": 0.3587114698573032
+      },
+      "customer_support": {
+        "mean_pre_shift": 54.09,
+        "mean_post_shift": 46.03,
+        "kendall_tau_post_shift": -0.2,
+        "kendall_p_post_shift": 0.4453821448613115
+      },
+      "account_login_otp": {
+        "mean_pre_shift": 1.21,
+        "mean_post_shift": 1.04,
+        "kendall_tau_post_shift": 0.037,
+        "kendall_p_post_shift": 0.8758960579229409
+      },
+      "pricing_charges_fraud": {
+        "mean_pre_shift": 13.2,
+        "mean_post_shift": 13.22,
+        "kendall_tau_post_shift": 0.091,
+        "kendall_p_post_shift": 0.7611503928170594
+      },
+      "ui_ux_update": {
+        "mean_pre_shift": 0.55,
+        "mean_post_shift": 0.92,
+        "kendall_tau_post_shift": 0.11,
+        "kendall_p_post_shift": 0.6394118528033749
+      }
+    },
+    "Zomato": {
+      "crash_bugs_stability": {
+        "mean_pre_shift": 2.5,
+        "mean_post_shift": 1.6,
+        "kendall_tau_post_shift": 0.127,
+        "kendall_p_post_shift": 0.6480954385121052
+      },
+      "payment_refund": {
+        "mean_pre_shift": 27.75,
+        "mean_post_shift": 17.66,
+        "kendall_tau_post_shift": -0.164,
+        "kendall_p_post_shift": 0.5422593494468494
+      },
+      "delivery_delay": {
+        "mean_pre_shift": 36.63,
+        "mean_post_shift": 27.0,
+        "kendall_tau_post_shift": -0.273,
+        "kendall_p_post_shift": 0.2829668209876543
+      },
+      "order_quality_fulfillment": {
+        "mean_pre_shift": 14.88,
+        "mean_post_shift": 12.11,
+        "kendall_tau_post_shift": -0.236,
+        "kendall_p_post_shift": 0.3587114698573032
+      },
+      "cancellation_return": {
+        "mean_pre_shift": 23.59,
+        "mean_post_shift": 16.05,
+        "kendall_tau_post_shift": -0.127,
+        "kendall_p_post_shift": 0.6480954385121052
+      },
+      "customer_support": {
+        "mean_pre_shift": 52.45,
+        "mean_post_shift": 42.98,
+        "kendall_tau_post_shift": 0.273,
+        "kendall_p_post_shift": 0.2829668209876543
+      },
+      "account_login_otp": {
+        "mean_pre_shift": 0.34,
+        "mean_post_shift": 0.35,
+        "kendall_tau_post_shift": 0.043,
+        "kendall_p_post_shift": 0.8641610311132468
+      },
+      "pricing_charges_fraud": {
+        "mean_pre_shift": 14.81,
+        "mean_post_shift": 13.08,
+        "kendall_tau_post_shift": -0.164,
+        "kendall_p_post_shift": 0.5422593494468494
+      },
+      "ui_ux_update": {
+        "mean_pre_shift": 0.49,
+        "mean_post_shift": 0.64,
+        "kendall_tau_post_shift": -0.127,
+        "kendall_p_post_shift": 0.6480954385121052
+      }
+    },
+    "Myntra": {
+      "crash_bugs_stability": {
+        "mean_pre_shift": 2.13,
+        "mean_post_shift": 1.86,
+        "kendall_tau_post_shift": -0.073,
+        "kendall_p_post_shift": 0.7547764265871044
+      },
+      "payment_refund": {
+        "mean_pre_shift": 14.02,
+        "mean_post_shift": 12.45,
+        "kendall_tau_post_shift": 0.091,
+        "kendall_p_post_shift": 0.7611503928170594
+      },
+      "delivery_delay": {
+        "mean_pre_shift": 19.25,
+        "mean_post_shift": 14.46,
+        "kendall_tau_post_shift": 0.164,
+        "kendall_p_post_shift": 0.5422593494468494
+      },
+      "order_quality_fulfillment": {
+        "mean_pre_shift": 10.14,
+        "mean_post_shift": 7.45,
+        "kendall_tau_post_shift": -0.367,
+        "kendall_p_post_shift": 0.11834981273562825
+      },
+      "cancellation_return": {
+        "mean_pre_shift": 48.27,
+        "mean_post_shift": 37.46,
+        "kendall_tau_post_shift": -0.345,
+        "kendall_p_post_shift": 0.16457331248997917
+      },
+      "customer_support": {
+        "mean_pre_shift": 39.0,
+        "mean_post_shift": 28.47,
+        "kendall_tau_post_shift": -0.236,
+        "kendall_p_post_shift": 0.3587114698573032
+      },
+      "account_login_otp": {
+        "mean_pre_shift": 1.19,
+        "mean_post_shift": 0.65,
+        "kendall_tau_post_shift": -0.135,
+        "kendall_p_post_shift": 0.5755812602368213
+      },
+      "pricing_charges_fraud": {
+        "mean_pre_shift": 10.02,
+        "mean_post_shift": 6.98,
+        "kendall_tau_post_shift": 0.164,
+        "kendall_p_post_shift": 0.5422593494468494
+      },
+      "ui_ux_update": {
+        "mean_pre_shift": 2.98,
+        "mean_post_shift": 1.84,
+        "kendall_tau_post_shift": -0.294,
+        "kendall_p_post_shift": 0.21152242941072896
+      }
+    },
+    "Paytm": {
+      "crash_bugs_stability": {
+        "mean_pre_shift": 18.94,
+        "mean_post_shift": 20.06,
+        "kendall_tau_post_shift": 0.2,
+        "kendall_p_post_shift": 0.4453821448613115
+      },
+      "payment_refund": {
+        "mean_pre_shift": 7.08,
+        "mean_post_shift": 5.53,
+        "kendall_tau_post_shift": -0.491,
+        "kendall_p_post_shift": 0.04053235730319064
+      },
+      "delivery_delay": {
+        "mean_pre_shift": 1.14,
+        "mean_post_shift": 1.31,
+        "kendall_tau_post_shift": 0.037,
+        "kendall_p_post_shift": 0.8758960579229409
+      },
+      "order_quality_fulfillment": {
+        "mean_pre_shift": 0.62,
+        "mean_post_shift": 0.12,
+        "kendall_tau_post_shift": 0.402,
+        "kendall_p_post_shift": 0.12812565674429427
+      },
+      "cancellation_return": {
+        "mean_pre_shift": 3.85,
+        "mean_post_shift": 2.77,
+        "kendall_tau_post_shift": -0.018,
+        "kendall_p_post_shift": 1.0
+      },
+      "customer_support": {
+        "mean_pre_shift": 22.53,
+        "mean_post_shift": 14.95,
+        "kendall_tau_post_shift": -0.294,
+        "kendall_p_post_shift": 0.21152242941072896
+      },
+      "account_login_otp": {
+        "mean_pre_shift": 4.72,
+        "mean_post_shift": 3.7,
+        "kendall_tau_post_shift": -0.055,
+        "kendall_p_post_shift": 0.8792698312489979
+      },
+      "pricing_charges_fraud": {
+        "mean_pre_shift": 7.75,
+        "mean_post_shift": 5.83,
+        "kendall_tau_post_shift": -0.345,
+        "kendall_p_post_shift": 0.16457331248997917
+      },
+      "ui_ux_update": {
+        "mean_pre_shift": 5.02,
+        "mean_post_shift": 3.98,
+        "kendall_tau_post_shift": 0.2,
+        "kendall_p_post_shift": 0.4453821448613115
+      }
+    },
+    "PhonePe": {
+      "crash_bugs_stability": {
+        "mean_pre_shift": 8.07,
+        "mean_post_shift": 5.22,
+        "kendall_tau_post_shift": -0.127,
+        "kendall_p_post_shift": 0.6480954385121052
+      },
+      "payment_refund": {
+        "mean_pre_shift": 7.48,
+        "mean_post_shift": 4.68,
+        "kendall_tau_post_shift": -0.055,
+        "kendall_p_post_shift": 0.8792698312489979
+      },
+      "delivery_delay": {
+        "mean_pre_shift": 1.21,
+        "mean_post_shift": 0.92,
+        "kendall_tau_post_shift": 0.0,
+        "kendall_p_post_shift": 1.0
+      },
+      "order_quality_fulfillment": {
+        "mean_pre_shift": 0.18,
+        "mean_post_shift": 0.08,
+        "kendall_tau_post_shift": 0.0,
+        "kendall_p_post_shift": 1.0
+      },
+      "cancellation_return": {
+        "mean_pre_shift": 2.18,
+        "mean_post_shift": 1.41,
+        "kendall_tau_post_shift": -0.418,
+        "kendall_p_post_shift": 0.08656124739458072
+      },
+      "customer_support": {
+        "mean_pre_shift": 20.07,
+        "mean_post_shift": 13.75,
+        "kendall_tau_post_shift": 0.018,
+        "kendall_p_post_shift": 1.0
+      },
+      "account_login_otp": {
+        "mean_pre_shift": 3.35,
+        "mean_post_shift": 2.21,
+        "kendall_tau_post_shift": -0.2,
+        "kendall_p_post_shift": 0.4453821448613115
+      },
+      "pricing_charges_fraud": {
+        "mean_pre_shift": 7.94,
+        "mean_post_shift": 6.01,
+        "kendall_tau_post_shift": -0.2,
+        "kendall_p_post_shift": 0.4453821448613115
+      },
+      "ui_ux_update": {
+        "mean_pre_shift": 5.57,
+        "mean_post_shift": 3.44,
+        "kendall_tau_post_shift": -0.673,
+        "kendall_p_post_shift": 0.0031063111271444604
+      }
+    }
+  },
+  "issue_spike_scan": {
+    "z_threshold": 3.0,
+    "app_issue_weeks_tested": 523,
+    "expected_by_chance": 0.7,
+    "n_flagged": 1,
+    "flagged": [
+      {
+        "app_name": "Swiggy",
+        "issue": "order_quality_fulfillment",
+        "week_start": "2026-06-29",
+        "review_count": 188,
+        "n_tagged": 35,
+        "pct_week": 18.6,
+        "pct_regime_baseline": 11.2,
+        "z": 3.25
+      }
+    ]
+  },
+  "forecast_setup": {
+    "metrics": [
+      "pct_low_star",
+      "mean_rating",
+      "pct_negative_sentiment",
+      "pct_has_issue"
+    ],
+    "primary_metric": "pct_low_star",
+    "models": {
+      "naive": "Naive (last week)",
+      "hist_mean": "Mean of all history",
+      "shift_mean": "Level-shift mean",
+      "moving_avg": "4-week moving avg",
+      "ses": "Exp. smoothing (SES)"
+    },
+    "final_model": "ses",
+    "test_weeks": 6,
+    "horizons": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "train_weeks_at_first_origin": 12,
+    "test_window": [
+      "2026-08-03",
+      "2026-09-07"
+    ],
+    "forecast_weeks": [
+      "2026-09-14",
+      "2026-09-21",
+      "2026-09-28",
+      "2026-10-05"
+    ],
+    "prediction_interval": 0.8
+  },
+  "forecast_accuracy": {
+    "by_series": {
+      "Swiggy": {
+        "pct_low_star": {
+          "mae_h1_4": {
+            "naive": 1.312,
+            "hist_mean": 2.98,
+            "shift_mean": 0.852,
+            "moving_avg": 1.028,
+            "ses": 1.164
+          },
+          "mae_h1": {
+            "naive": 1.087,
+            "hist_mean": 2.754,
+            "shift_mean": 0.742,
+            "moving_avg": 0.801,
+            "ses": 1.08
+          },
+          "bias_h1_4": {
+            "naive": 0.458,
+            "hist_mean": 2.98,
+            "shift_mean": 0.254,
+            "moving_avg": 0.48,
+            "ses": 0.493
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 1.372
+        },
+        "mean_rating": {
+          "mae_h1_4": {
+            "naive": 0.054,
+            "hist_mean": 0.092,
+            "shift_mean": 0.036,
+            "moving_avg": 0.037,
+            "ses": 0.043
+          },
+          "mae_h1": {
+            "naive": 0.063,
+            "hist_mean": 0.085,
+            "shift_mean": 0.036,
+            "moving_avg": 0.034,
+            "ses": 0.047
+          },
+          "bias_h1_4": {
+            "naive": -0.013,
+            "hist_mean": -0.092,
+            "shift_mean": -0.013,
+            "moving_avg": -0.013,
+            "ses": -0.014
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 0.044
+        },
+        "pct_negative_sentiment": {
+          "mae_h1_4": {
+            "naive": 3.952,
+            "hist_mean": 5.606,
+            "shift_mean": 2.573,
+            "moving_avg": 2.83,
+            "ses": 2.986
+          },
+          "mae_h1": {
+            "naive": 3.284,
+            "hist_mean": 5.178,
+            "shift_mean": 2.408,
+            "moving_avg": 2.597,
+            "ses": 2.708
+          },
+          "bias_h1_4": {
+            "naive": 1.004,
+            "hist_mean": 5.606,
+            "shift_mean": 2.024,
+            "moving_avg": 1.683,
+            "ses": 1.536
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 2.487
+        },
+        "pct_has_issue": {
+          "mae_h1_4": {
+            "naive": 3.527,
+            "hist_mean": 6.17,
+            "shift_mean": 2.878,
+            "moving_avg": 3.234,
+            "ses": 3.166
+          },
+          "mae_h1": {
+            "naive": 3.762,
+            "hist_mean": 5.575,
+            "shift_mean": 2.686,
+            "moving_avg": 3.129,
+            "ses": 3.102
+          },
+          "bias_h1_4": {
+            "naive": 0.012,
+            "hist_mean": 6.17,
+            "shift_mean": 2.144,
+            "moving_avg": 1.038,
+            "ses": 0.631
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 2.155
+        }
+      },
+      "Zomato": {
+        "pct_low_star": {
+          "mae_h1_4": {
+            "naive": 2.062,
+            "hist_mean": 1.247,
+            "shift_mean": 1.211,
+            "moving_avg": 1.184,
+            "ses": 1.232
+          },
+          "mae_h1": {
+            "naive": 2.015,
+            "hist_mean": 1.26,
+            "shift_mean": 1.242,
+            "moving_avg": 1.347,
+            "ses": 1.257
+          },
+          "bias_h1_4": {
+            "naive": -0.313,
+            "hist_mean": 0.047,
+            "shift_mean": -0.208,
+            "moving_avg": 0.042,
+            "ses": 0.049
+          },
+          "best_model": "moving_avg",
+          "sampling_noise_floor": 1.712
+        },
+        "mean_rating": {
+          "mae_h1_4": {
+            "naive": 0.067,
+            "hist_mean": 0.04,
+            "shift_mean": 0.044,
+            "moving_avg": 0.049,
+            "ses": 0.047
+          },
+          "mae_h1": {
+            "naive": 0.067,
+            "hist_mean": 0.041,
+            "shift_mean": 0.044,
+            "moving_avg": 0.054,
+            "ses": 0.046
+          },
+          "bias_h1_4": {
+            "naive": -0.006,
+            "hist_mean": 0.002,
+            "shift_mean": -0.002,
+            "moving_avg": -0.016,
+            "ses": -0.013
+          },
+          "best_model": "hist_mean",
+          "sampling_noise_floor": 0.058
+        },
+        "pct_negative_sentiment": {
+          "mae_h1_4": {
+            "naive": 2.041,
+            "hist_mean": 1.527,
+            "shift_mean": 1.818,
+            "moving_avg": 1.644,
+            "ses": 1.499
+          },
+          "mae_h1": {
+            "naive": 1.892,
+            "hist_mean": 1.463,
+            "shift_mean": 1.518,
+            "moving_avg": 1.493,
+            "ses": 1.362
+          },
+          "bias_h1_4": {
+            "naive": 0.095,
+            "hist_mean": -0.757,
+            "shift_mean": -1.027,
+            "moving_avg": -0.159,
+            "ses": -0.535
+          },
+          "best_model": "ses",
+          "sampling_noise_floor": 2.501
+        },
+        "pct_has_issue": {
+          "mae_h1_4": {
+            "naive": 3.771,
+            "hist_mean": 7.68,
+            "shift_mean": 2.349,
+            "moving_avg": 2.874,
+            "ses": 2.941
+          },
+          "mae_h1": {
+            "naive": 3.054,
+            "hist_mean": 6.845,
+            "shift_mean": 2.303,
+            "moving_avg": 2.233,
+            "ses": 2.911
+          },
+          "bias_h1_4": {
+            "naive": -1.058,
+            "hist_mean": 7.68,
+            "shift_mean": 0.428,
+            "moving_avg": 0.043,
+            "ses": -0.045
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 2.322
+        }
+      },
+      "Myntra": {
+        "pct_low_star": {
+          "mae_h1_4": {
+            "naive": 7.938,
+            "hist_mean": 6.745,
+            "shift_mean": 5.729,
+            "moving_avg": 6.646,
+            "ses": 7.055
+          },
+          "mae_h1": {
+            "naive": 8.308,
+            "hist_mean": 6.714,
+            "shift_mean": 5.623,
+            "moving_avg": 6.578,
+            "ses": 6.605
+          },
+          "bias_h1_4": {
+            "naive": -1.179,
+            "hist_mean": 3.131,
+            "shift_mean": -3.833,
+            "moving_avg": -2.279,
+            "ses": -0.04
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 2.542
+        },
+        "mean_rating": {
+          "mae_h1_4": {
+            "naive": 0.311,
+            "hist_mean": 0.265,
+            "shift_mean": 0.228,
+            "moving_avg": 0.256,
+            "ses": 0.263
+          },
+          "mae_h1": {
+            "naive": 0.334,
+            "hist_mean": 0.263,
+            "shift_mean": 0.221,
+            "moving_avg": 0.266,
+            "ses": 0.276
+          },
+          "bias_h1_4": {
+            "naive": 0.044,
+            "hist_mean": -0.133,
+            "shift_mean": 0.157,
+            "moving_avg": 0.091,
+            "ses": 0.03
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 0.097
+        },
+        "pct_negative_sentiment": {
+          "mae_h1_4": {
+            "naive": 6.712,
+            "hist_mean": 4.879,
+            "shift_mean": 6.276,
+            "moving_avg": 6.037,
+            "ses": 4.784
+          },
+          "mae_h1": {
+            "naive": 6.621,
+            "hist_mean": 4.877,
+            "shift_mean": 5.832,
+            "moving_avg": 5.966,
+            "ses": 4.796
+          },
+          "bias_h1_4": {
+            "naive": -0.237,
+            "hist_mean": 1.314,
+            "shift_mean": -3.79,
+            "moving_avg": -1.463,
+            "ses": 1.036
+          },
+          "best_model": "ses",
+          "sampling_noise_floor": 2.568
+        },
+        "pct_has_issue": {
+          "mae_h1_4": {
+            "naive": 4.977,
+            "hist_mean": 11.947,
+            "shift_mean": 4.523,
+            "moving_avg": 4.789,
+            "ses": 4.861
+          },
+          "mae_h1": {
+            "naive": 6.308,
+            "hist_mean": 10.967,
+            "shift_mean": 4.694,
+            "moving_avg": 4.684,
+            "ses": 5.272
+          },
+          "bias_h1_4": {
+            "naive": 1.426,
+            "hist_mean": 11.947,
+            "shift_mean": 2.413,
+            "moving_avg": 2.325,
+            "ses": 2.315
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 2.508
+        }
+      },
+      "Paytm": {
+        "pct_low_star": {
+          "mae_h1_4": {
+            "naive": 5.045,
+            "hist_mean": 13.131,
+            "shift_mean": 6.133,
+            "moving_avg": 5.349,
+            "ses": 4.773
+          },
+          "mae_h1": {
+            "naive": 3.76,
+            "hist_mean": 12.155,
+            "shift_mean": 5.343,
+            "moving_avg": 4.25,
+            "ses": 3.411
+          },
+          "bias_h1_4": {
+            "naive": 2.674,
+            "hist_mean": 13.131,
+            "shift_mean": 6.133,
+            "moving_avg": 4.671,
+            "ses": 3.647
+          },
+          "best_model": "ses",
+          "sampling_noise_floor": 3.545
+        },
+        "mean_rating": {
+          "mae_h1_4": {
+            "naive": 0.217,
+            "hist_mean": 0.546,
+            "shift_mean": 0.239,
+            "moving_avg": 0.219,
+            "ses": 0.207
+          },
+          "mae_h1": {
+            "naive": 0.162,
+            "hist_mean": 0.503,
+            "shift_mean": 0.202,
+            "moving_avg": 0.183,
+            "ses": 0.147
+          },
+          "bias_h1_4": {
+            "naive": -0.083,
+            "hist_mean": -0.546,
+            "shift_mean": -0.239,
+            "moving_avg": -0.173,
+            "ses": -0.128
+          },
+          "best_model": "ses",
+          "sampling_noise_floor": 0.131
+        },
+        "pct_negative_sentiment": {
+          "mae_h1_4": {
+            "naive": 6.919,
+            "hist_mean": 14.299,
+            "shift_mean": 6.406,
+            "moving_avg": 6.165,
+            "ses": 6.059
+          },
+          "mae_h1": {
+            "naive": 7.684,
+            "hist_mean": 13.321,
+            "shift_mean": 5.976,
+            "moving_avg": 4.941,
+            "ses": 4.921
+          },
+          "bias_h1_4": {
+            "naive": 4.191,
+            "hist_mean": 14.299,
+            "shift_mean": 5.865,
+            "moving_avg": 5.672,
+            "ses": 5.415
+          },
+          "best_model": "ses",
+          "sampling_noise_floor": 3.445
+        },
+        "pct_has_issue": {
+          "mae_h1_4": {
+            "naive": 3.214,
+            "hist_mean": 7.281,
+            "shift_mean": 3.586,
+            "moving_avg": 3.831,
+            "ses": 4.384
+          },
+          "mae_h1": {
+            "naive": 2.333,
+            "hist_mean": 6.521,
+            "shift_mean": 2.767,
+            "moving_avg": 2.29,
+            "ses": 2.636
+          },
+          "bias_h1_4": {
+            "naive": -0.837,
+            "hist_mean": 7.281,
+            "shift_mean": 2.827,
+            "moving_avg": 0.683,
+            "ses": 2.489
+          },
+          "best_model": "naive",
+          "sampling_noise_floor": 3.542
+        }
+      },
+      "PhonePe": {
+        "pct_low_star": {
+          "mae_h1_4": {
+            "naive": 5.035,
+            "hist_mean": 17.717,
+            "shift_mean": 5.969,
+            "moving_avg": 4.886,
+            "ses": 5.341
+          },
+          "mae_h1": {
+            "naive": 4.861,
+            "hist_mean": 16.153,
+            "shift_mean": 4.686,
+            "moving_avg": 2.513,
+            "ses": 3.891
+          },
+          "bias_h1_4": {
+            "naive": 1.443,
+            "hist_mean": 17.717,
+            "shift_mean": 5.924,
+            "moving_avg": 4.171,
+            "ses": 4.063
+          },
+          "best_model": "moving_avg",
+          "sampling_noise_floor": 3.306
+        },
+        "mean_rating": {
+          "mae_h1_4": {
+            "naive": 0.211,
+            "hist_mean": 0.629,
+            "shift_mean": 0.174,
+            "moving_avg": 0.194,
+            "ses": 0.203
+          },
+          "mae_h1": {
+            "naive": 0.216,
+            "hist_mean": 0.57,
+            "shift_mean": 0.148,
+            "moving_avg": 0.128,
+            "ses": 0.176
+          },
+          "bias_h1_4": {
+            "naive": -0.008,
+            "hist_mean": -0.629,
+            "shift_mean": -0.161,
+            "moving_avg": -0.099,
+            "ses": -0.085
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 0.12
+        },
+        "pct_negative_sentiment": {
+          "mae_h1_4": {
+            "naive": 5.724,
+            "hist_mean": 10.866,
+            "shift_mean": 4.566,
+            "moving_avg": 4.988,
+            "ses": 5.565
+          },
+          "mae_h1": {
+            "naive": 6.085,
+            "hist_mean": 9.87,
+            "shift_mean": 3.986,
+            "moving_avg": 4.007,
+            "ses": 4.051
+          },
+          "bias_h1_4": {
+            "naive": 0.144,
+            "hist_mean": 10.866,
+            "shift_mean": 2.496,
+            "moving_avg": 1.391,
+            "ses": 3.472
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 3.054
+        },
+        "pct_has_issue": {
+          "mae_h1_4": {
+            "naive": 6.037,
+            "hist_mean": 11.665,
+            "shift_mean": 4.73,
+            "moving_avg": 4.481,
+            "ses": 5.033
+          },
+          "mae_h1": {
+            "naive": 5.858,
+            "hist_mean": 10.853,
+            "shift_mean": 4.512,
+            "moving_avg": 3.938,
+            "ses": 4.525
+          },
+          "bias_h1_4": {
+            "naive": 2.727,
+            "hist_mean": 11.665,
+            "shift_mean": 3.963,
+            "moving_avg": 3.262,
+            "ses": 3.677
+          },
+          "best_model": "moving_avg",
+          "sampling_noise_floor": 3.016
+        }
+      },
+      "All apps": {
+        "pct_low_star": {
+          "mae_h1_4": {
+            "naive": 2.647,
+            "hist_mean": 5.848,
+            "shift_mean": 2.679,
+            "moving_avg": 2.752,
+            "ses": 3.049
+          },
+          "mae_h1": {
+            "naive": 2.695,
+            "hist_mean": 5.429,
+            "shift_mean": 2.569,
+            "moving_avg": 2.501,
+            "ses": 2.57
+          },
+          "bias_h1_4": {
+            "naive": 1.494,
+            "hist_mean": 5.848,
+            "shift_mean": 2.375,
+            "moving_avg": 2.225,
+            "ses": 2.343
+          },
+          "best_model": "naive",
+          "sampling_noise_floor": 1.184
+        },
+        "mean_rating": {
+          "mae_h1_4": {
+            "naive": 0.1,
+            "hist_mean": 0.227,
+            "shift_mean": 0.096,
+            "moving_avg": 0.1,
+            "ses": 0.099
+          },
+          "mae_h1": {
+            "naive": 0.103,
+            "hist_mean": 0.211,
+            "shift_mean": 0.094,
+            "moving_avg": 0.092,
+            "ses": 0.094
+          },
+          "bias_h1_4": {
+            "naive": -0.051,
+            "hist_mean": -0.227,
+            "shift_mean": -0.085,
+            "moving_avg": -0.078,
+            "ses": -0.071
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 0.044
+        },
+        "pct_negative_sentiment": {
+          "mae_h1_4": {
+            "naive": 2.989,
+            "hist_mean": 4.743,
+            "shift_mean": 2.679,
+            "moving_avg": 2.88,
+            "ses": 3.647
+          },
+          "mae_h1": {
+            "naive": 3.291,
+            "hist_mean": 4.477,
+            "shift_mean": 2.724,
+            "moving_avg": 2.558,
+            "ses": 2.992
+          },
+          "bias_h1_4": {
+            "naive": 1.919,
+            "hist_mean": 4.743,
+            "shift_mean": 1.793,
+            "moving_avg": 2.22,
+            "ses": 3.607
+          },
+          "best_model": "shift_mean",
+          "sampling_noise_floor": 1.291
+        },
+        "pct_has_issue": {
+          "mae_h1_4": {
+            "naive": 2.339,
+            "hist_mean": 6.671,
+            "shift_mean": 2.926,
+            "moving_avg": 2.63,
+            "ses": 2.64
+          },
+          "mae_h1": {
+            "naive": 2.361,
+            "hist_mean": 6.166,
+            "shift_mean": 2.576,
+            "moving_avg": 1.977,
+            "ses": 2.155
+          },
+          "bias_h1_4": {
+            "naive": 1.446,
+            "hist_mean": 6.671,
+            "shift_mean": 2.897,
+            "moving_avg": 2.298,
+            "ses": 2.326
+          },
+          "best_model": "naive",
+          "sampling_noise_floor": 1.261
+        }
+      }
+    },
+    "mean_rank_by_model": {
+      "hist_mean": 4.42,
+      "moving_avg": 2.29,
+      "naive": 3.58,
+      "ses": 2.67,
+      "shift_mean": 2.04
+    },
+    "times_best_by_model": {
+      "shift_mean": 12,
+      "ses": 5,
+      "moving_avg": 3,
+      "naive": 3,
+      "hist_mean": 1
+    },
+    "n_series_metric": 24,
+    "hist_mean_worst_count": 18,
+    "final_model_beats_naive_count": 19,
+    "final_model_mean_skill_vs_naive": 0.081,
+    "primary_metric_mae_final_model_min": 1.16,
+    "primary_metric_mae_final_model_max": 7.05
+  },
+  "interval_coverage": {
+    "nominal": 0.8,
+    "empirical_h1": 0.924,
+    "n": 144
+  },
+  "forecasts": {
+    "Swiggy": {
+      "pct_low_star": {
+        "forecast": 93.199,
+        "last_observed": 93.78,
+        "ses_alpha": 0.6,
+        "pi80_lower_h1": 89.961,
+        "pi80_upper_h1": 96.436,
+        "pi80_lower_h4": 88.98,
+        "pi80_upper_h4": 97.417
+      },
+      "mean_rating": {
+        "forecast": 1.247,
+        "last_observed": 1.239,
+        "ses_alpha": 0.5,
+        "pi80_lower_h1": 1.157,
+        "pi80_upper_h1": 1.338,
+        "pi80_lower_h4": 1.121,
+        "pi80_upper_h4": 1.373
+      },
+      "pct_negative_sentiment": {
+        "forecast": 72.32,
+        "last_observed": 71.77,
+        "ses_alpha": 0.45,
+        "pi80_lower_h1": 67.563,
+        "pi80_upper_h1": 77.076,
+        "pi80_lower_h4": 67.49,
+        "pi80_upper_h4": 77.149
+      },
+      "pct_has_issue": {
+        "forecast": 82.158,
+        "last_observed": 83.254,
+        "ses_alpha": 0.5,
+        "pi80_lower_h1": 78.183,
+        "pi80_upper_h1": 86.133,
+        "pi80_lower_h4": 76.798,
+        "pi80_upper_h4": 87.519
+      }
+    },
+    "Zomato": {
+      "pct_low_star": {
+        "forecast": 88.614,
+        "last_observed": 90.566,
+        "ses_alpha": 0.1,
+        "pi80_lower_h1": 84.771,
+        "pi80_upper_h1": 92.458,
+        "pi80_lower_h4": 84.771,
+        "pi80_upper_h4": 92.458
+      },
+      "mean_rating": {
+        "forecast": 1.413,
+        "last_observed": 1.392,
+        "ses_alpha": 0.15,
+        "pi80_lower_h1": 1.284,
+        "pi80_upper_h1": 1.542,
+        "pi80_lower_h4": 1.284,
+        "pi80_upper_h4": 1.542
+      },
+      "pct_negative_sentiment": {
+        "forecast": 68.869,
+        "last_observed": 69.811,
+        "ses_alpha": 0.15,
+        "pi80_lower_h1": 63.68,
+        "pi80_upper_h1": 74.057,
+        "pi80_lower_h4": 63.68,
+        "pi80_upper_h4": 74.057
+      },
+      "pct_has_issue": {
+        "forecast": 76.911,
+        "last_observed": 79.245,
+        "ses_alpha": 0.5,
+        "pi80_lower_h1": 69.085,
+        "pi80_upper_h1": 84.736,
+        "pi80_lower_h4": 64.829,
+        "pi80_upper_h4": 88.992
+      }
+    },
+    "Myntra": {
+      "pct_low_star": {
+        "forecast": 58.114,
+        "last_observed": 50.612,
+        "ses_alpha": 0.05,
+        "pi80_lower_h1": 46.758,
+        "pi80_upper_h1": 69.471,
+        "pi80_lower_h4": 45.303,
+        "pi80_upper_h4": 70.926
+      },
+      "mean_rating": {
+        "forecast": 2.737,
+        "last_observed": 2.906,
+        "ses_alpha": 0.25,
+        "pi80_lower_h1": 2.307,
+        "pi80_upper_h1": 3.166,
+        "pi80_lower_h4": 2.223,
+        "pi80_upper_h4": 3.251
+      },
+      "pct_negative_sentiment": {
+        "forecast": 47.83,
+        "last_observed": 40.0,
+        "ses_alpha": 0.05,
+        "pi80_lower_h1": 38.468,
+        "pi80_upper_h1": 57.191,
+        "pi80_lower_h4": 38.468,
+        "pi80_upper_h4": 57.191
+      },
+      "pct_has_issue": {
+        "forecast": 59.702,
+        "last_observed": 56.327,
+        "ses_alpha": 0.45,
+        "pi80_lower_h1": 50.849,
+        "pi80_upper_h1": 68.556,
+        "pi80_lower_h4": 45.931,
+        "pi80_upper_h4": 73.474
+      }
+    },
+    "Paytm": {
+      "pct_low_star": {
+        "forecast": 58.736,
+        "last_observed": 59.761,
+        "ses_alpha": 0.6,
+        "pi80_lower_h1": 49.419,
+        "pi80_upper_h1": 68.054,
+        "pi80_lower_h4": 46.517,
+        "pi80_upper_h4": 70.956
+      },
+      "mean_rating": {
+        "forecast": 2.539,
+        "last_observed": 2.49,
+        "ses_alpha": 0.6,
+        "pi80_lower_h1": 2.19,
+        "pi80_upper_h1": 2.888,
+        "pi80_lower_h4": 1.999,
+        "pi80_upper_h4": 3.079
+      },
+      "pct_negative_sentiment": {
+        "forecast": 35.778,
+        "last_observed": 35.06,
+        "ses_alpha": 0.45,
+        "pi80_lower_h1": 25.653,
+        "pi80_upper_h1": 45.904,
+        "pi80_lower_h4": 22.307,
+        "pi80_upper_h4": 49.249
+      },
+      "pct_has_issue": {
+        "forecast": 43.909,
+        "last_observed": 45.02,
+        "ses_alpha": 0.35,
+        "pi80_lower_h1": 36.24,
+        "pi80_upper_h1": 51.578,
+        "pi80_lower_h4": 33.045,
+        "pi80_upper_h4": 54.772
+      }
+    },
+    "PhonePe": {
+      "pct_low_star": {
+        "forecast": 38.214,
+        "last_observed": 34.211,
+        "ses_alpha": 0.5,
+        "pi80_lower_h1": 25.185,
+        "pi80_upper_h1": 51.242,
+        "pi80_lower_h4": 16.982,
+        "pi80_upper_h4": 59.445
+      },
+      "mean_rating": {
+        "forecast": 3.226,
+        "last_observed": 3.382,
+        "ses_alpha": 0.5,
+        "pi80_lower_h1": 2.709,
+        "pi80_upper_h1": 3.743,
+        "pi80_lower_h4": 2.402,
+        "pi80_upper_h4": 4.05
+      },
+      "pct_negative_sentiment": {
+        "forecast": 27.535,
+        "last_observed": 21.711,
+        "ses_alpha": 0.35,
+        "pi80_lower_h1": 15.159,
+        "pi80_upper_h1": 39.912,
+        "pi80_lower_h4": 10.673,
+        "pi80_upper_h4": 44.397
+      },
+      "pct_has_issue": {
+        "forecast": 25.17,
+        "last_observed": 15.789,
+        "ses_alpha": 0.4,
+        "pi80_lower_h1": 14.495,
+        "pi80_upper_h1": 35.845,
+        "pi80_lower_h4": 10.805,
+        "pi80_upper_h4": 39.535
+      }
+    },
+    "All apps": {
+      "pct_low_star": {
+        "forecast": 67.857,
+        "last_observed": 66.791,
+        "ses_alpha": 0.55,
+        "pi80_lower_h1": 63.139,
+        "pi80_upper_h1": 72.575,
+        "pi80_lower_h4": 61.466,
+        "pi80_upper_h4": 74.247
+      },
+      "mean_rating": {
+        "forecast": 2.202,
+        "last_observed": 2.25,
+        "ses_alpha": 0.55,
+        "pi80_lower_h1": 2.038,
+        "pi80_upper_h1": 2.366,
+        "pi80_lower_h4": 1.956,
+        "pi80_upper_h4": 2.448
+      },
+      "pct_negative_sentiment": {
+        "forecast": 52.482,
+        "last_observed": 48.363,
+        "ses_alpha": 0.3,
+        "pi80_lower_h1": 47.021,
+        "pi80_upper_h1": 57.943,
+        "pi80_lower_h4": 46.254,
+        "pi80_upper_h4": 58.709
+      },
+      "pct_has_issue": {
+        "forecast": 59.902,
+        "last_observed": 57.717,
+        "ses_alpha": 0.45,
+        "pi80_lower_h1": 56.232,
+        "pi80_upper_h1": 63.572,
+        "pi80_lower_h4": 53.307,
+        "pi80_upper_h4": 66.497
+      }
+    }
+  },
+  "volume": {
+    "mean_weekly_reviews_pre_shift": 306.5,
+    "mean_weekly_reviews_post_shift": 851.2,
+    "ratio_post_vs_pre": 2.78
+  },
+  "charts": [
+    {
+      "file": "data/charts/timeseries/ts_01_weekly_volume.png",
+      "title": "Weekly review volume steps up 2.8\u00d7 at the July sampling shift: a property of the feed, not of demand"
+    },
+    {
+      "file": "data/charts/timeseries/ts_02_weekly_failure_trend.png",
+      "title": "All three failure signals step down at the July shift, together with review length (60 \u2192 42 words)"
+    },
+    {
+      "file": "data/charts/timeseries/ts_03_weekly_trend_by_app.png",
+      "title": "PhonePe and Paytm carry the July step (-22.2 and -13.8 pp in 1\u20132\u2605 share); Zomato and Swiggy move least (-0.4 and -4.3 pp)"
+    },
+    {
+      "file": "data/charts/timeseries/ts_04_weekly_issue_categories.png",
+      "title": "Each app keeps its own issue mix week after week: 1 of 523 app-issue-weeks spike above 3 SE, 2 of 45 series trend after July"
+    },
+    {
+      "file": "data/charts/timeseries/ts_05_forecast_backtest_accuracy.png",
+      "title": "SES forecasts the 1\u20132\u2605 share with 1.2\u20137.0 pp error; the all-history mean, blind to the July step, is worst in 18 of 24 series"
+    },
+    {
+      "file": "data/charts/timeseries/ts_06_forecast_overall.png",
+      "title": "Pooled forecast: about 68% of reviews rated 1\u20132\u2605 over the next 4 weeks (80% interval 61\u201374% by week 4)"
+    },
+    {
+      "file": "data/charts/timeseries/ts_07_forecast_low_star_by_app.png",
+      "title": "% rated 1\u20132\u2605, 4-week forecast by app: from 38% (PhonePe) to 93% (Swiggy)"
+    },
+    {
+      "file": "data/charts/timeseries/ts_08_forecast_rating_by_app.png",
+      "title": "Mean star rating, 4-week forecast by app: from 1.25\u2605 (Swiggy) to 3.23\u2605 (PhonePe)"
+    }
+  ]
+}
