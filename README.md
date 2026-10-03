@@ -14,7 +14,7 @@ Each pipeline stage is owned end-to-end by one person — see `Team_Work_Split.p
 | Text Mining (Issue Tagging + Sentiment) | Person 2 | Done (issues #101–#103) |
 | Exploratory Data Analysis (EDA) | Person 3 | Done (issues #104–#106 + follow-ups) |
 | Predictive Modeling (Feature Engineering + Classifier) | Person 4 | Planned — issues #107–#110 |
-| Time-Series + Dashboard + Final Assembly | Person 5 | Time-series done (issue #111); dashboard and assembly planned — issues #112–#114 |
+| Time-Series + Dashboard + Final Assembly | Person 5 | Time-series (issue #111) and dashboard (issue #112) done; assembly planned — issues #113–#114 |
 
 ## Stage contents
 
@@ -43,6 +43,8 @@ Each pipeline stage is owned end-to-end by one person — see `Team_Work_Split.p
 | `data/charts/timeseries/` | 8 time-series charts (`ts_01_…` to `ts_08_…`) | Person 5 |
 | `data/timeseries_summary.json` | Every number quoted in `TIME_SERIES.md`, plus trend tests and the issue-spike scan | Person 5 |
 | `TIME_SERIES.md` | Time-series methodology, forecast results, limitations, and combined insights across stages | Person 5 |
+| `dashboard/app.py` | Interactive Streamlit + Plotly dashboard: overview, weekly trends, forecast, sentiment & issues, key findings | Person 5 |
+| `dashboard/utils.py`, `dashboard/charts.py` | Cached data loading and filtering; Plotly figure builders | Person 5 |
 
 See `DATA_SOURCES.md` for data collection details, `TEXT_MINING.md` for text mining methodology, `EDA.md` for the exploratory analysis and `TIME_SERIES.md` for the weekly trends and forecasts.
 
@@ -62,8 +64,12 @@ python scripts/04_sentiment_analysis.py # computes VADER sentiment, validation, 
 # Stage 4: Exploratory Data Analysis (reads app_reviews_tagged.csv, writes charts/tables/summary)
 python scripts/05_eda.py              # ~10 s; 13 charts in data/charts/eda/, summary in data/eda_summary.json
 
-# Stage 6: Time-Series (reads app_reviews_tagged.csv, writes weekly tables, forecasts and charts)
+# Stage 6: Time-Series analysis (reads app_reviews_tagged.csv, writes weekly tables, forecasts and charts)
 python scripts/13_time_series_forecast.py   # 8 charts in data/charts/timeseries/, tables in data/timeseries/
+
+# Interactive dashboard 
+pip install -r dashboard/requirements.txt
+streamlit run dashboard/app.py
 ```
 
 ## Handoff to Person 3 (EDA) & Person 4 (Predictive Modeling)
