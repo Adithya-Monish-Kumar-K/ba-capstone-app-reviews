@@ -1,7 +1,110 @@
 {
-  "raw_rows": 15000,
-  "after_dedupe": 15000,
-  "after_empty_removed": 15000,
-  "after_non_english_removed": 14988,
-  "final_rows": 14988
+  "raw_rows": 1202729,
+  "after_dedupe": 1202729,
+  "after_empty_removed": 1155196,
+  "after_no_letters_removed": 1147776,
+  "after_non_english_removed": 1137987,
+  "final_rows": 1137987,
+  "app_version_missing": 152017,
+  "per_app": {
+    "Swiggy": {
+      "raw_rows": 78562,
+      "after_dedupe": 78562,
+      "after_empty_removed": 75549,
+      "after_no_letters_removed": 75130,
+      "after_non_english_removed": 74768,
+      "final_rows": 74768,
+      "app_version_missing": 8483
+    },
+    "Zomato": {
+      "raw_rows": 159399,
+      "after_dedupe": 159399,
+      "after_empty_removed": 152261,
+      "after_no_letters_removed": 151353,
+      "after_non_english_removed": 150560,
+      "final_rows": 150560,
+      "app_version_missing": 17581
+    },
+    "Blinkit": {
+      "raw_rows": 237716,
+      "after_dedupe": 237716,
+      "after_empty_removed": 230618,
+      "after_no_letters_removed": 229534,
+      "after_non_english_removed": 228446,
+      "final_rows": 228446,
+      "app_version_missing": 30228
+    },
+    "Domino's": {
+      "raw_rows": 46298,
+      "after_dedupe": 46298,
+      "after_empty_removed": 44097,
+      "after_no_letters_removed": 43802,
+      "after_non_english_removed": 43629,
+      "final_rows": 43629,
+      "app_version_missing": 4748
+    },
+    "Myntra": {
+      "raw_rows": 87160,
+      "after_dedupe": 87160,
+      "after_empty_removed": 85927,
+      "after_no_letters_removed": 85572,
+      "after_non_english_removed": 85347,
+      "final_rows": 85347,
+      "app_version_missing": 15335
+    },
+    "Flipkart": {
+      "raw_rows": 288063,
+      "after_dedupe": 288063,
+      "after_empty_removed": 271869,
+      "after_no_letters_removed": 269509,
+      "after_non_english_removed": 266285,
+      "final_rows": 266285,
+      "app_version_missing": 23671
+    },
+    "Amazon": {
+      "raw_rows": 34035,
+      "after_dedupe": 34035,
+      "after_empty_removed": 33305,
+      "after_no_letters_removed": 33170,
+      "after_non_english_removed": 32753,
+      "final_rows": 32753,
+      "app_version_missing": 7549
+    },
+    "Meesho": {
+      "raw_rows": 107744,
+      "after_dedupe": 107744,
+      "after_empty_removed": 105190,
+      "after_no_letters_removed": 104382,
+      "after_non_english_removed": 102686,
+      "final_rows": 102686,
+      "app_version_missing": 20799
+    },
+    "Paytm": {
+      "raw_rows": 47940,
+      "after_dedupe": 47940,
+      "after_empty_removed": 45517,
+      "after_no_letters_removed": 45194,
+      "after_non_english_removed": 44658,
+      "final_rows": 44658,
+      "app_version_missing": 6639
+    },
+    "PhonePe": {
+      "raw_rows": 94101,
+      "after_dedupe": 94101,
+      "after_empty_removed": 90072,
+      "after_no_letters_removed": 89479,
+      "after_non_english_removed": 88535,
+      "final_rows": 88535,
+      "app_version_missing": 15030
+    },
+    "Google Pay": {
+      "raw_rows": 21711,
+      "after_dedupe": 21711,
+      "after_empty_removed": 20791,
+      "after_no_letters_removed": 20651,
+      "after_non_english_removed": 20320,
+      "final_rows": 20320,
+      "app_version_missing": 1954
+    }
+  }
 }

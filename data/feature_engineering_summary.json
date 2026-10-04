@@ -1,0 +1,9 @@
+{
+  "rows": 1137987,
+  "tfidf_features": 20000,
+  "svd_components": 200,
+  "svd_explained_variance": 0.6269,
+  "structural_features": 15,
+  "total_features": 215,
+  "positive_class_rate": 0.1947
+}

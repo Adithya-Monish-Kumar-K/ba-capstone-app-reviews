@@ -1,4 +1,5 @@
 import os
+import json
 import joblib
 import numpy as np
 import pandas as pd
@@ -29,6 +30,9 @@ svd = joblib.load(
     os.path.join(MODEL_DIR, "svd_model.pkl")
 )
 
+with open("data/feature_names.json") as f:
+    feature_names = np.array(json.load(f))
+
 print("Loaded trained models and feature-engineering artifacts.")
 
 # --------------------------------------------------
@@ -39,6 +43,7 @@ logistic_coefficients = logistic_model.coef_[0]
 
 feature_importance = pd.DataFrame({
     "feature_index": np.arange(len(logistic_coefficients)),
+    "feature": feature_names,
     "coefficient": logistic_coefficients,
     "absolute_coefficient": np.abs(logistic_coefficients)
 })
@@ -57,7 +62,7 @@ plt.barh(
 
 plt.yticks(
     range(len(top_logistic)),
-    [f"SVD_{i}" for i in top_logistic["feature_index"]]
+    top_logistic["feature"]
 )
 
 plt.xlabel("Logistic Regression Coefficient")
@@ -84,6 +89,7 @@ rf_importance = pd.DataFrame({
     "feature_index": np.arange(
         len(random_forest_model.feature_importances_)
     ),
+    "feature": feature_names,
     "importance": random_forest_model.feature_importances_
 })
 
@@ -101,7 +107,7 @@ plt.barh(
 
 plt.yticks(
     range(len(top_rf)),
-    [f"SVD_{i}" for i in top_rf["feature_index"]]
+    top_rf["feature"]
 )
 
 plt.xlabel("Feature Importance")

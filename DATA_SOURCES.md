@@ -8,46 +8,86 @@ Required by the capstone rubric: *"The data source and data-collection method mu
 
 ## Apps and package IDs
 
-| App | Package ID |
-|---|---|
-| Swiggy | `in.swiggy.android` |
-| Zomato | `com.application.zomato` |
-| Myntra | `com.myntra.android` |
-| Paytm | `net.one97.paytm` |
-| PhonePe | `com.phonepe.app` |
+Eleven apps in three domains. All three domains share the same kinds of problems (payments, refunds, support, delivery or fulfilment, app crashes), so one issue taxonomy covers all of them.
+
+| Domain | App | Package ID | Play category | Installs |
+|---|---|---|---|---|
+| Food & Grocery | Swiggy | `in.swiggy.android` | Food & Drink | 100M+ |
+| Food & Grocery | Zomato | `com.application.zomato` | Food & Drink | 100M+ |
+| Food & Grocery | Blinkit | `com.grofers.customerapp` | Food & Drink | 100M+ |
+| Food & Grocery | Domino's | `com.Dominos` | Food & Drink | 100M+ |
+| Shopping | Myntra | `com.myntra.android` | Shopping | 100M+ |
+| Shopping | Flipkart | `com.flipkart.android` | Shopping | 1B+ |
+| Shopping | Amazon | `in.amazon.mShop.android.shopping` | Shopping | 500M+ |
+| Shopping | Meesho | `com.meesho.supply` | Shopping | 500M+ |
+| Payments | Paytm | `net.one97.paytm` | Finance | 500M+ |
+| Payments | PhonePe | `com.phonepe.app` | Finance | 1B+ |
+| Payments | Google Pay | `com.google.android.apps.nbu.paisa.user` | Finance | 1B+ |
+
+The app list lives in one place, `scripts/apps.py`, and every script reads it from there.
 
 ## Collection parameters
 
-- **Date collected:** 20 September 2026
-- **Sort method:** `Sort.MOST_RELEVANT`, paginated via `continuation_token`
-- **Volume:** 3,000 reviews per app (15,000 total)
-- **Fields captured:** `review_id`, `score` (1–5★), `content` (review text), `thumbs_up`, `app_version`, `review_date`
+- **Window:** every review posted from **1 April 2026** to **20 September 2026** (both days included; `START_DATE` and `END_DATE` in `scripts/01_scrape_reviews.py`)
+- **Sort method:** `Sort.NEWEST`, paginated backwards in time via `continuation_token` until a whole page is older than 1 April 2026
+- **Volume:** 1,202,729 raw reviews; 1,137,987 after cleaning
+- **Fields captured:** `review_id`, `score` (1–5★), `content` (review text), `thumbs_up`, `app_version`, `review_date`, plus `app_id`, `app_name`, `domain`
 - **Language/region:** `lang="en"`, `country="in"`
+- **Storage:** one gzipped CSV per app per stage (`data/raw/`, `data/clean/`, `data/tagged/`), so no single file exceeds GitHub's 100 MB limit
 
-### Why `MOST_RELEVANT` instead of `NEWEST`
+| App | Raw reviews | Reviews per day |
+|---|---:|---:|
+| Flipkart | 288,063 | 1,539 |
+| Blinkit | 237,716 | 1,320 |
+| Zomato | 159,399 | 870 |
+| Meesho | 107,744 | 594 |
+| PhonePe | 94,101 | 512 |
+| Myntra | 87,160 | 493 |
+| Swiggy | 78,562 | 432 |
+| Paytm | 47,940 | 258 |
+| Domino's | 46,298 | 252 |
+| Amazon | 34,035 | 189 |
+| Google Pay | 21,711 | 117 |
+| **Total** | **1,202,729** | |
 
-An initial pull using `Sort.NEWEST` (1,600 reviews/app) returned a date range of only ~4 days — these apps receive thousands of reviews daily, so recency-sorted pagination cannot reach back far enough for any time-series analysis. `Sort.MOST_RELEVANT` surfaces heavily-upvoted reviews regardless of age, reaching back to 2018 for some apps, which is what makes the monthly/weekly trend analysis in this project possible from a single scrape (no repeated/scheduled scraping needed).
+(Reviews per day are after cleaning.)
 
-### Known sampling bias (disclosed, not hidden)
+### Why a fixed date window with `NEWEST`
 
-Play Store users upvote complaint reviews far more than generic praise, so the `MOST_RELEVANT` feed is skewed negative relative to the true population:
+The first version of this dataset (15,000 reviews, 3,000 per app, kept in `review_2_prep/data/v1_most_relevant/`) used `Sort.MOST_RELEVANT`. That feed has two problems:
 
-| | |
-|---|---|
-| Real public rating of these 5 apps | 4.43 – 4.66 ★ |
-| Scraped sample rating distribution | 69.2% are 1★, only 17.5% are 5★ |
+1. **A hard ceiling.** In a test, `MOST_RELEVANT` ran out of reviews for Swiggy at 11,200 (the other apps were still returning reviews when the short test stopped at 8,200–8,800). `NEWEST` returned more than 100,000 reviews for several apps.
+2. **Uneven, biased coverage.** It returns heavily-upvoted reviews from any year, so Paytm and PhonePe reached back to 2018 while the other apps were almost all 2026. It was also far more negative than the real user base (69% 1★).
 
-This applies to **every downstream stage**, not just this one — it does not invalidate trend/correlation findings (which compare month-to-month or app-to-app within the sample), but absolute negative-review rates must never be quoted as representative of the apps' real user bases.
+`NEWEST` has no such ceiling. It returns *every* review in time order. Collecting everything since a fixed date gives every app **exactly the same time window**. Cross-app comparisons need no "common window", and busy apps simply contribute more reviews.
+
+### How the scraper handles large pulls
+
+- Each app is scraped independently and can run in parallel (`python scripts/01_scrape_reviews.py flipkart amazon`).
+- A failed page is retried with backoff. An empty page mid-stream is retried before the scraper gives up. This happened once for Flipkart: the first run stopped early at 41,400 reviews, and the retry fix was added before the full re-run.
+- An app whose output file already exists is skipped, so an interrupted run can be restarted.
+
+### Known data issues (disclosed, not hidden)
+
+| Issue | What it is | How we handle it |
+|---|---|---|
+| **Short reviews dominate** | Median review is 2 words; 66% have 3 words or fewer ("good", "nice app") | Kept: they are real reviews and still carry a rating. Issue tags and text features naturally cover the longer reviews. |
+| **Written reviews are harsher than the public rating** | Sample means sit 0.0–1.4★ below each app's Play Store rating, which also counts ratings without a written review | Compare apps and weeks with each other; never quote absolute satisfaction. |
+| **21 Apr – 5 May 2026 feed gap** | For Swiggy, Blinkit, Domino's, Flipkart and Amazon, *positive* reviews drop by 59–90% while negative reviews drop only 3–37% (EDA chart 15). Negative reviews did not rise, so this is not a wave of complaints, and a scraper failure would remove all reviews alike, so the cause is on the Play Store side. | Rows kept and flagged; trend, version and July analyses exclude the window. |
+| **One missing day for Zomato** | Zomato has no reviews from 23 Jul 22:00 to 25 Jul 12:30 (24 July is empty); re-querying the Play Store returned the same counts, so the gap is in the source, not the scraper | Kept as is; it lowers one week's Zomato volume and does not affect rates. Every other app has reviews on all 173 days. |
+| **Missing app version** | `app_version` is empty for 13.4% of reviews | Kept; version is not a model feature. |
+
+The earlier claim that this data is "skewed negative by upvote ranking" applied to the `MOST_RELEVANT` sample only. The NEWEST collection is 67% 5★ and 17% 1★.
 
 ## Processing pipeline & ownership
 
 Each stage is a separate person's responsibility, each reading the previous stage's output:
 
-1. **Scrape** (Person 1) — `scripts/01_scrape_reviews.py` → `app_reviews_raw.csv`
-2. **Clean** (Person 1) — dedupe, drop empty/non-English reviews, derive `month`/`review_length` → `scripts/02_clean_reviews.py` → `app_reviews_clean.csv` (14,988 rows, **not yet tagged**)
-3. **Tag + Sentiment** (Person 2) — rule-based issue-category keywords + VADER sentiment scoring → `app_reviews_tagged.csv`
-4. **EDA** (Person 3) — rating/volume/issue-frequency/trend charts, reading the tagged dataset
-5. **Feature Engineering + Predictive Model** (Person 4) — TF-IDF → Truncated SVD + structural features → Logistic Regression / Random Forest classifying `is_problematic` (score ≤ 2)
-6. **Time-Series + Dashboard + Assembly** (Person 5) — weekly forecast models, interactive dashboard, final notebook/report/deck
+1. **Scrape** (Person 1) — `scripts/01_scrape_reviews.py` → `data/raw/<app>.csv.gz`, `data/app_metadata.csv`
+2. **Clean** (Person 1) — dedupe; drop empty/very short reviews (< 3 characters), reviews with no letters at all (emoji or punctuation only) and non-English reviews (fewer than 85% of the letters are basic Latin a–z); derive `month`/`review_length` → `scripts/02_clean_reviews.py` → `data/clean/<app>.csv.gz` (1,137,987 rows). Language is judged on letters only, so an English review with emojis such as "good 👍" is kept. (An earlier version counted all characters, so emojis pushed about 76,000 English reviews below the 85% threshold; that was fixed before this analysis.)
+3. **Tag + Sentiment** — rule-based issue-category keywords + VADER sentiment scoring → `data/tagged/<app>.csv.gz`
+4. **EDA** (Persons 3 and 2) — `scripts/05_eda.py`, 15 charts, reading the tagged dataset
+5. **Feature Engineering + Predictive Model** (Persons 4 and 5) — TF-IDF → Truncated SVD + structural features → Logistic Regression / Random Forest classifying `is_problematic` (score ≤ 2)
+6. **Time-Series + Dashboard + Assembly** (Review 2) — weekly forecast models and interactive dashboard. *These are kept in `review_2_prep/`; they still run on the v1 dataset and will be rebuilt on this collection for Review 2.*
 
-Only stage 1–2 is complete as of this branch. See `Team_Work_Split.pdf` for the full commit-by-commit plan for stages 3–6.
+Shared helpers: `scripts/apps.py` (app list, domains, colours) and `scripts/data_io.py` (read/write the per-app files).

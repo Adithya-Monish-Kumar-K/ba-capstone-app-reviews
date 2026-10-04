@@ -14,7 +14,7 @@ from sklearn.metrics import (
 # Paths
 # --------------------------------------------------
 
-PREDICTION_PATH = "data/model_predictions.csv"
+PREDICTION_PATH = "data/model_predictions.csv.gz"
 CURVE_PATH = "data/model_curve_data.json"
 FIGURE_DIR = "figures"
 
@@ -127,6 +127,12 @@ for model_key, model_name in models.items():
         precision,
         label=model_name
     )
+
+plt.axhline(
+    curve_data["positive_rate"],
+    linestyle="--",
+    label=f"Random Classifier (base rate {curve_data['positive_rate']:.1%})"
+)
 
 plt.xlabel("Recall")
 plt.ylabel("Precision")

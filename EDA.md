@@ -1,23 +1,25 @@
 # Exploratory Data Analysis — Findings & Method
 
 **Capstone Project — Stage 4: Exploratory Data Analysis**
-*Owner: Person 3 · Input: `data/app_reviews_tagged.csv` (14,988 reviews × 28 columns) · Code: `scripts/05_eda.py`*
+*Owners: Person 3 and Person 2 · Input: `data/tagged/*.csv.gz` (1,137,987 reviews × 29 columns, 11 apps) · Code: `scripts/05_eda.py`*
 
-Outputs: 13 charts in `data/charts/eda/`, all quoted numbers in `data/eda_summary.json`, and two tables for Person 5 (`data/eda/monthly_trend.csv`, `data/eda/version_metrics.csv`).
+Outputs: 15 charts in `data/charts/eda/`, all quoted numbers in `data/eda_summary.json`, and three tables (`data/eda/monthly_trend.csv`, `data/eda/weekly_trend.csv`, `data/eda/version_metrics.csv`).
+
+This is the second version of the EDA. The first (13 charts, 15,000 `MOST_RELEVANT` reviews from 5 apps) is preserved in git history. Its input data is in `review_2_prep/data/v1_most_relevant/`. Where this version overturns an earlier finding, it says so.
 
 ---
 
 ## 1. Headline findings
 
-1. **The sample is extremely negative and not representative.** 69.2% of reviews are 1★, only 17.5% are 5★; every app's sample mean sits 2.0–3.3★ below its public rating ([chart 02](data/charts/eda/eda_02_ratings_and_sample_bias.png)). Only *relative* comparisons (app vs app, month vs month) are safe.
-2. **The apps cover different time periods.** Swiggy, Zomato and Myntra are ~100% 2026 reviews; only Paytm and PhonePe reach back to 2018 ([chart 01](data/charts/eda/eda_01_coverage_timeline.png)). Only **Apr–Sep 2026** has ≥50 reviews for all five apps, so all cross-app trends use that *common window*.
-3. **A sampling regime shift hits all five apps in July 2026.** Reviews per day rise 2.9× and median review length falls 27–50% ([chart 11](data/charts/eda/eda_11_july_regime_shift.png)). Issue-tag rates appear to fall 7–16 pp, but only 1–5 pp once review length is held constant. **Most post-July "improvement" is a collection artefact, not a change in the apps.** This is the most important caveat for Persons 4 and 5.
-4. **Customer Support is the biggest problem; Order Quality is the most damaging.** Support appears in 34.4% of reviews (1.8× the next issue, average 1.19★). Order Quality is rare (6.6%) but rated worst (1.13★) ([chart 05](data/charts/eda/eda_05_issue_priority.png)).
-5. **Every app has its own failure fingerprint.** Delivery Delay is ~30% at Swiggy/Zomato but 1–2% at the UPI apps; Cancellation & Return is 40% at Myntra; Crash & Stability is 17% at Paytm vs 2–3% at Myntra/Zomato/Swiggy ([chart 06](data/charts/eda/eda_06_issue_by_app.png)). All nine issue-vs-app chi-square tests have p < 10⁻³⁷.
-6. **The issue tagger has both false positives and blind spots.** 333 five-star reviews carry *Cancellation & Return*, 92% of them Myntra praising easy returns ([chart 08](data/charts/eda/eda_08_issue_by_rating.png)). Conversely 22% of 1–2★ reviews have no tag; the missed terms are Paytm security-scan alerts ("malicious", "detected"), QR/scan, notifications and rewards/coins ([chart 09](data/charts/eda/eda_09_taxonomy_gap.png)).
-7. **Upvotes are winner-take-all and do not explain the negative skew.** Gini 0.97; the top 1% of reviews hold 85% of upvotes. 1★ is 69% of reviews but only 43% of upvotes ([chart 03](data/charts/eda/eda_03_length_and_upvotes.png)).
-8. **Unhappy users write about twice as much** (median 59 words at 1★ vs 30 at 5★), and issue tags track length (Spearman 0.40): longer text has more chances to match a keyword ([charts 03, 04](data/charts/eda/eda_04_correlation_matrix.png)).
-9. **"Bad release" evidence by app version is weak, and where present it is not about crashes.** 8 of 84 versions rate significantly worse than their app's mean, but ~2 would be flagged by chance and version is confounded with time ([chart 12](data/charts/eda/eda_12_app_versions.png)). In those 8 versions the elevated complaints are fulfilment and support (8 of 9 significant signals); none shows a crash/stability or UI increase, and 2 show no specific issue at all ([chart 13](data/charts/eda/eda_13_version_issue_mix.png)).
+1. **Recent reviews are short and mostly positive.** 67% are 5★ and 17% are 1★. The median review is 2 words, and 66% have 3 words or fewer ([chart 02](data/charts/eda/eda_02_ratings_vs_public.png), [chart 03](data/charts/eda/eda_03_length_and_upvotes.png)). This overturns the v1 picture (69% 1★), which came from how `MOST_RELEVANT` selects reviews.
+2. **Amazon and Swiggy are the clear outliers.** 54% of Amazon reviews and 35% of Swiggy reviews are 1–2★, against 10–24% for every other app. PhonePe (9.8%) and Myntra (10.3%) are the mildest. Written reviews sit 0.0–1.4★ below each app's public rating; Amazon has the biggest gap (2.74 vs 4.18★).
+3. **A late-April feed gap, not an incident.** From 21 April to 5 May 2026, positive reviews fall 59–90% for Swiggy, Blinkit, Domino's, Flipkart and Amazon, while negative reviews fall only 3–37% ([chart 15](data/charts/eda/eda_15_april_gap.png)). Swiggy's weekly "% rated 1–2★" jumps from ~33% to 87% mainly because short positive reviews ("good", "nice") are missing. **Shares are fragile; counts of negative reviews per day are far less affected.** The window is flagged and excluded from trend, version and July analyses.
+4. **The v1 "July 2026 regime shift" was a sampling artefact.** In this complete collection no app gets ≥1.5× more reviews per day after July, and median length is unchanged in 10 of 11 apps ([chart 11](data/charts/eda/eda_11_july_check.png)). The v1 warning to Persons 4–5 no longer applies.
+5. **Customer Support is both the most common and the most damaging issue.** It appears in 4.1% of all reviews, and those reviews average 1.23★ ([chart 05](data/charts/eda/eda_05_issue_priority.png)). Only 10% of reviews carry any issue tag, because most reviews are too short to name a problem.
+6. **Each domain has its own fingerprint.** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping. In Payments, Crash & Stability and Customer Support are tied (1.30% and 1.29%), and delivery problems are almost absent. Delivery Delay is the most domain-specific issue (3.5% of Food & Grocery reviews vs 0.07% of Payments) ([charts 06, 14](data/charts/eda/eda_14_domain_comparison.png)). Food & Grocery is the most negative domain (22% 1–2★), Payments the mildest (13%).
+7. **Ratings are stable over time; app differences dominate.** Between May–Jun and Aug–Sep, 7 of 11 apps move by less than 2.5 pp of 1–2★ share. Exceptions: Amazon worsens by 9.6 pp, Zomato by 4.4 pp and Flipkart by 2.6 pp; Google Pay improves by 5.5 pp ([chart 10](data/charts/eda/eda_10_weekly_trend.png)).
+8. **The tagger misses most short complaints, and many 1–2★ reviews are mis-ratings.** 54% of 1–2★ reviews get no tag. Their median length is 5 words, against 28 for tagged ones. The most distinctive untagged terms are praise ("nice product", "mast", "super", "gud"), which means users giving 1★ by mistake ([chart 09](data/charts/eda/eda_09_taxonomy_gap.png)).
+9. **"Bad release" signals exist but are concentrated.** 49 of 544 versions are clearly worse than their app's mean (≥0.25★ below and z ≤ −3); 15 of them are Flipkart builds. Every Amazon version released since mid-July (five versions, 32.13 to 32.17) is flagged, matching its downward trend. In the 15 worst versions, the most often elevated issue is Customer Support (9 signals), followed by Payment & Refund (8) ([charts 12–13](data/charts/eda/eda_12_app_versions.png)).
 
 ---
 
@@ -25,13 +27,13 @@ Outputs: 13 charts in `data/charts/eda/`, all quoted numbers in `data/eda_summar
 
 | Choice | Why |
 |---|---|
-| Read the tagged dataset only (no re-tagging or re-scoring) | Reproducible and independent of Person 2's stage. |
-| **Common window** = months where every app has ≥50 reviews (Apr–Sep 2026; Sep is partial, scraped 20 Sep) | Coverage is very uneven (§3); cross-app trends outside the window compare different eras. |
-| Points/rates shown only where n ≥ 30 | Avoids plotting noise as trend. |
-| Medians, log upvotes, Spearman and rank tests | `thumbs_up` is heavy-tailed (max 46,743); ratings are ordinal. |
-| Direct standardisation on review-length bands | Separates a real change in an app from a change in *what was sampled* (§6.1). |
-
-One fixed colour per app across all charts; red↔blue for star ratings.
+| Read the tagged dataset only (no re-tagging or re-scoring) | Reproducible and independent of the tagging stage. |
+| Identical window for every app (1 Apr – 20 Sep 2026) | `NEWEST` collection back to a fixed date, so no common-window restriction is needed. |
+| Complete weeks / full months only for trends | The first week and September (1–20 Sep) are partial. |
+| **Exclude 21 Apr – 5 May** from trend, version and July analyses | Positive reviews are largely missing for 5 apps in this window (§6.1). |
+| Version flags need **≥0.25★ gap AND \|z\| ≥ 3** | With 1.1M rows a plain z ≥ 2 flags trivial differences. |
+| Medians, log upvotes, Spearman and rank tests | Upvotes are heavy-tailed; ratings are ordinal. |
+| Eleven apps are never drawn in one panel | Time charts are split by domain. Each app keeps one colour, taken from a palette checked for colour-blind readers (`scripts/apps.py`). |
 
 ---
 
@@ -39,106 +41,118 @@ One fixed colour per app across all charts; red↔blue for star ratings.
 
 | Check | Result |
 |---|---|
-| Rows / columns | 14,988 / 28 |
+| Rows / columns | 1,137,987 / 29 |
 | Duplicate `review_id` | 0 |
-| Nulls | Only `app_version`: 449 (3.0%) |
-| Date range | 2018-09-15 → 2026-09-18 |
-| Zero-upvote reviews | 40.5% |
-| Untagged reviews (`has_issue = 0`) | 34.6% |
+| Nulls | Only `app_version`: 152,017 (13.4%) |
+| Date range | 2026-04-01 → 2026-09-20 (identical for every app) |
+| Days with reviews | 173 of 173 for every app except Zomato (172): no reviews from 23 Jul 22:00 to 25 Jul 12:30 (24 July is empty); re-querying the Play Store returned the same counts, so the gap is in the source, not the scraper |
+| Zero-upvote reviews | 93.6% |
+| Reviews with ≤ 3 words | 65.6% |
+| Untagged reviews (`has_issue = 0`) | 89.6% |
 
-| App | Reviews | First review | Months with data | Distinct versions |
-|---|---:|---|---:|---:|
-| Swiggy | 3,000 | 2025-08 (99.9% from 2026) | 10 | 26 |
-| Zomato | 2,997 | 2026-03 | 7 | 39 |
-| Myntra | 2,998 | 2024-11 (99.9% from 2026) | 8 | 24 |
-| Paytm | 2,998 | 2018-09 | 95 | 202 |
-| PhonePe | 2,995 | 2018-09 | 96 | 177 |
+| App | Domain | Reviews | Per day | Mean ★ | % 1–2★ | Median words | Versions |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Flipkart | Shopping | 266,285 | 1,539 | 4.07 | 18.3 | 2 | 184 |
+| Blinkit | Food & Grocery | 228,446 | 1,320 | 4.07 | 19.0 | 2 | 221 |
+| Zomato | Food & Grocery | 150,560 | 870 | 4.06 | 18.8 | 2 | 345 |
+| Meesho | Shopping | 102,686 | 594 | 4.22 | 17.6 | 3 | 217 |
+| PhonePe | Payments | 88,535 | 512 | 4.43 | 9.8 | 2 | 193 |
+| Myntra | Shopping | 85,347 | 493 | 4.49 | 10.3 | 3 | 138 |
+| Swiggy | Food & Grocery | 74,768 | 432 | 3.45 | 35.0 | 2 | 266 |
+| Paytm | Payments | 44,658 | 258 | 4.31 | 14.6 | 2 | 180 |
+| Domino's | Food & Grocery | 43,629 | 252 | 3.89 | 23.6 | 2 | 125 |
+| Amazon | Shopping | 32,753 | 189 | 2.74 | 54.4 | 7 | 219 |
+| Google Pay | Payments | 20,320 | 117 | 3.93 | 23.2 | 2 | 419 |
 
-1★ share: Swiggy 90%, Zomato 84%, Paytm 65%, Myntra 54%, PhonePe 53%. Rating differs strongly by app (chi-square V = 0.19).
+Rating differs by app (chi-square Cramér's V = 0.12) much more than by domain (V = 0.06).
 
 **Outliers (Tukey 1.5 × IQR fences).**
 
 | Field | Outside fences | Max | 99th percentile | Decision |
 |---|---|---:|---:|---|
-| `thumbs_up` | 1,897 (12.7%) | 46,743 | 399 | Keep. They are genuine viral reviews, not errors; use medians, `log1p` and rank tests. |
-| `review_length` (words) | 9 (0.06%) | 223 | 98 | Keep. Long but plausible. |
-| `sentiment_compound` | 0 | 0.99 | 0.98 | Bounded score, nothing to treat. |
+| `thumbs_up` | 72,945 (6.4%) | 11,165 | 4 | Keep. Any review with a vote is "outside" because 94% have none; use `log1p` and rank tests. |
+| `review_length` (words) | 167,193 (14.7%) | 167 | 82 | Keep. The fence is only 11 words because the median is 2; long reviews are the informative ones. |
+| `sentiment_compound` | 36,775 (3.2%) | 1.00 | 0.89 | Bounded score, nothing to treat. |
 
-No rows were removed. Removing the `thumbs_up` outliers would delete exactly the most-seen reviews, so the analysis is made robust instead (medians, log scale, Spearman, Mann-Whitney).
-
-> **Correction to `DATA_SOURCES.md`.** It says users upvote complaints more than praise. Here that is not what the data shows: 4★ reviews are 4.5% of reviews but 23.5% of upvotes, and 1★ is 43% of upvotes vs 69% of reviews. The negative skew is real, but Play's `MOST_RELEVANT` ranking evidently uses other signals; the stated mechanism should be softened.
+No rows were removed by the EDA.
 
 ---
 
 ## 4. Engagement & correlations (charts 03–04)
 
-* **Length:** median words fall monotonically with rating (59 → 53 → 45 → 36 → 30); Spearman ρ(rating, length) = −0.32.
-* **Upvotes:** Gini 0.97; top 1% = 85% of all upvotes; PhonePe's mean (120) is 60× its median (2). Upvotes correlate with length (ρ = 0.36) but not with rating (−0.04) or sentiment (−0.01, p = 0.12).
-* **Correlation structure:** VADER compound ↔ rating ρ = 0.56 (reproduces Person 2's validation); issue_count ↔ rating ρ = −0.45; issue_count ↔ length ρ = 0.40.
+* **Length:** median words by rating are 14 / 4 / 2 / 2 / 2 for 1★ to 5★. A complaint is a sentence; praise is one word. Spearman ρ(rating, length) = −0.39.
+* **Upvotes:** Gini 0.98. 93.6% of reviews have no upvote, and the top 1% hold 71% of all upvotes. 1★ reviews are 17% of reviews but 59% of upvotes: other users endorse complaints far more than praise.
+* **Correlation structure:** rating ↔ VADER compound ρ = 0.49; rating ↔ issue count ρ = −0.50; issue count ↔ length ρ = 0.46. Longer text has more chances to match a keyword rule.
 
 ---
 
-## 5. Issue analysis (charts 05–09)
+## 5. Issue analysis (charts 05–09, 14)
 
-| Issue | % of reviews | Mean ★ with issue | % rated 1–2★ | Effect vs rest (rank-biserial) |
-|---|---:|---:|---:|---:|
-| Customer Support | 34.4 | 1.19 | 94.9 | 0.36 |
-| Cancellation & Return | 19.5 | 1.56 | 85.7 | 0.16 |
-| Delivery Delay | 15.4 | 1.23 | 93.9 | 0.26 |
-| Payment & Refund | 15.2 | 1.27 | 93.0 | 0.25 |
-| Pricing & Fraud | 9.4 | 1.30 | 91.2 | 0.21 |
-| Order Quality | 6.6 | **1.13** | 96.8 | 0.27 |
-| Crash & Stability | 6.3 | 1.71 | 79.7 | 0.06 |
-| UI/UX & Update | 2.4 | **2.71** | 52.2 | −0.24 |
-| Account / Login / OTP | 2.4 | 1.49 | 85.1 | 0.13 |
+| Issue | % of reviews | Reviews | Mean ★ with issue | % rated 1–2★ | Effect vs rest (rank-biserial) |
+|---|---:|---:|---:|---:|---:|
+| Customer Support | 4.07 | 46,338 | 1.23 | 94.1 | 0.80 |
+| Cancellation & Return | 3.09 | 35,112 | 1.50 | 87.0 | 0.73 |
+| Delivery Delay | 2.81 | 32,030 | 1.57 | 84.7 | 0.71 |
+| Payment & Refund | 1.65 | 18,726 | 1.38 | 90.0 | 0.75 |
+| Pricing & Fraud | 1.64 | 18,674 | 1.42 | 87.7 | 0.75 |
+| Order Quality | 0.91 | 10,335 | 1.24 | 93.4 | 0.78 |
+| Crash & Stability | 0.53 | 6,034 | 1.78 | 77.6 | 0.66 |
+| Account / Login / OTP | 0.19 | 2,127 | 1.45 | 87.6 | 0.72 |
+| UI/UX & Update | 0.18 | 2,061 | 2.74 | 51.8 | 0.40 |
 
-All nine differ significantly in rating from untagged reviews (p < 0.001). **UI/UX & Update is the only issue rated above average**: 29% of its reviews are 5★ because the tag also matches praise such as "very UI friendly", and 72% of tagged reviews are Paytm/PhonePe, where it also catches update-triggered security warnings.
+All nine differ significantly in rating from untagged reviews (p < 0.001). UI/UX & Update is again the mildest: the tag also matches praise such as "nice UI".
 
-**By app (chart 06).** Strongest app effects (Cramér's V): Cancellation & Return 0.36, Delivery Delay 0.34, Crash & Stability 0.24, Customer Support 0.22. Support is high everywhere (Swiggy 48%, Zomato 45%, Myntra 31%, Paytm 27%, PhonePe 22%).
+**By app (chart 06).** Amazon has the heaviest issue load in every category except Crash & Stability (Customer Support 16.8%, Cancellation & Return 12.5%, Delivery Delay 8.9%). Swiggy is second (Customer Support 9.9%, Delivery Delay 6.1%). Crash & Stability is highest at Google Pay (2.7%), Paytm (2.2%) and Amazon (2.0%); PhonePe is low (0.5%). Delivery Delay and Order Quality are close to zero at the payment apps. Strongest app effects (Cramér's V): Customer Support 0.146, Cancellation & Return 0.133, Delivery Delay 0.103.
 
-**Co-occurrence (chart 07).** Highest lifts: Crash+UI/UX 3.3× (n = 74), Payment+Order Quality 2.1× (n = 321), Payment+Cancellation 1.9× (n = 858). UI/UX almost never co-occurs with Order Quality (lift 0.08) or Delivery (0.13): app-experience complaints and physical-fulfilment complaints are largely separate.
+**By domain (chart 14).** Shopping's top issue is Cancellation & Return (4.6%, just ahead of Customer Support at 4.4%). Food & Grocery is led by Customer Support (4.6%). In Payments, Crash & Stability (1.30%) and Customer Support (1.29%) are tied. Delivery Delay is about 50× more common in Food & Grocery (3.53%) than in Payments (0.07%).
 
-**Tagger quality (charts 08–09).** Tags rise with lower ratings (79% of 1★ vs 26% of 5★ carry a tag), but the 5★ *Cancellation & Return* cluster is polarity-blind, and untagged low-star reviews are shorter (median 42 vs 62 words). Tag prevalence is therefore a lower bound on complaints, slightly inflated for Myntra returns praise.
+**Co-occurrence (chart 07).** Crash + UI/UX co-occur 26× more than chance (n = 281), i.e. post-update breakage. Payment & Refund travels with Cancellation & Return (13.3×, n = 7,666) and Order Quality (13.1×, n = 2,236): a wrong or cancelled order becomes a refund complaint.
+
+**Tagger quality (charts 08–09).** 49% of 1★ reviews carry a tag, against 1.3% of 5★. The largest 5★ false-positive cluster is Cancellation & Return (3,135 reviews, 40% Myntra; 97% of Myntra's mention returns or exchanges, i.e. praise for easy returns). 54% of 1–2★ reviews have no tag. They are short (median 5 words; 30% are 1–2 words), and the most distinctive terms are praise words ("nice product", "mast", "super", "gud", "badhiya") or unmodelled topics ("compatible" on Amazon, "currently unavailable" and "late service" on Blinkit). Tag prevalence is therefore a lower bound on complaints.
 
 ---
 
-## 6. Trends & versions (charts 10–13)
+## 6. Trends, data gaps & versions (charts 10–13, 15)
 
-### 6.1 The July 2026 regime shift (chart 11)
+### 6.1 The 21 April – 5 May feed gap (chart 15)
 
-| App | Median words before → after | Rating Δ raw | Rating Δ length-adjusted | Issue-rate Δ raw (pp) | Issue-rate Δ adjusted (pp) |
-|---|---|---:|---:|---:|---:|
-| Swiggy | 73 → 53 | +0.11 | +0.02 | −7.1 | −2.7 |
-| Zomato | 70 → 47 | −0.03 | −0.20 | −10.4 | −5.2 |
-| Myntra | 66 → 45 | +0.41 | −0.08 | −15.8 | −2.9 |
-| Paytm | 41 → 26 | +0.64 | +0.38 | −8.7 | −1.7 |
-| PhonePe | 40 → 20 | +0.80 | +0.18 | −14.6 | −1.2 |
+| App | Positive/day before → gap → after | Negative/day before → gap → after |
+|---|---|---|
+| Swiggy | 297 → **30** → 325 | 163 → 136 → 184 |
+| Domino's | 180 → **31** → 214 | 72 → 47 → 68 |
+| Flipkart | 1,254 → **162** → 1,556 | 257 → 178 → 309 |
+| Blinkit | 966 → **414** → 1,198 | 226 → 213 → 290 |
+| Amazon | 103 → **42** → 100 | 96 → 97 → 105 |
+| Meesho (unaffected) | 491 → **446** → 452 | 102 → 103 → 100 |
 
-"Adjusted" standardises each app's before/after values to that app's own length mix (bands ≤20, 21–40, 41–70, 71+ words). Within the 41–70 and 71+ bands the issue-tag rate is identical before and after (75%/75%, 84%/84%). Two real exceptions remain: 21–40 word reviews are tagged more often after July (45% → 56%), and ≤20-word reviews are rated ~0.5★ higher. The likely cause is a change in what Play's `MOST_RELEVANT` feed returned from July; the data alone cannot confirm it.
+Before = 8–20 Apr, after = 6–18 May. An app is "affected" when positive reviews per day fall below 60% of normal *and* fall much more than negative ones. Five apps meet the rule; Paytm is borderline (positive 54% of normal, negative 79%). Median review length jumps in the affected apps (Swiggy 2 → 18 words), so the missing reviews are the short positive ones. A scraper failure would remove all reviews alike, so the cause is on the Play Store side; this dataset cannot say what it was.
 
-**Consequence.** Raw month-over-month gains for Myntra/Paytm/PhonePe ([chart 10](data/charts/eda/eda_10_monthly_trend.png)) must not be read as product improvements. Only Paytm (+0.38★) and PhonePe (+0.18★) keep a positive length-adjusted change; Zomato's is negative (−0.20★). Swiggy and Zomato never exceed 1.6★ in any month.
+**Consequence.** Any share-based metric ("% negative", mean rating) is distorted in this window. Counts of negative reviews per day are far less affected (−3% to −37% in the affected apps, and they did not rise). 61,077 reviews fall in the window; they are kept and flagged.
 
-### 6.2 App versions (charts 12–13)
-84 versions have ≥30 reviews. Eight are significantly worse than their app's mean (|z| > 2): Swiggy 4.109.1, Zomato 19.7.3, Myntra 4.2605.21 / 4.2606.11 / 4.2607.43, Paytm 10.79.1 / 10.80.0, PhonePe 26.04.24.0. Eleven are significantly better, mostly the newest PhonePe/Paytm builds (post-July). With 84 tests ~2 false flags per direction are expected, and a review is attributed to the reviewer's installed version, not the release that caused the complaint. Treat `data/eda/version_metrics.csv` as a shortlist for Person 5, not proof.
+### 6.2 Weekly trends (chart 10)
 
-**What kind of failure?** For the 8 worse-rated versions, chart 13 compares each issue's rate with the app's overall rate (significant cells only: |diff| > 2 SE and ≥ 3 pp). Zomato 19.7.3 stands out (delivery +13 pp, customer support +13 pp, order quality +7 pp); Myntra 4.2605.21 and 4.2606.11 show more cancellation/return and support complaints; Swiggy 4.109.1 shows +8 pp delivery. **No flagged version has a significant rise in Crash & Stability or UI/UX.** Together with the tagger's polarity issues this suggests that low-rated versions mostly coincide with operational problems (deliveries, support) rather than app defects, or that ratings dip for reasons the text does not name; we cannot separate the two from reviews alone.
+Change in % rated 1–2★ from May–Jun to Aug–Sep (gap excluded; Aug–Sep runs to 20 Sep): Amazon +9.6 pp, Zomato +4.4, Flipkart +2.6, Myntra +2.0, Swiggy +1.1, Meesho +0.4, Blinkit +0.4, PhonePe −0.1, Paytm −0.3, Domino's −1.1, Google Pay −5.5. Amazon's mean rating falls 0.37★ over the same period. The most volatile apps week to week are Amazon (SD 0.21★) and Google Pay (0.18★); the most stable is Blinkit (0.03★). Differences between apps (Cramér's V = 0.12) are far larger than any app's movement.
+
+### 6.3 The July 2026 check (chart 11)
+
+v1 reported that all five apps showed 2.9× more reviews per day and 27–50% shorter reviews from July 2026. In this complete collection, reviews per day in July–September (to 20 Sep) are 0.62–1.02× the April–June level (gap days excluded): no app rises by more than 2% (Flipkart), and Zomato's volume actually falls by about 38%. Median length is unchanged in 10 of 11 apps; Amazon's goes up by 2 words. Length-adjusted rating changes are small (−0.19 Zomato to +0.13 Google Pay). **There is no common July shift.** The v1 effect came from how `MOST_RELEVANT` chose reviews.
+
+### 6.4 App versions (charts 12–13)
+
+544 versions have ≥30 reviews (gap days excluded). 49 are clearly worse than their app's mean and 17 clearly better. Worse versions by app: Flipkart 15, Zomato 7, Swiggy 5, Amazon 5, PhonePe 5, Google Pay 4, Paytm 3, Blinkit 2, Meesho 2, Myntra 1. Amazon stands out: every version first seen since 15 July (32.13.0 to 32.17.0, five versions) rates 2.28–2.48★ against the app mean of 2.75★, consistent with Amazon's falling trend.
+
+For the 15 most significantly worse versions, chart 13 compares each issue's rate with the app's overall rate (significant cells only: |diff| > 3 SE and ≥ 2 pp). Elevated signals: Customer Support 9, Payment & Refund 8, Delivery Delay 5, Cancellation & Return 4, Crash & Stability 3, Order Quality 2, Pricing & Fraud 1. One version shows no specific issue. Unlike v1, some versions do show crash increases. Version is still confounded with time, and a review is attributed to the reviewer's installed version, not the release that caused the complaint. Treat `data/eda/version_metrics.csv` as a shortlist, not proof.
 
 ---
 
 ## 7. Implications for other stages
 
 **Person 4 — Predictive modelling**
-* `is_problematic` (score ≤ 2) has a **74.1% base rate**; a majority-class model scores 74.1% accuracy. Report precision/recall/F1/PR-AUC, not accuracy.
-* `issue_count` is partly a **length proxy** (ρ = 0.40). Include `review_length` explicitly and check the model is not only learning length.
-* The July shift changes feature distributions. Split train/test by time carefully (a random split hides it), or add a `post_july` feature.
+* `is_problematic` (score ≤ 2) now has a **19.5% base rate** (v1: 74.1%). The classes have flipped: a model that never flags anything scores 80.5% accuracy. Report precision, recall, F1 and PR-AUC.
+* Most reviews are 1–3 words, so text features carry little for them. Sentiment and length matter most. `issue_count` is partly a length proxy (ρ = 0.46).
+* The July shift no longer exists, so a time-based test split is safe. The April gap affects only the label mix in two weeks.
 
-**Person 5 — Time series & dashboard**
-* Use only the common window (Apr–Sep 2026) for cross-app series; Paytm/PhonePe long history is not like-for-like (pre-2024 rows are ~100 survivors per year).
-* Do not forecast raw volume or tag rate across the July step without modelling a level shift; prefer length-standardised series.
-* `data/eda/monthly_trend.csv` has per-app monthly metrics over all months (rating, low-star %, issue rates, sentiment, length) with `in_common_window`, `post_regime_shift`, `partial_month` and `n_ge_min` flags, so the common window and the July step can be handled without re-deriving them.
-* `data/eda/version_metrics.csv` is a ready shortlist of unusual builds for release-impact analysis.
-
-**Person 2 — Tagging (feedback)**: add polarity handling for *Cancellation & Return*, and patterns for security-scan alerts, QR/scan, notifications, rewards/coins.
+**Tagging stage (feedback)**: add polarity handling for *Cancellation & Return* (praise for easy returns), and patterns for compatibility, stock availability ("currently unavailable") and Hinglish complaint words.
 
 ---
 
@@ -146,25 +160,27 @@ All nine differ significantly in rating from untagged reviews (p < 0.001). **UI/
 
 | Test | Result |
 |---|---|
-| Rating vs app (chi-square) | χ² = 2228, dof = 16, Cramér's V = 0.19 |
-| Rating by app (Kruskal–Wallis) | H = 1834 |
-| Issue vs app (9 chi-square tests) | all p < 10⁻³⁷; V from 0.11 to 0.36 |
-| Rating with vs without each issue (Mann-Whitney) | all p < 0.001; largest effect Customer Support (0.36) |
-| Upvotes, tagged vs untagged (Mann-Whitney) | rank-biserial −0.09 (tiny) |
-| Upvotes vs length / sentiment (Spearman) | ρ = 0.36 / −0.01 (p = 0.12) |
+| Rating vs app (chi-square) | χ² = 65,055, dof = 40, Cramér's V = 0.12 |
+| Rating vs domain (chi-square) | χ² = 7,469, dof = 8, Cramér's V = 0.06 |
+| Rating by app (Kruskal–Wallis) | H = 44,490 |
+| Issue vs app (9 chi-square tests) | all p < 0.001; V from 0.04 to 0.15 |
+| Rating with vs without each issue (Mann-Whitney) | all p < 0.001; largest effect Customer Support (0.80) |
+| Upvotes, tagged vs untagged (Mann-Whitney) | mean 1.32 vs 0.11; rank-biserial −0.22 |
+| Review length, tagged vs untagged | median 26 vs 2 words |
+| Upvotes vs length (Spearman) | ρ = 0.26 |
 
-With n ≈ 15,000 p-values are almost always tiny; read the **effect sizes** (V, ρ, rank-biserial).
+With n ≈ 1.1 million every p-value is tiny. Read the **effect sizes** (V, ρ, rank-biserial).
 
 ---
 
 ## 9. Limitations
 
-* Rating/sentiment levels are biased by `MOST_RELEVANT` sampling and are not population estimates.
-* One snapshot (20 Sep 2026): the cause of the July shift cannot be established from this dataset.
+* Written reviews are harsher than the public rating (which includes star-only ratings), so absolute levels are not population satisfaction.
+* The cause of the late-April gap cannot be established from this dataset; we only measure its effect.
+* One snapshot. Reviews edited or deleted before collection are not visible.
 * Review time has no stored timezone.
-* Tags are rule-based: recall depends on length and some categories have polarity blind spots.
-* `app_version` is the reviewer's installed version, missing for 3.0% of rows; PhonePe mixes two version schemes (`26.xx.xx.x` and `4.26xx.xx`).
-* Comparisons are exploratory; multiple-comparison correction is discussed only for versions (§6.2).
+* Tags are rule-based. Most reviews are too short to tag, and some categories have polarity blind spots.
+* `app_version` is the reviewer's installed version and is missing for 13.4% of rows.
 
 ---
 
@@ -172,5 +188,5 @@ With n ≈ 15,000 p-values are almost always tiny; read the **effect sizes** (V,
 
 ```bash
 pip install pandas numpy scipy matplotlib scikit-learn
-python scripts/05_eda.py    # ~10 s; writes 13 charts, eda_summary.json, eda/monthly_trend.csv, eda/version_metrics.csv
+python scripts/05_eda.py    # ~25 s; writes 15 charts, eda_summary.json and the three tables in data/eda/
 ```

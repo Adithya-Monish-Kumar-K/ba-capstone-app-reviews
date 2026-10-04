@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.metrics import confusion_matrix
 
-PREDICTION_PATH = "data/model_predictions.csv"
+PREDICTION_PATH = "data/model_predictions.csv.gz"
 OUTPUT_PATH = "data/prediction_error_summary.csv"
 
 predictions = pd.read_csv(PREDICTION_PATH)

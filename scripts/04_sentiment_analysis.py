@@ -1,5 +1,5 @@
 import json
-import os
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,6 +9,9 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
+from apps import APP_COLORS, APPS, DOMAINS, APP_DOMAIN
+from data_io import read_app, read_stage, write_app
+
 # Setup Matplotlib styling
 plt.style.use("seaborn-v0_8-whitegrid" if "seaborn-v0_8-whitegrid" in plt.style.available else "default")
 plt.rcParams["font.family"] = "sans-serif"
@@ -16,8 +19,6 @@ plt.rcParams["font.sans-serif"] = ["DejaVu Sans", "Arial", "Helvetica"]
 
 # Paths
 REPO_ROOT = Path(__file__).resolve().parent.parent
-INPUT_PATH = REPO_ROOT / "data" / "app_reviews_tagged.csv"
-OUTPUT_DATASET = REPO_ROOT / "data" / "app_reviews_tagged.csv"
 CHARTS_DIR = REPO_ROOT / "data" / "charts"
 SUMMARY_PATH = REPO_ROOT / "data" / "sentiment_summary.json"
 APP_AGG_PATH = REPO_ROOT / "data" / "sentiment_aggregation_by_app.csv"
@@ -35,7 +36,6 @@ def score_sentiment(df: pd.DataFrame) -> pd.DataFrame:
     sentiment_cols = ["sentiment_neg", "sentiment_neu", "sentiment_pos", "sentiment_compound", "sentiment_label"]
     df = df.drop(columns=[c for c in sentiment_cols if c in df.columns])
 
-    print("Initializing VADER SentimentIntensityAnalyzer...")
     sia = SentimentIntensityAnalyzer()
 
     def get_scores(text):
@@ -50,7 +50,6 @@ def score_sentiment(df: pd.DataFrame) -> pd.DataFrame:
             label = "Neutral"
         return scores["neg"], scores["neu"], scores["pos"], comp, label
 
-    print(f"Scoring {len(df):,} reviews...")
     results = df["content"].apply(get_scores)
     sentiment_df = pd.DataFrame(
         results.tolist(),
@@ -245,7 +244,8 @@ def generate_charts(df: pd.DataFrame, val_results: dict):
         if pos[app] > 10:
             ax.text(i, neg[app] + neu[app] + pos[app] / 2, f"{pos[app]:.1f}%", ha="center", va="center", color="white", fontweight="bold", fontsize=9)
 
-    ax.set_title("Review Sentiment Distribution Across 5 Consumer Apps", fontsize=12, fontweight="bold", pad=12)
+    ax.set_title(f"Review Sentiment Distribution Across {len(apps)} Consumer Apps", fontsize=12, fontweight="bold", pad=12)
+    ax.tick_params(axis="x", rotation=30)
     ax.set_ylabel("Percentage of Reviews (%)", fontsize=11)
     ax.set_ylim(0, 105)
     ax.legend(loc="upper right", frameon=True)
@@ -281,45 +281,28 @@ def generate_charts(df: pd.DataFrame, val_results: dict):
     plt.close(fig)
     print(f"  Chart 3: {chart3_path.name}")
 
-    # 4. Monthly Sentiment Trends by App
-    fig, ax = plt.subplots(figsize=(11, 5), dpi=300)
+    # 4. Monthly Sentiment Trends by App, one panel per domain
     monthly = (
         df.groupby(["month", "app_name"])["sentiment_compound"]
         .agg(["mean", "count"])
         .reset_index()
     )
-    # Filter out recent or sparse months with < 10 reviews
+    # Filter out sparse months with < 10 reviews
     monthly = monthly[monthly["count"] >= 10].sort_values("month")
-    # Take the latest 12 months for clarity
-    recent_months = sorted(monthly["month"].unique())[-12:]
-    monthly_recent = monthly[monthly["month"].isin(recent_months)]
+    months = sorted(monthly["month"].unique())
 
-    app_colors = {
-        "Swiggy": "#fc8019",
-        "Zomato": "#cb202d",
-        "Myntra": "#ff3f6c",
-        "Paytm": "#002970",
-        "PhonePe": "#5f259f"
-    }
-
-    for app in sorted(monthly_recent["app_name"].unique()):
-        sub = monthly_recent[monthly_recent["app_name"] == app]
-        ax.plot(
-            sub["month"],
-            sub["mean"],
-            marker="o",
-            label=app,
-            color=app_colors.get(app, "#333333"),
-            linewidth=2,
-            markersize=5
-        )
-
-    ax.set_title("Monthly Sentiment Trajectory Across 5 Major Apps (Latest 12 Months)", fontsize=12, fontweight="bold", pad=12)
-    ax.set_ylabel("Mean VADER Compound Score", fontsize=11)
-    ax.set_xlabel("Month", fontsize=11)
-    ax.axhline(0, color="gray", linestyle="--", alpha=0.5, linewidth=0.8)
-    ax.tick_params(axis="x", rotation=45)
-    ax.legend(loc="lower left", frameon=True)
+    fig, axes = plt.subplots(1, len(DOMAINS), figsize=(16, 5), dpi=300, sharey=True)
+    for ax, domain in zip(axes, DOMAINS):
+        for app in [a for a in APP_COLORS if APP_DOMAIN[a] == domain]:
+            sub = monthly[monthly["app_name"] == app].set_index("month").reindex(months)
+            ax.plot(months, sub["mean"], marker="o", label=app, color=APP_COLORS[app], linewidth=2, markersize=5)
+        ax.set_title(domain, fontsize=11, fontweight="bold")
+        ax.set_xlabel("Month", fontsize=11)
+        ax.axhline(0, color="gray", linestyle="--", alpha=0.5, linewidth=0.8)
+        ax.tick_params(axis="x", rotation=45)
+        ax.legend(loc="lower left", frameon=True, fontsize=9)
+    axes[0].set_ylabel("Mean VADER Compound Score", fontsize=11)
+    fig.suptitle(f"Monthly Sentiment Trajectory Across {df['app_name'].nunique()} Apps", fontsize=12, fontweight="bold")
     fig.tight_layout()
     chart4_path = CHARTS_DIR / "04_sentiment_trend_monthly.png"
     fig.savefig(chart4_path)
@@ -327,27 +310,30 @@ def generate_charts(df: pd.DataFrame, val_results: dict):
     print(f"  Chart 4: {chart4_path.name}")
 
 
-def main():
-    print(f"Loading input dataset: {INPUT_PATH}")
-    df = pd.read_csv(INPUT_PATH)
-    print(f"Loaded {len(df):,} rows.")
+def score_app(slug):
+    scored = score_sentiment(read_app("tagged", slug))
+    write_app(scored, "tagged", slug)
+    return slug, len(scored)
 
-    # 1. Scoring
-    scored_df = score_sentiment(df)
+
+def main():
+    # 1. Scoring (VADER, one process per app; results written back into data/tagged/<app>.csv.gz)
+    print("Scoring data/tagged/*.csv.gz with VADER...")
+    with ProcessPoolExecutor(max_workers=11) as pool:
+        for slug, n in pool.map(score_app, APPS):
+            print(f"  {APPS[slug]['name']:10s} {n:>9,} reviews scored")
+
+    issue_cols = [c for c in read_app("tagged", next(iter(APPS)), nrows=0).columns
+                  if c.startswith("issue_") and c != "issue_count"]
+    scored_df = read_stage("tagged", columns=["app_name", "score", "month", "sentiment_neg", "sentiment_neu",
+                                              "sentiment_pos", "sentiment_compound", "sentiment_label"] + issue_cols)
+    print(f"Loaded {len(scored_df):,} scored rows for validation and aggregation.")
 
     # 2. Validation
     val_results = validate_sentiment(scored_df)
 
     # 3. Aggregation
     agg_results = aggregate_sentiment(scored_df)
-
-    # Drop temporary validation helper before saving
-    if "rating_sentiment_class" in scored_df.columns:
-        scored_df = scored_df.drop(columns=["rating_sentiment_class"])
-
-    # Save enriched dataset
-    print(f"\nSaving sentiment-enriched dataset to: {OUTPUT_DATASET}")
-    scored_df.to_csv(OUTPUT_DATASET, index=False)
 
     # 4. Generate Charts
     generate_charts(scored_df, val_results)
@@ -363,7 +349,7 @@ def main():
             "positive_pct": round(float((scored_df["sentiment_label"] == "Positive").mean() * 100), 2),
         },
         "output_files": {
-            "dataset": str(OUTPUT_DATASET),
+            "dataset": "data/tagged/*.csv.gz",
             "charts": [
                 str(CHARTS_DIR / "01_sentiment_validation_by_rating.png"),
                 str(CHARTS_DIR / "02_sentiment_distribution_by_app.png"),

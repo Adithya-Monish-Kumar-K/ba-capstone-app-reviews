@@ -4,3 +4,13 @@ __pycache__/
 .venv/
 venv/
 .env
+
+# Regenerable model inputs (~1 GB at 1.5M rows; rebuild with scripts/05_feature_engineering.py)
+data/engineered_features.npz
+data/target.npy
+data/model_row_index.csv.gz
+
+# Scraper per-app metadata scratch and interrupted writes
+data/raw/metadata/
+*.tmp
+*.tmp.gz

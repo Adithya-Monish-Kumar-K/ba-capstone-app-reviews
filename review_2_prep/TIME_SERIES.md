@@ -1,7 +1,9 @@
 # Time-Series Analysis & Forecasting — Findings & Method
 
 **Capstone Project — Stage 6: Time-Series (issue #111)**
-*Owner: Person 5 · Input: `data/app_reviews_tagged.csv` (14,988 reviews × 28 columns) · Code: `scripts/13_time_series_forecast.py`*
+*Owner: Person 5 · Input: `data/v1_most_relevant/app_reviews_tagged.csv` (14,988 reviews × 28 columns) · Code: `scripts/13_time_series_forecast.py`*
+
+> **Data version note (Oct 2026).** This stage still uses the first dataset (moved to `data/v1_most_relevant/`). Review 1 now uses a new collection of 1,218,358 reviews of 11 apps; this analysis has not been rebuilt on it yet. The July 2026 "regime shift" handled below does not appear in the new data (see `../EDA.md` §6.3).
 
 Outputs: 8 charts in `data/charts/timeseries/`, 5 tables in `data/timeseries/`, and every number quoted below in `data/timeseries_summary.json`.
 

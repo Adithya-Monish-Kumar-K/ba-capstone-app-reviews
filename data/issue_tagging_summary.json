@@ -1,148 +1,262 @@
 {
-  "input_rows": 14988,
-  "tagged_rows": 9801,
-  "overall_coverage_pct": 65.39,
-  "avg_issues_per_review": 1.12,
+  "input_rows": 1137987,
+  "tagged_rows": 118314,
+  "overall_coverage_pct": 10.4,
+  "avg_issues_per_review": 0.15,
   "category_summary": {
     "crash_bugs_stability": {
-      "count": 938,
-      "pct_of_total": 6.26,
+      "count": 6034,
+      "pct_of_total": 0.53,
       "description": "App crashes, freezes, lagging, black screen, glitches, server errors, loading failures"
     },
     "payment_refund": {
-      "count": 2278,
-      "pct_of_total": 15.2,
+      "count": 18726,
+      "pct_of_total": 1.65,
       "description": "Payment failures, money deducted without order, refund delays/denials, UPI and wallet errors"
     },
     "delivery_delay": {
-      "count": 2301,
-      "pct_of_total": 15.35,
+      "count": 32030,
+      "pct_of_total": 2.81,
       "description": "Late delivery, excessive waiting time, slow delivery partners/riders, GPS tracking inaccuracies"
     },
     "order_quality_fulfillment": {
-      "count": 996,
-      "pct_of_total": 6.65,
+      "count": 10335,
+      "pct_of_total": 0.91,
       "description": "Wrong items, missing items, damaged packaging, stale/cold food, fake products, false delivered status"
     },
     "cancellation_return": {
-      "count": 2923,
-      "pct_of_total": 19.5,
+      "count": 35112,
+      "pct_of_total": 3.09,
       "description": "Order cancellations, cancellation charges, return request rejections, failed reverse pickups, exchange problems"
     },
     "customer_support": {
-      "count": 5150,
-      "pct_of_total": 34.36,
+      "count": 46338,
+      "pct_of_total": 4.07,
       "description": "Unresponsive customer care, useless automated bots, closed tickets without resolution, rude executives"
     },
     "account_login_otp": {
-      "count": 356,
-      "pct_of_total": 2.38,
+      "count": 2127,
+      "pct_of_total": 0.19,
       "description": "OTP not arriving, login failures, blocked/suspended accounts, KYC verification errors, password reset"
     },
     "pricing_charges_fraud": {
-      "count": 1414,
-      "pct_of_total": 9.43,
+      "count": 18674,
+      "pct_of_total": 1.64,
       "description": "Hidden charges, platform/delivery fees, surge pricing, overcharging, coupons not working, scam/fraud allegations"
     },
     "ui_ux_update": {
-      "count": 364,
-      "pct_of_total": 2.43,
+      "count": 2061,
+      "pct_of_total": 0.18,
       "description": "Post-update regressions, poor interface/navigation, search/filter broken, removed features, intrusive ads"
     }
   },
   "app_breakdown": {
-    "Myntra": {
-      "total_reviews": 2998,
-      "tagged_reviews": 1978,
-      "coverage_pct": 65.98,
+    "Amazon": {
+      "total_reviews": 32753,
+      "tagged_reviews": 11492,
+      "coverage_pct": 35.09,
       "top_categories": [
         [
-          "cancellation_return",
-          1203
+          "customer_support",
+          5500
         ],
         [
-          "customer_support",
-          917
+          "cancellation_return",
+          4104
         ],
         [
           "delivery_delay",
-          473
+          2929
+        ]
+      ]
+    },
+    "Blinkit": {
+      "total_reviews": 228446,
+      "tagged_reviews": 22329,
+      "coverage_pct": 9.77,
+      "top_categories": [
+        [
+          "customer_support",
+          6847
+        ],
+        [
+          "delivery_delay",
+          6706
+        ],
+        [
+          "cancellation_return",
+          5205
+        ]
+      ]
+    },
+    "Domino's": {
+      "total_reviews": 43629,
+      "tagged_reviews": 4131,
+      "coverage_pct": 9.47,
+      "top_categories": [
+        [
+          "customer_support",
+          1712
+        ],
+        [
+          "delivery_delay",
+          1420
+        ],
+        [
+          "cancellation_return",
+          870
+        ]
+      ]
+    },
+    "Flipkart": {
+      "total_reviews": 266285,
+      "tagged_reviews": 23098,
+      "coverage_pct": 8.67,
+      "top_categories": [
+        [
+          "customer_support",
+          9106
+        ],
+        [
+          "cancellation_return",
+          8446
+        ],
+        [
+          "delivery_delay",
+          6845
+        ]
+      ]
+    },
+    "Google Pay": {
+      "total_reviews": 20320,
+      "tagged_reviews": 1484,
+      "coverage_pct": 7.3,
+      "top_categories": [
+        [
+          "crash_bugs_stability",
+          548
+        ],
+        [
+          "customer_support",
+          324
+        ],
+        [
+          "pricing_charges_fraud",
+          256
+        ]
+      ]
+    },
+    "Meesho": {
+      "total_reviews": 102686,
+      "tagged_reviews": 12002,
+      "coverage_pct": 11.69,
+      "top_categories": [
+        [
+          "cancellation_return",
+          5649
+        ],
+        [
+          "customer_support",
+          3897
+        ],
+        [
+          "delivery_delay",
+          2723
+        ]
+      ]
+    },
+    "Myntra": {
+      "total_reviews": 85347,
+      "tagged_reviews": 8358,
+      "coverage_pct": 9.79,
+      "top_categories": [
+        [
+          "cancellation_return",
+          4224
+        ],
+        [
+          "customer_support",
+          3138
+        ],
+        [
+          "delivery_delay",
+          1872
         ]
       ]
     },
     "Paytm": {
-      "total_reviews": 2998,
-      "tagged_reviews": 1671,
-      "coverage_pct": 55.74,
+      "total_reviews": 44658,
+      "tagged_reviews": 2674,
+      "coverage_pct": 5.99,
       "top_categories": [
         [
-          "customer_support",
-          807
-        ],
-        [
           "crash_bugs_stability",
-          511
+          963
         ],
         [
-          "payment_refund",
-          265
+          "customer_support",
+          818
+        ],
+        [
+          "pricing_charges_fraud",
+          467
         ]
       ]
     },
     "PhonePe": {
-      "total_reviews": 2995,
-      "tagged_reviews": 1306,
-      "coverage_pct": 43.61,
+      "total_reviews": 88535,
+      "tagged_reviews": 2428,
+      "coverage_pct": 2.74,
       "top_categories": [
         [
           "customer_support",
-          648
+          840
         ],
         [
-          "payment_refund",
-          309
+          "pricing_charges_fraud",
+          540
         ],
         [
           "crash_bugs_stability",
-          208
+          478
         ]
       ]
     },
     "Swiggy": {
-      "total_reviews": 3000,
-      "tagged_reviews": 2501,
-      "coverage_pct": 83.37,
+      "total_reviews": 74768,
+      "tagged_reviews": 15284,
+      "coverage_pct": 20.44,
       "top_categories": [
         [
           "customer_support",
-          1438
-        ],
-        [
-          "cancellation_return",
-          922
+          7370
         ],
         [
           "delivery_delay",
-          855
+          4558
+        ],
+        [
+          "cancellation_return",
+          3961
         ]
       ]
     },
     "Zomato": {
-      "total_reviews": 2997,
-      "tagged_reviews": 2345,
-      "coverage_pct": 78.24,
+      "total_reviews": 150560,
+      "tagged_reviews": 15034,
+      "coverage_pct": 9.99,
       "top_categories": [
         [
           "customer_support",
-          1340
+          6786
         ],
         [
           "delivery_delay",
-          885
+          4866
         ],
         [
-          "payment_refund",
-          586
+          "pricing_charges_fraud",
+          3094
         ]
       ]
     }

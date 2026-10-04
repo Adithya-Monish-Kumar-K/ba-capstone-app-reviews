@@ -2,34 +2,24 @@
 
 **Capstone Project — Stage 5: Predictive Modeling**
 
-*Owner: Person 4 · Input: `data/engineered_features.npz` and `data/target.npy` · Code: `scripts/06_model_training.py`*
+*Owners: Person 4 and Person 5 · Input: `data/engineered_features.npz`, `data/target.npy`, `data/model_row_index.csv.gz` (all built by `scripts/05_feature_engineering.py`) · Code: `scripts/06_model_training.py` to `scripts/12_normalized_confusion_matrices.py`*
 
-Outputs: trained Logistic Regression and Random Forest models, evaluation metrics, prediction data, ROC/PR and confusion-matrix charts, and model interpretation charts.
+Outputs: trained Logistic Regression and Random Forest models (`models/`), evaluation metrics, test-set predictions, per-app and out-of-time results, and the charts in `figures/`.
+
+This is the second version of the evaluation, on 1,137,987 reviews from 11 apps (`Sort.NEWEST`, 1 Apr – 20 Sep 2026). The first version (14,988 `MOST_RELEVANT` reviews, 5 apps) is in git history.
 
 ---
 
 ## 1. Headline findings
 
-1. **The predictive task is binary classification of problematic reviews.**  
-   A review is labelled `1` (`problematic`) when its rating score is ≤2, and `0` (`non-problematic`) otherwise.
-
-2. **The dataset contains 14,988 reviews and 115 engineered features.**  
-   The feature matrix combines 100 SVD components derived from TF-IDF text features with 15 structural and sentiment features.
-
-3. **The target is imbalanced.**  
-   There are 11,108 problematic reviews and 3,880 non-problematic reviews. Therefore, accuracy is reported together with precision, recall, F1-score, ROC-AUC and PR-AUC.
-
-4. **Logistic Regression provides a strong baseline.**  
-   It achieved 89.26% accuracy, 92.58% F1-score, 95.13% ROC-AUC and 97.98% PR-AUC on the held-out test set.
-
-5. **Random Forest produced a different error profile.**  
-   It achieved 90.59% accuracy, 93.90% F1-score, 94.39% ROC-AUC and 97.38% PR-AUC.
-
-6. **The two models show a precision-recall trade-off.**  
-   Logistic Regression produced higher precision, while Random Forest produced higher recall. This difference is visible in their confusion matrices.
-
-7. **Model evaluation uses a fixed stratified 80/20 train-test split.**  
-   The training set contains 11,990 reviews and the test set contains 2,998 reviews.
+1. **The task is binary classification of problematic reviews.** A review is `1` (problematic) when its rating is ≤ 2, otherwise `0`.
+2. **The classes have flipped since v1.** 19.5% of reviews are problematic (v1: 74.1%). A model that never flags anything scores **80.5% accuracy with 0% recall**, so accuracy alone is not a useful headline. We report PR-AUC, recall and precision as well.
+3. **Both models score above 91% accuracy and about 0.94 ROC-AUC on 227,598 held-out reviews.** They are close, and each is better on different measures.
+4. **Logistic Regression is better at the default threshold.** Accuracy 92.2%, precision 76.7%, F1 0.810. It raises 2,205 fewer false alarms than Random Forest.
+5. **Random Forest ranks reviews slightly better.** PR-AUC 0.873 (vs a 0.195 base rate), ROC-AUC 0.941 and recall 87.0%, so it misses the fewest complaints.
+6. **Performance holds on future data.** Trained on April–August and tested on 1–20 September, PR-AUC drops by less than 0.01 (Random Forest 0.866, Logistic Regression 0.862).
+7. **Payments is the hardest domain.** Random Forest PR-AUC is 0.895 for Food & Grocery and 0.869 for Shopping, but 0.750 for Payments. PhonePe is the hardest app (0.678): its complaints are rare (9.7%) and short (median 6 words, against 12 for all apps).
+8. **Sentiment carries the Random Forest.** The positive, compound and negative VADER scores are its top three features; with the neutral score (7th) the four make up 42% of total importance. Text components and review length follow.
 
 ---
 
@@ -38,277 +28,162 @@ Outputs: trained Logistic Regression and Random Forest models, evaluation metric
 | Choice | Details |
 |---|---|
 | Target | `is_problematic = 1` when `score <= 2`, otherwise `0` |
-| Input features | 115 engineered features |
-| Text representation | TF-IDF followed by Truncated SVD |
-| SVD components | 100 |
-| Structural features | 15 |
-| Train/test split | 80% / 20% |
-| Random state | 42 |
-| Split strategy | Stratified |
-| Models | Logistic Regression and Random Forest |
+| Input features | 215: 200 SVD text components + 15 structural features |
+| Text representation | TF-IDF (20,000 terms, 1–2 grams, min_df 3, max_df 0.95, sublinear term frequency, no stop-word list) → Truncated SVD (200 components) |
+| Train/test split | 80% / 20%, stratified, random state 42 (910,389 / 227,598 reviews) |
 | Logistic Regression | `class_weight="balanced"`, `max_iter=1000` |
-| Random Forest | 200 trees, `class_weight="balanced"` |
+| Random Forest | 150 trees, each on a 30% bootstrap sample, `min_samples_leaf=100`, `class_weight="balanced"` |
+| Baseline | Always predict the majority class (`data/baseline_results.csv`) |
+| Extra checks | Per-domain and per-app metrics (`data/model_results_by_group.csv`); out-of-time test, train < 1 Sep 2026 ≤ test (`data/model_results_out_of_time.csv`) |
 | Evaluation metrics | Accuracy, Precision, Recall, F1, ROC-AUC, PR-AUC |
 
-The evaluation was performed on the held-out test set rather than on the training data.
+**Why no stop-word list.** The standard English stop-word list removes "not", "no" and "never", so "not good" and "good" would look the same. Without it, negated phrases such as "not good" and "very bad" become features.
+
+**Why the Random Forest settings changed from v1 (200 fully grown trees).** The v1 forest was 26 MB for about 12,000 training rows. Fully grown trees on 910,389 rows would be roughly 75 times larger (about 2 GB by that estimate), which GitHub cannot store and which is slow to load. Subsampling each tree to 30% of rows and requiring at least 100 reviews per leaf keeps the model at 9.8 MB. The whole training script (both models, baseline, out-of-time re-fit) runs in about 3 minutes on 20 cores.
 
 ---
 
 ## 3. Dataset and feature representation
 
-The engineered feature matrix contains:
+| Item | Value |
+|---|---|
+| Reviews | 1,137,987 |
+| TF-IDF terms | 20,000 |
+| SVD components | 200 (62.7% of TF-IDF variance kept; v1: 21.8%) |
+| Structural features | 15: 9 issue flags, 4 VADER scores, `review_length`, `thumbs_up` |
+| Total features | 215 |
 
-- **5,000 TF-IDF text features** before dimensionality reduction.
-- **100 SVD components** representing the reduced text feature space.
-- **15 structural/sentiment features**.
+| Target | Count | Share | Meaning |
+|---|---:|---:|---|
+| 0 | 916,406 | 80.5% | Non-problematic |
+| 1 | 221,581 | 19.5% | Problematic |
 
-The resulting model input therefore contains:
-
-**14,988 reviews × 115 features**
-
-The target distribution is:
-
-| Target | Count | Meaning |
-|---|---:|---|
-| 0 | 3,880 | Non-problematic |
-| 1 | 11,108 | Problematic |
-
-The target is therefore not evenly distributed, which is why class balancing and multiple evaluation metrics are used.
+The SVD keeps far more variance than in v1 because most reviews now use a small vocabulary ("good", "nice app", "worst service").
 
 ---
 
-## 4. Model performance
+## 4. Model performance (test set, 227,598 reviews)
 
-| Model | Accuracy | Precision | Recall | F1-score | ROC-AUC | PR-AUC |
+| Model | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
 |---|---:|---:|---:|---:|---:|---:|
-| Logistic Regression | 0.8926 | 0.9485 | 0.9041 | 0.9258 | 0.9513 | 0.9798 |
-| Random Forest | 0.9059 | 0.9045 | 0.9761 | 0.9390 | 0.9439 | 0.9738 |
+| Majority-class baseline | 0.805 | 0.000 | 0.000 | 0.000 | 0.500 | 0.195 |
+| Logistic Regression | **0.922** | **0.767** | 0.858 | **0.810** | 0.940 | 0.871 |
+| Random Forest | 0.914 | 0.737 | **0.870** | 0.798 | **0.941** | **0.873** |
 
-The metrics were calculated using the 2,998-review held-out test set.
+Bold = better of the two models.
+
+![Model comparison](figures/model_performance_comparison.png)
 
 ---
 
 ## 5. Confusion matrices
 
-### Logistic Regression
+| Model | True negative | False positive | False negative | True positive |
+|---|---:|---:|---:|---:|
+| Logistic Regression | 171,744 | 11,538 | 6,297 | 38,019 |
+| Random Forest | 169,539 | 13,743 | 5,756 | 38,560 |
 
-```text
-                 Predicted
-               Non-Prob  Prob
-Actual Non-Prob    667    109
-       Prob        213   2009
-The corresponding chart is:
+Random Forest finds 541 more of the 44,316 problem reviews (38,560 vs 38,019). Logistic Regression raises 2,205 (16%) fewer false alarms.
 
-[`figures/random_forest_confusion_matrix.png`](figures/random_forest_confusion_matrix.png)
+![Normalized confusion matrices](figures/normalized_confusion_matrix_comparison.png)
 
 ---
 
 ## 6. ROC and Precision-Recall evaluation
 
-Two threshold-independent evaluation views were generated.
+![ROC curves](figures/roc_curves.png)
 
-### ROC curve
+![Precision-Recall curves](figures/precision_recall_curves.png)
 
-The ROC curve compares the true-positive rate with the false-positive rate across classification thresholds.
-
-[`figures/roc_curves.png`](figures/roc_curves.png)
-
-The ROC-AUC values are:
-
-- Logistic Regression: **0.9513**
-- Random Forest: **0.9439**
-
-### Precision-Recall curve
-
-The Precision-Recall curve is particularly informative when the target classes are imbalanced because it focuses on the relationship between precision and recall.
-
-[`figures/precision_recall_curves.png`](figures/precision_recall_curves.png)
-
-The PR-AUC values are:
-
-- Logistic Regression: **0.9798**
-- Random Forest: **0.9738**
+The dashed line on the PR chart is the 19.5% base rate, the precision of random guessing. At 80% recall, Random Forest's precision is 0.85 (Logistic Regression 0.84). At 90% recall both are still at 0.58, about three times the base rate. The two models' curves almost overlap: the difference between them is mainly where the default 0.5 threshold falls on each curve, not how well they rank reviews.
 
 ---
 
-## 7. Model interpretation
+## 7. Per-domain, per-app and out-of-time results (Random Forest)
 
-Model interpretation outputs were generated to inspect which engineered dimensions and text terms contributed most strongly to the fitted models.
+| Group | Test reviews | % problematic | Precision | Recall | PR-AUC |
+|---|---:|---:|---:|---:|---:|
+| Food & Grocery | 99,491 | 21.7 | 0.738 | 0.905 | 0.895 |
+| Shopping | 97,360 | 19.2 | 0.764 | 0.843 | 0.869 |
+| Payments | 30,747 | 12.9 | 0.626 | 0.805 | 0.750 |
+| Amazon | 6,705 | 54.8 | 0.908 | 0.961 | 0.969 |
+| Swiggy | 15,001 | 35.2 | 0.873 | 0.935 | 0.948 |
+| Myntra | 16,954 | 10.4 | 0.654 | 0.949 | 0.926 |
+| Meesho | 20,509 | 17.8 | 0.693 | 0.942 | 0.909 |
+| Domino's | 8,568 | 23.9 | 0.784 | 0.889 | 0.898 |
+| Zomato | 30,215 | 18.7 | 0.739 | 0.881 | 0.879 |
+| Blinkit | 45,707 | 19.0 | 0.664 | 0.906 | 0.865 |
+| Google Pay | 4,049 | 23.4 | 0.685 | 0.855 | 0.813 |
+| Flipkart | 53,192 | 18.1 | 0.771 | 0.742 | 0.800 |
+| Paytm | 9,026 | 14.4 | 0.661 | 0.840 | 0.798 |
+| PhonePe | 17,672 | 9.7 | 0.569 | 0.751 | 0.678 |
 
-### Logistic Regression feature importance
+PR-AUC rises with the share of problem reviews, so compare each app against its own base rate. Even so, the payment apps are the weakest: their complaints are rarer and shorter (median 8 words in Payments, against 11 in Food & Grocery and 16 in Shopping). Flipkart and PhonePe have the lowest recall (74% and 75%). For Flipkart this is consistent with EDA §5: the most distinctive words in untagged 1–2★ reviews are praise words ("nice product", "mast", "super"), mostly from Flipkart, i.e. users who mis-rate.
 
-The absolute coefficients were used to identify the most influential model features.
+| Out-of-time test (train < 1 Sep ≤ test) | Train | Test | Precision | Recall | ROC-AUC | PR-AUC |
+|---|---:|---:|---:|---:|---:|---:|
+| Logistic Regression | 1,008,932 | 129,055 | 0.748 | 0.849 | 0.938 | 0.862 |
+| Random Forest | 1,008,932 | 129,055 | 0.721 | 0.862 | 0.939 | 0.866 |
 
-[`figures/logistic_regression_feature_importance.png`](figures/logistic_regression_feature_importance.png)
-
-The detailed values are stored in:
-
-`data/logistic_feature_importance.csv`
-
-### Random Forest feature importance
-
-Random Forest impurity-based feature importance was extracted and the highest-importance features were visualized.
-
-[`figures/random_forest_feature_importance.png`](figures/random_forest_feature_importance.png)
-
-The detailed values are stored in:
-
-`data/random_forest_feature_importance.csv`
-
-### TF-IDF term interpretation
-
-The TF-IDF vocabulary and SVD components were used to calculate mean absolute SVD loadings for the original text terms.
-
-[`figures/top_tfidf_terms.png`](figures/top_tfidf_terms.png)
-
-The resulting terms and scores are stored in:
-
-`data/top_tfidf_terms.csv`
-
-Because the classifier operates on the reduced SVD representation, the model feature-importance charts describe SVD dimensions rather than individual raw words. The TF-IDF chart provides a separate view of which original text terms have the strongest average SVD loadings.
+PR-AUC drops by less than 0.01 compared with the random split. The models do not depend on mixing past and future reviews.
 
 ---
 
-## 7A. Detailed Findings and Model Comparison
+## 8. Model interpretation
 
-### Overall classification performance
+![Random Forest feature importance](figures/random_forest_feature_importance.png)
 
-The two classifiers show strong performance across the reported evaluation metrics.
+| Rank | Random Forest feature | Importance |
+|---:|---|---:|
+| 1 | `sentiment_pos` | 0.155 |
+| 2 | `sentiment_compound` | 0.136 |
+| 3 | `sentiment_neg` | 0.094 |
+| 4 | SVD_12 | 0.059 |
+| 5 | SVD_11 | 0.042 |
+| 6 | SVD_7 | 0.039 |
+| 7 | `sentiment_neu` | 0.039 |
+| 8 | `review_length` | 0.035 |
 
-| Metric | Logistic Regression | Random Forest |
-|---|---:|---:|
-| Accuracy | 0.8926 | 0.9059 |
-| Precision | 0.9485 | 0.9045 |
-| Recall | 0.9041 | 0.9761 |
-| F1 Score | 0.9258 | 0.9390 |
-| ROC-AUC | 0.9513 | 0.9439 |
-| PR-AUC | 0.9798 | 0.9738 |
+v1 plotted every feature as `SVD_<n>`, including the 15 structural ones. The charts now use the real names (saved in `data/feature_names.json`). Logistic Regression's largest coefficients are all text components (SVD_27 −10.2, SVD_23 −9.7). The SVD components are not standardised while the 15 structural features are, so coefficient sizes cannot be compared across the two groups. Among the structural features, the largest are `sentiment_compound` (−0.92: more positive text, less likely a problem) and `review_length` (+0.24: longer reviews are more likely complaints).
 
-The results show that the models have different precision-recall characteristics. Logistic Regression has higher precision, meaning that a larger proportion of its reviews predicted as problematic are actually problematic. Random Forest has higher recall, meaning that it identifies a larger proportion of the actual problematic reviews.
+![Top TF-IDF terms](figures/top_tfidf_terms.png)
 
-The F1 scores summarize this precision-recall balance and are 0.9258 for Logistic Regression and 0.9390 for Random Forest.
+The terms with the largest SVD loadings are a mix of praise ("very fast", "the best", "fast service", "fast delivery", "good delivery") and complaint phrases ("very bad", "not good", "worst app"). Because stop words are kept, negated phrases such as "not good" now appear among them, along with very common words ("to", "my", "the"). The text components separate these vocabularies.
 
-### Confusion-matrix findings
+---
 
-The confusion-matrix counts provide a more detailed view of classification errors.
+## 9. Practical interpretation
 
-| Model | True Negative | False Positive | False Negative | True Positive |
-|---|---:|---:|---:|---:|
-| Logistic Regression | 667 | 109 | 213 | 2009 |
-| Random Forest | 547 | 229 | 53 | 2169 |
+- **Triage:** at the default threshold the Random Forest flags about 52,000 of 228,000 test reviews and catches 87.0% of real complaints; about 3 in 4 flagged reviews are real complaints. Logistic Regression flags about 50,000, catches 85.8% and is right about 77% of the time. Use Random Forest when missing a complaint is costly and Logistic Regression when reviewer time is the limit.
+- **Per domain:** the model can be used as-is for Food & Grocery and Shopping. For payment apps, expect about 4 in 10 flags to be false alarms.
+- **Short reviews:** most reviews are 1–3 words. For these the model mostly reads sentiment ("worst" vs "good"). The text components matter for the longer, more informative reviews.
 
-For Logistic Regression, 2,009 problematic reviews were correctly identified, while 213 problematic reviews were classified as non-problematic. The model produced 109 false positives.
+---
 
-For Random Forest, 2,169 problematic reviews were correctly identified and only 53 problematic reviews were classified as non-problematic. It produced 229 false positives.
+## 10. Limitations
 
-These results illustrate the trade-off between false positives and false negatives. In this dataset, the models therefore provide different error profiles despite both achieving strong overall performance.
+- The target comes from the star rating, so the model predicts "low rating", not a confirmed failure. Mis-ratings (1★ with "nice product") are counted as problems.
+- TF-IDF, SVD and the scaler are fitted on all rows before the split. They do not use the target, but a stricter setup would fit them on training rows only.
+- No hyper-parameter search; one random split plus one out-of-time split, no cross-validation.
+- During the 21 Apr – 5 May feed gap, positive reviews are under-represented for five apps. This changes the label mix for those two weeks only.
 
-### Threshold-based evaluation
+---
 
-The ROC and Precision-Recall curves evaluate model behaviour across different classification thresholds rather than only the default prediction threshold.
+## 11. Files and scripts
 
-The ROC-AUC values of 0.9513 for Logistic Regression and 0.9439 for Random Forest indicate strong separation between the two target classes across thresholds.
-
-The PR-AUC values of 0.9798 for Logistic Regression and 0.9738 for Random Forest provide an additional view of precision-recall behaviour for the problematic-review classification task.
-
-### Interpretation of model features
-
-The Logistic Regression interpretation is based on model coefficients, while the Random Forest interpretation uses impurity-based feature importance.
-
-Because the predictive pipeline applies TF-IDF followed by SVD, the classifier operates on the resulting reduced feature representation rather than directly on individual raw words.
-
-The TF-IDF interpretation therefore provides complementary information about the original text vocabulary. It should not be interpreted as a direct list of classifier coefficients for individual words.
-
-### Practical interpretation
-
-The evaluation indicates that problematic-review detection can be approached using a combination of text-derived and structural review features.
-
-The evaluation outputs provide three complementary levels of analysis:
-
-1. **Classification performance** — accuracy, precision, recall, F1, ROC-AUC and PR-AUC.
-2. **Prediction errors** — true positives, true negatives, false positives and false negatives.
-3. **Feature interpretation** — model feature importance and TF-IDF/SVD term analysis.
-
-Together, these outputs provide a reproducible basis for understanding classifier behaviour and the engineered feature representation.
-
-## 7B. Model Comparison for Interpretation
-
-| Aspect | Logistic Regression | Random Forest |
-|---|---|---|
-| Accuracy | 0.8926 | 0.9059 |
-| Precision | 0.9485 | 0.9045 |
-| Recall | 0.9041 | 0.9761 |
-| F1 Score | 0.9258 | 0.9390 |
-| ROC-AUC | 0.9513 | 0.9439 |
-| PR-AUC | 0.9798 | 0.9738 |
-| Main error pattern | More false negatives | More false positives |
-| Interpretation focus | Coefficient-based feature influence | Tree-based feature importance |
-
-The comparison shows that the two classifiers exhibit different error profiles. Logistic Regression has higher precision and slightly higher ROC-AUC and PR-AUC, while Random Forest has higher accuracy, recall, and F1 score. This indicates that the choice of model affects the balance between false-positive and false-negative predictions.
-
-For interpretation, Logistic Regression provides coefficient-based evidence about the direction and magnitude of feature contributions. Random Forest provides impurity-based feature importance, which captures how strongly features contribute to decisions across the ensemble. These interpretations should be considered complementary rather than directly equivalent.
-
-The final interpretation should therefore consider both predictive performance and the type of evidence provided by each model. The TF-IDF term analysis provides an additional language-level view of the text data, while the classifiers themselves operate on the reduced SVD feature representation.
-
-## 8. Reproducibility outputs
-
-The modeling stage produces the following files:
-
-| File | Purpose |
+| File | Contents |
 |---|---|
-| `models/logistic_regression.pkl` | Trained Logistic Regression model |
-| `models/random_forest.pkl` | Trained Random Forest model |
-| `data/model_results.csv` | Model-level evaluation metrics |
-| `data/model_predictions.csv` | Test-set predictions and probabilities |
-| `data/model_curve_data.json` | ROC and Precision-Recall curve data |
-| `data/logistic_feature_importance.csv` | Logistic Regression feature coefficients |
-| `data/random_forest_feature_importance.csv` | Random Forest feature importance |
-| `data/top_tfidf_terms.csv` | Top TF-IDF terms by SVD loading |
-| `figures/` | Model evaluation and interpretation charts |
+| `scripts/05_feature_engineering.py` | TF-IDF, SVD, structural features; writes the feature matrix (not tracked in git, ~570 MB, rebuilt in about 2.5 minutes) |
+| `scripts/06_model_training.py` | Training, test metrics, baseline, per-group and out-of-time results |
+| `scripts/07`–`12` | Charts, feature importance, AUC summary, error summary, normalized confusion matrices |
+| `data/model_results.csv`, `data/baseline_results.csv`, `data/model_results_by_group.csv`, `data/model_results_out_of_time.csv` | Metric tables |
+| `data/model_predictions.csv.gz` | Test-set predictions with app and domain |
+| `data/feature_engineering_summary.json`, `data/feature_names.json` | Feature matrix summary and names |
+| `models/*.pkl` | TF-IDF, SVD, scaler, Logistic Regression, Random Forest |
 
----
-
-## 9. Limitations
-
-1. **The target is derived directly from the review rating.**  
-   Therefore, the model predicts the project's defined `problematic` label rather than an independently observed business failure outcome.
-
-2. **The dataset is imbalanced.**  
-   Problematic reviews substantially outnumber non-problematic reviews, so accuracy alone should not be used to describe model performance.
-
-3. **The models operate on a reduced feature representation.**  
-   The text features are compressed from 5,000 TF-IDF dimensions into 100 SVD components, so individual classifier features do not directly correspond to individual words.
-
-4. **The evaluation uses one fixed train-test split.**  
-   The reported metrics describe this held-out test set and may vary with a different split or validation procedure.
-
-5. **Model interpretation should be treated as feature-level evidence rather than causal explanation.**  
-   Feature importance indicates association with model predictions and does not establish that a feature causes a review to be problematic.
-
----
-
-## 10. Files and scripts
-
-**Feature engineering**
-
-`scripts/05_feature_engineering.py`
-
-**Model training and evaluation**
-
-`scripts/06_model_training.py`
-
-**Evaluation visualization**
-
-`scripts/07_model_evaluation_charts.py`
-
-**Model interpretation**
-
-`scripts/08_model_interpretation.py`
-
----
-
-## 11. Summary
-
-The predictive modeling stage converts the engineered review representation into a binary problematic-review classifier using Logistic Regression and Random Forest. Both models achieve strong test-set discrimination, while their confusion matrices demonstrate different precision-recall trade-offs. Evaluation charts and interpretation outputs provide reproducible evidence for comparing model behaviour and understanding the engineered feature space.
-
----
+```bash
+python scripts/05_feature_engineering.py   # ~2.5 min
+python scripts/06_model_training.py        # ~3 min on 20 cores
+for s in 07_model_evaluation_charts 08_model_interpretation 09_model_performance_comparison \
+         10_auc_summary 11_prediction_error_summary 12_normalized_confusion_matrices; do python scripts/$s.py; done
+```

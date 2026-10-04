@@ -14,7 +14,7 @@ from scipy import stats
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-INPUT_PATH = REPO_ROOT / "data" / "app_reviews_tagged.csv"
+INPUT_PATH = REPO_ROOT / "data" / "v1_most_relevant" / "app_reviews_tagged.csv"
 CHARTS_DIR = REPO_ROOT / "data" / "charts" / "timeseries"
 TABLES_DIR = REPO_ROOT / "data" / "timeseries"
 SUMMARY_PATH = REPO_ROOT / "data" / "timeseries_summary.json"
@@ -766,7 +766,7 @@ def main():
     write_table(fc, "weekly_forecast.csv")
 
     summary = {
-        "input": {"file": "data/app_reviews_tagged.csv", "date_column": DATE_COL, "rows": int(len(df)),
+        "input": {"file": "data/v1_most_relevant/app_reviews_tagged.csv", "date_column": DATE_COL, "rows": int(len(df)),
                   "first_review": str(df[DATE_COL].min()), "last_review": str(df[DATE_COL].max())},
         "weekly_aggregation": {"week_definition": "Monday-Sunday (pandas W-SUN), labelled by week_start",
                                "min_reviews_per_app_week": MIN_WEEK_N,

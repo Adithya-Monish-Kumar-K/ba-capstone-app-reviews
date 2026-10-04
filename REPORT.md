@@ -1,12 +1,10 @@
 # Mobile App Update Impact and Failure Detection
 
-**Final Project Report: Review 1 and Review 2**
+**Project Report: Review 1**
 
 Course: 23CSE452 Business Analytics
 
 Review 1: Data Analysis and Predictive Modelling 
-
-Review 2: Advanced Analytics, using Text Mining and Time-Series Analysis
 
 Team number: 10
 
@@ -26,13 +24,18 @@ Members:
 
 ### 1.1 Problem statement
 
-Apps like Swiggy, Zomato, Myntra, Paytm and PhonePe get thousands of Play Store reviews every day. Many of these reviews report real problems: a failed payment, a late delivery, a refund that never came, an app that crashes after an update. A product team cannot read all of them. So problems are noticed late, and it is hard to say which problem is the biggest or whether things are getting better or worse.
+Apps like Swiggy, Zomato, Blinkit, Flipkart, Amazon, Paytm and PhonePe get hundreds of Play Store reviews every day, and the busiest get more than a thousand. Many of these reviews report real problems: a failed payment, a late delivery, a refund that never came, an app that crashes after an update. A product team cannot read all of them. So problems are noticed late, and it is hard to say which problem is the biggest or whether things are getting better or worse.
 
 Our project asks three questions:
 
 1. What are users complaining about, and how does this differ from app to app?
-2. Can we automatically tell whether a review reports a problem?
-3. How do complaints change from week to week, and can we forecast the next few weeks?
+2. Can we automatically flag problem reviews, and say which failure they describe?
+3. Do some app versions bring more complaints than others (update impact)?
+
+Two terms are used throughout:
+
+- **Problem review:** a review rated 1 or 2 stars (`is_problematic = 1`). The star rating is the user's own judgement, so the classifier finds dissatisfied users. The 9 issue tags (Section 2.3) name the failure when the review text mentions one. Most reviews are very short (median 2 words), so many problem reviews say only "bad" or "worst app" and name no specific failure. Some are mis-ratings: the most common text among untagged 1–2 star reviews is "good" (8,342 reviews).
+- **Update impact:** how ratings and complaints change between app versions. In Review 1 we compare each version with its app's average (Section 4, charts 12 and 13).
 
 ### 1.2 Existing methods
 
@@ -51,15 +54,13 @@ Our project asks three questions:
 
 ### 1.4 Proposed approach
 
-We built one pipeline that goes from raw reviews to a dashboard:
+We built one pipeline that goes from raw reviews to a problem-review classifier:
 
-1. Collect 15,000 reviews ourselves from the Play Store (no ready-made dataset).
+1. Collect every review of 11 apps from 1 April to 20 September 2026 ourselves from the Play Store: 1,137,987 reviews after cleaning (no ready-made dataset).
 2. Clean the data.
 3. Tag each review with issue categories and score its sentiment (Text Mining).
-4. Explore the data and check for bias (EDA).
+4. Explore the data, compare app versions and check for collection bias (EDA).
 5. Build features and train a classifier that finds problem reviews (Predictive Modelling).
-6. Build weekly series and forecast them (Time-Series Analysis).
-7. Put everything into an interactive dashboard.
 
 ### 1.5 Business objective
 
@@ -67,7 +68,8 @@ Give a product or support team a quick and reliable view of:
 
 - which problems hurt users most in each app,
 - which new reviews need attention first,
-- whether the share of negative reviews this week is normal or unusual.
+- whether a new app version made things worse,
+- whether the number of negative reviews this week is normal or unusual.
 
 ---
 
@@ -77,33 +79,55 @@ Give a product or support team a quick and reliable view of:
 
 - Source: Google Play Store.
 - Tool: the `google-play-scraper` Python package. It calls the Play Store review endpoint directly. No login is needed.
-- Script: `scripts/01_scrape_reviews.py`.
-- Settings: language English, country India, sort order `MOST_RELEVANT`, 3,000 reviews per app.
+- Script: `scripts/01_scrape_reviews.py`. The list of apps is in `scripts/apps.py`.
+- Settings: language English, country India, sort order `NEWEST`. We collected **every review posted from 1 April 2026 to 20 September 2026**.
 - We did not use any dataset from Kaggle, UCI or GitHub.
 
-| App | Package ID | Category |
-|---|---|---|
-| Swiggy | in.swiggy.android | Food and Drink |
-| Zomato | com.application.zomato | Food and Drink |
-| Myntra | com.myntra.android | Shopping |
-| Paytm | net.one97.paytm | Finance |
-| PhonePe | com.phonepe.app | Finance |
+| Domain | App | Package ID | Category |
+|---|---|---|---|
+| Food & Grocery | Swiggy | in.swiggy.android | Food and Drink |
+| Food & Grocery | Zomato | com.application.zomato | Food and Drink |
+| Food & Grocery | Blinkit | com.grofers.customerapp | Food and Drink |
+| Food & Grocery | Domino's | com.Dominos | Food and Drink |
+| Shopping | Myntra | com.myntra.android | Shopping |
+| Shopping | Flipkart | com.flipkart.android | Shopping |
+| Shopping | Amazon | in.amazon.mShop.android.shopping | Shopping |
+| Shopping | Meesho | com.meesho.supply | Shopping |
+| Payments | Paytm | net.one97.paytm | Finance |
+| Payments | PhonePe | com.phonepe.app | Finance |
+| Payments | Google Pay | com.google.android.apps.nbu.paisa.user | Finance |
 
-Why `MOST_RELEVANT` and not `NEWEST`: a first try with `NEWEST` gave reviews from only about 4 days, because these apps get thousands of reviews daily. `MOST_RELEVANT` returns reviews from a much longer period, which we needed for trend analysis.
+Why `NEWEST` and a fixed start date: our first version used `MOST_RELEVANT` and 3,000 reviews per app. We tested that feed: for Swiggy it ran out after 11,200 reviews, while `NEWEST` returned more than 100,000 reviews for several apps. It also mixes years: Paytm and PhonePe went back to 2018, the other apps were almost all 2026. `NEWEST` has no limit. Collecting everything since one date gives every app the same time window, so apps can be compared week by week.
 
 ### 2.2 Dataset size
 
-| File | Rows | Columns | Made by |
+Each stage is stored as one compressed file per app, so that no file is larger than GitHub's 100 MB limit.
+
+| Files | Rows | Columns | Made by |
 |---|---:|---:|---|
-| `data/app_reviews_raw.csv` | 15,000 | 8 | Scraping |
-| `data/app_reviews_clean.csv` | 14,988 | 10 | Cleaning |
-| `data/app_reviews_tagged.csv` | 14,988 | 28 | Issue tagging and sentiment |
+| `data/raw/<app>.csv.gz` | 1,202,729 | 9 | Scraping |
+| `data/clean/<app>.csv.gz` | 1,137,987 | 11 | Cleaning |
+| `data/tagged/<app>.csv.gz` | 1,137,987 | 29 | Issue tagging and sentiment |
+
+| App | Reviews after cleaning | Reviews per day |
+|---|---:|---:|
+| Flipkart | 266,285 | 1,539 |
+| Blinkit | 228,446 | 1,320 |
+| Zomato | 150,560 | 870 |
+| Meesho | 102,686 | 594 |
+| PhonePe | 88,535 | 512 |
+| Myntra | 85,347 | 493 |
+| Swiggy | 74,768 | 432 |
+| Paytm | 44,658 | 258 |
+| Domino's | 43,629 | 252 |
+| Amazon | 32,753 | 189 |
+| Google Pay | 20,320 | 117 |
 
 ### 2.3 Key variables
 
 | Variable | Type | Meaning |
 |---|---|---|
-| `app_name` | Category | One of the five apps |
+| `app_name`, `domain` | Category | One of the 11 apps; Food & Grocery, Shopping or Payments |
 | `score` | Integer 1 to 5 | Star rating given by the user |
 | `content` | Text | Review text |
 | `thumbs_up` | Integer | Number of users who found the review helpful |
@@ -119,98 +143,110 @@ Why `MOST_RELEVANT` and not `NEWEST`: a first try with `NEWEST` gave reviews fro
 
 `is_problematic` = 1 if the rating is 1 or 2 stars, else 0.
 
-- Problematic: 11,108 reviews (74.1%)
-- Not problematic: 3,880 reviews (25.9%)
+- Problematic: 221,581 reviews (19.5%)
+- Not problematic: 916,406 reviews (80.5%)
 
 ### 2.5 Collection period and limitations
 
-- Collected on 20 September 2026.
-- Review dates run from 15 September 2018 to 18 September 2026.
-- Swiggy, Zomato and Myntra reviews are almost all from 2026. Only Paytm and PhonePe go back to 2018.
-- The sample is biased towards complaints. 69.2% of our reviews are 1 star, but the public rating of these apps is between 4.43 and 4.66. So we only compare app with app and week with week. We do not claim that 74% of all users are unhappy.
+- Review dates run from 1 April 2026 to 20 September 2026, the same for every app.
+- Most reviews are very short: the median is 2 words and 66% have 3 words or fewer ("good", "nice app").
+- Written reviews are harsher than the public rating, which also counts ratings without text. The gap is 0.0 to 1.4 stars depending on the app. So we compare apps and weeks with each other and do not report absolute satisfaction.
+- From 21 April to 5 May 2026, positive reviews are mostly missing for 5 apps (Section 4, Finding 3). These rows are kept and flagged.
+- Zomato has no reviews from 23 July 22:00 to 25 July 12:30. Asking the Play Store again returned the same counts, so the gap is in the source. Every other app has reviews on all 173 days.
 
 ### 2.6 Data sample
 
-| app_name | score | content (shortened) | thumbs_up | review_date | primary_issue | sentiment_label |
+| app_name | score | content | thumbs_up | review_date | primary_issue | sentiment_label |
 |---|---:|---|---:|---|---|---|
-| Swiggy | 1 | "i added 2 items to my cart and went to the payment page... no response from support for 15 minutes..." | 189 | 2025-08-14 | crash_bugs_stability | Negative |
-| Swiggy | 1 | "Worst app ever. Whenever I order from Instamart, the prices are always higher... I still didn't receive my refund..." | 3 | 2026-09-08 | customer_support | Negative |
+| Swiggy | 1 | "becoming worst and worst they are assging multiple orders for single delivery partner at the end all the orders are getting delayed" | 0 | 2026-05-02 | delivery_delay | Negative |
+| Amazon | 1 | "i return my Order product... but didn't get any Refund even After waiting for 20 Days" | 1 | 2026-07-14 | payment_refund | Neutral |
+| Flipkart | 5 | "nice app" | 0 | 2026-08-20 | none | Positive |
+| PhonePe | 5 | "Yes my phone pe app not working" | 0 | 2026-05-20 | none | Positive |
+
+The last row shows a real problem with the data: the user gave 5 stars to a complaint.
 
 ---
 
 ## 3. Data Cleaning and Preprocessing
 
-Script: `scripts/02_clean_reviews.py`. Results: `data/cleaning_results.json`.
+Script: `scripts/02_clean_reviews.py`. Results: `data/cleaning_results.json` (totals and per app).
 
 ### 3.1 Missing values
 
-- Review text: empty text was replaced with an empty string and then reviews with fewer than 3 characters were removed. None were found.
-- `app_version` is missing in 449 rows (3.0%). We kept these rows because the version is not used by the model. Removing them would throw away good review text.
+- Review text: empty text was replaced with an empty string, and reviews with fewer than 3 characters were removed (47,533 reviews, mostly "ok" or a single emoji).
+- `app_version` is missing in 152,017 rows (13.4%). We kept these rows because the version is not used by the model. Removing them would throw away good review text.
 - No other column has missing values.
 
 ### 3.2 Duplicates and outliers
 
 - Duplicates: checked using `review_id`. There were 0 duplicates.
-- Non-English reviews: a review was removed if less than 85% of its characters were ASCII. This removed 12 reviews.
-- Outliers in `thumbs_up`: 1,897 reviews (12.7%) are outside the Tukey fences, and the largest value is 46,743. These are real viral reviews, not errors, so we kept them. We use the median, log scale and rank-based tests so that they do not distort the results.
-- Outliers in `review_length`: only 9 reviews (0.06%), longest 223 words. Kept.
+- Reviews with no letters at all (only emojis or punctuation, such as "👍👍👍") were removed: 7,420 reviews.
+- Non-English reviews: a review was removed if fewer than 85% of its letters are basic Latin (a–z). Emojis, digits and punctuation are ignored, so "good 👍" is kept. This removed 9,789 reviews, 63.9% of them in Hindi (Devanagari) script and most of the rest in other Indian scripts such as Bengali and Telugu.
+- Our first version of this rule counted all characters, not just letters. Emojis then pushed about 76,000 short English reviews ("good 👍") below 85%, so they were wrongly removed. We found this during checking and changed the rule to letters only.
+- Outliers in `thumbs_up`: 93.6% of reviews have no upvotes, so every review with even one upvote is outside the Tukey fences (72,945 reviews, 6.4%). The largest value is 11,165. These are real, so we kept them and use log scale, medians and rank-based tests.
+- Outliers in `review_length`: 167,193 reviews (14.7%) are above the fence, which is only 11 words because the median is 2. The longest review has 167 words. Kept: the long reviews carry most of the information.
 
 ### 3.3 Encoding and scaling
 
 - Text was converted to numbers with TF-IDF (details in Section 5).
 - The nine issue categories were stored as 0/1 columns.
 - The 15 structural features were scaled with `StandardScaler` (mean 0, standard deviation 1).
-- Two fields were derived: `month` from `review_date`, and `review_length` as the word count.
+- Two fields were derived: `month` from `review_date`, and `review_length` as the word count. The `domain` of each app is added during collection.
 
 ### 3.4 Before and after
 
 | Step | Rows left |
 |---|---:|
-| Raw scraped data | 15,000 |
-| After removing duplicates | 15,000 |
-| After removing empty reviews | 15,000 |
-| After removing non-English reviews | 14,988 |
+| Raw scraped data | 1,202,729 |
+| After removing duplicates | 1,202,729 |
+| After removing empty and very short reviews | 1,155,196 |
+| After removing reviews with no letters | 1,147,776 |
+| After removing non-English reviews | 1,137,987 |
 
-Only 12 rows (0.08%) were removed. The columns went from 8 to 10 after cleaning, and to 28 after tagging and sentiment scoring.
+64,742 rows (5.4%) were removed. The columns went from 9 to 11 after cleaning, and to 29 after tagging and sentiment scoring.
 
 ---
 
 ## 4. Exploratory Analysis and Visualization
 
-Script: `scripts/05_eda.py`. It produces 13 charts in `data/charts/eda/` and saves every number in `data/eda_summary.json`. Full details are in `EDA.md`.
+Script: `scripts/05_eda.py`. It produces 15 charts in `data/charts/eda/` and saves every number in `data/eda_summary.json`. Full details are in `EDA.md`.
 
-### Finding 1: The sample is very negative, so only relative comparisons are safe
+### Finding 1: Two apps stand out, and the gaps between apps are stable
 
-![Rating distribution and gap to the public rating](data/charts/eda/eda_02_ratings_and_sample_bias.png)
+![Rating distribution and gap to the public rating](data/charts/eda/eda_02_ratings_vs_public.png)
 
-- 69.2% of reviews are 1 star and 17.5% are 5 star.
-- Every app's average rating in our sample is 2.0 to 3.3 stars below its public rating.
-- Business meaning: these numbers must not be reported as "user satisfaction". They are useful for ranking problems and comparing apps, which is what we do.
+- 67% of reviews are 5 stars and 17% are 1 star.
+- Amazon (54% rated 1 or 2 stars) and Swiggy (35%) are far harsher than every other app (10% to 24%). PhonePe (9.8%) and Myntra (10.3%) are the mildest.
+- From May–June to August–September, 7 of 11 apps move by less than 2.5 percentage points. Amazon got worse (+9.6 points of 1–2 star reviews) and Google Pay got better (−5.5 points).
+- Business meaning: the differences between apps are large and lasting, so they reflect real differences in service, not random noise.
 
-### Finding 2: Each app has its own type of problem
+### Finding 2: Each domain has its own type of problem
 
 ![Issue categories by app](data/charts/eda/eda_06_issue_by_app.png)
 
-- Customer Support is the most common issue overall: 34.4% of reviews, with an average rating of 1.19 stars. It is 48% at Swiggy and 45% at Zomato.
-- Delivery Delay is about 29% at Swiggy and Zomato, but only 1 to 2% at Paytm and PhonePe.
-- Cancellation and Return is 40% at Myntra.
-- Crash and Stability is 17% at Paytm, against 2 to 3% at Swiggy, Zomato and Myntra.
-- Order Quality is rare (6.6%) but has the lowest rating of all (1.13 stars).
+- Customer Support is the most common issue (4.1% of all reviews) and the most damaging (average rating 1.23 stars).
+- Shopping apps are led by Cancellation & Return. Food & Grocery apps are led by Customer Support. Delivery Delay is about 50 times more common in Food & Grocery than in Payments.
+- Amazon has the highest rate of almost every issue: Customer Support 17%, Cancellation & Return 13%, Delivery Delay 9%.
+- Crash & Stability is highest at Google Pay (2.7%), Paytm (2.2%) and Amazon (2.0%).
+- Only 10% of reviews carry any issue tag, because most reviews are too short to name a problem.
 - Business meaning: one common fix will not work. Each company should fix its own top problem first.
 
-### Finding 3: The data changes suddenly in July 2026, and it is not because the apps improved
+### Finding 3: The data has a gap in late April, and it is not because users got angrier
 
-![The July 2026 change](data/charts/eda/eda_11_july_regime_shift.png)
+![The late-April feed gap](data/charts/eda/eda_15_april_gap.png)
 
-- From July 2026, all five apps have 2.9 times more reviews per day, and the reviews are 27 to 50% shorter.
-- Issue rates seem to drop by 7 to 16 percentage points. But when we compare reviews of the same length, the drop is only 1 to 5 points.
-- Business meaning: this is a change in what the Play Store feed returned, not a real improvement. Anyone reading the trend must know this, or they will report a false improvement.
+- From 21 April to 5 May 2026, positive reviews fall by 59% to 90% for Swiggy, Blinkit, Domino's, Flipkart and Amazon, while negative reviews per day fall only 3% to 37%. Negative reviews did not rise, so users did not get angrier.
+- Mainly because the short "good" and "nice" reviews are missing, Swiggy's weekly share of 1–2 star reviews jumps from about 33% to 87% for one week and then returns to normal.
+- A scraper error would remove all reviews, not only positive ones. So the cause is on the Play Store side.
+- Business meaning: a "percent negative" dashboard would have raised a false alarm here. Counting negative reviews per day is much less affected. We kept the rows, flagged them, and left them out of trend comparisons.
 
 ### Other findings
 
-- Unhappy users write about twice as much: the median is 59 words for 1-star reviews and 30 words for 5-star reviews.
-- A few reviews get most of the upvotes: the top 1% of reviews hold 85% of all upvotes.
-- App versions: 8 of 84 versions have a clearly lower rating than their app's average. In these versions the extra complaints are about delivery and support, not about crashes.
+- Unhappy users write much more: the median is 14 words for 1-star reviews and 2 words for 5-star reviews.
+- Other users upvote complaints: 1-star reviews are 17% of reviews but receive 59% of all upvotes.
+- Our first version reported a sudden change in all apps in July 2026. With the complete data there is no such change (no app's volume rises by more than 2%, and review length is unchanged in 10 of 11 apps), so that change came from the old `MOST_RELEVANT` sampling.
+- 54% of 1–2 star reviews have no issue tag. Many of them are praise ("nice product", "mast", "super"), which means users who gave the wrong star rating.
+- App versions: 49 of 544 versions have a clearly lower rating than their app's average. Every Amazon version released since mid-July (five versions) is among them.
 
 ---
 
@@ -220,36 +256,35 @@ Script: `scripts/05_feature_engineering.py`.
 
 ### 5.1 Method
 
-1. TF-IDF on the review text: up to 5,000 terms, single words and two-word phrases, English stop words removed, terms must appear in at least 3 reviews and in at most 95% of reviews.
-2. Truncated SVD reduces the 5,000 TF-IDF columns to 100 components.
-3. The 100 text components are joined with 15 structural features.
+1. TF-IDF on the review text: up to 20,000 terms, single words and two-word phrases, terms must appear in at least 3 reviews and in at most 95% of reviews. No stop-word list is used: the standard English list removes "not", "no" and "never", which would make "not good" look like "good".
+2. Truncated SVD reduces the 20,000 TF-IDF columns to 200 components.
+3. The 200 text components are joined with 15 structural features.
 
 ### 5.2 Features used
 
 | Group | Count | Features |
 |---|---:|---|
-| Text components | 100 | SVD components of the TF-IDF matrix |
+| Text components | 200 | SVD components of the TF-IDF matrix |
 | Issue flags | 9 | One 0/1 column for each issue category |
 | Sentiment | 4 | VADER negative, neutral, positive and compound scores |
 | Other | 2 | `review_length`, `thumbs_up` |
-| Total | 115 | |
+| Total | 215 | |
 
 ### 5.3 Justification
 
 - TF-IDF gives more weight to words that are special to a review and less to words that appear everywhere.
-- A 5,000-column sparse matrix is slow and noisy for a Random Forest. SVD gives a small dense matrix.
+- A 20,000-column sparse matrix is slow and noisy for a Random Forest, especially with more than a million rows. SVD gives a small dense matrix.
 - The issue flags and sentiment scores add information that single words miss, for example whether the review is about a refund and how strongly negative it is.
-- `review_length` is included because the EDA showed that longer reviews get more issue tags (Spearman 0.40). Keeping length as its own feature lets the model separate "long" from "has a problem".
+- `review_length` is included because the EDA showed that complaints are much longer than praise (14 vs 2 words), and that longer reviews get more issue tags (Spearman 0.46).
 
 ### 5.4 Effect
 
-- Text features went from 5,000 columns to 100 columns (50 times smaller).
-- The 100 components keep 21.8% of the TF-IDF variance. This is normal for short, sparse text.
-- Final model input: 14,988 rows and 115 columns.
-- With these features both models reach a ROC-AUC of about 0.95 (Section 7).
-- In the Random Forest, the most important features are the sentiment scores (compound 0.103, negative 0.093, positive 0.092), followed by the first three text components, the Customer Support flag (0.033) and review length (0.023).
+- Text features went from 20,000 columns to 200 columns (100 times smaller).
+- The 200 components keep 62.7% of the TF-IDF variance (21.8% in our first version). The vocabulary of short reviews is small, so fewer components capture more of it.
+- Final model input: 1,137,987 rows and 215 columns.
+- In the Random Forest, the most important features are the positive, compound and negative sentiment scores (0.155, 0.136, 0.094), followed by text components 12 (0.059), 11 (0.042) and 7 (0.039), the neutral sentiment score (0.039) and review length (0.035).
 
-We did not train a model on the full 5,000 TF-IDF columns, so we cannot say how much accuracy the reduction gained or lost. The benefit we can show is the smaller size.
+Our models do not use the full 20,000 TF-IDF columns, so this report does not measure how much accuracy the reduction gains or loses. The benefit we can show is the smaller size.
 
 ---
 
@@ -260,10 +295,11 @@ Script: `scripts/06_model_training.py`. Saved models are in `models/`.
 | Item | Details |
 |---|---|
 | Prediction task | Binary classification: is the review problematic (1 or 2 stars) or not |
-| Models | Logistic Regression and Random Forest |
-| Data split | 80% training (11,990 reviews) and 20% testing (2,998 reviews), stratified, random state 42 |
+| Models | Logistic Regression and Random Forest, compared with a majority-class baseline |
+| Data split | 80% training (910,389 reviews) and 20% testing (227,598 reviews), stratified, random state 42 |
+| Extra test | Out-of-time: train on April–August 2026, test on 1–20 September 2026 |
 | Logistic Regression settings | `class_weight="balanced"`, `max_iter=1000` |
-| Random Forest settings | 200 trees, `class_weight="balanced"` |
+| Random Forest settings | 150 trees, each trained on 30% of the rows, at least 100 reviews per leaf, `class_weight="balanced"` |
 | Tuning | Default values were used for the other parameters. No grid search was done. |
 
 ### Why these two models
@@ -271,7 +307,8 @@ Script: `scripts/06_model_training.py`. Saved models are in `models/`.
 - Logistic Regression is a simple and fast baseline. Its coefficients show the direction of each feature.
 - Random Forest can learn non-linear patterns and combinations of features, and it gives feature importance.
 - Using one linear and one tree-based model lets us compare two different kinds of error.
-- `class_weight="balanced"` is used because 74% of the reviews are in the problematic class.
+- `class_weight="balanced"` is used because only 19.5% of the reviews are in the problematic class.
+- The Random Forest is limited (30% of rows per tree, at least 100 reviews per leaf) because fully grown trees on 910,000 rows would make a model file of roughly 2 GB (our first model was 26 MB for 12,000 rows). The limited model is 9.8 MB.
 
 ---
 
@@ -279,378 +316,123 @@ Script: `scripts/06_model_training.py`. Saved models are in `models/`.
 
 Scripts: `scripts/07` to `scripts/12`. Charts are in `figures/`. Full details are in `MODEL_EVALUATION.md`.
 
-### 7.1 Results on the test set (2,998 reviews)
+### 7.1 Results on the test set (227,598 reviews)
 
 | Model | Accuracy | Precision | Recall | F1 | ROC-AUC | PR-AUC |
 |---|---:|---:|---:|---:|---:|---:|
-| Logistic Regression | 0.893 | 0.949 | 0.904 | 0.926 | 0.951 | 0.980 |
-| Random Forest | 0.906 | 0.905 | 0.976 | 0.939 | 0.944 | 0.974 |
+| Always "not problematic" (baseline) | 0.805 | 0.000 | 0.000 | 0.000 | 0.500 | 0.195 |
+| Logistic Regression | 0.922 | 0.767 | 0.858 | 0.810 | 0.940 | 0.871 |
+| Random Forest | 0.914 | 0.737 | 0.870 | 0.798 | 0.941 | 0.873 |
 
 ![Model comparison](figures/model_performance_comparison.png)
+
+Out-of-time test (train April–August, test 1–20 September): Random Forest PR-AUC 0.866, Logistic Regression 0.862.
+
+By domain (Random Forest PR-AUC): Food & Grocery 0.895, Shopping 0.869, Payments 0.750.
 
 ### 7.2 Confusion matrix
 
 | Model | True negative | False positive | False negative | True positive |
 |---|---:|---:|---:|---:|
-| Logistic Regression | 667 | 109 | 213 | 2,009 |
-| Random Forest | 547 | 229 | 53 | 2,169 |
+| Logistic Regression | 171,744 | 11,538 | 6,297 | 38,019 |
+| Random Forest | 169,539 | 13,743 | 5,756 | 38,560 |
 
 ![Confusion matrices](figures/normalized_confusion_matrix_comparison.png)
 
-![ROC curves](figures/roc_curves.png)
+![Precision-recall curves](figures/precision_recall_curves.png)
 
-This is a classification task, so regression metrics (R squared, MAE, MSE, RMSE) do not apply to the classifier. MAE and RMSE are used later for the forecasts in Section 9.
+This is a classification task, so regression metrics (R squared, MAE, MSE, RMSE) do not apply to the classifier.
 
 ### 7.3 Interpretation
 
 Strengths:
 
-- Both models separate the two classes well (ROC-AUC 0.94 to 0.95).
-- A model that always says "problematic" would get 74.1% accuracy. Both models are well above this.
-- The two models make different mistakes. Random Forest misses only 53 problem reviews but raises 229 false alarms. Logistic Regression raises only 109 false alarms but misses 213 problem reviews.
+- Both models separate the two classes well (ROC-AUC 0.94) and are more than 91% accurate. PR-AUC (0.87) is more than four times the 0.195 of random guessing.
+- A model that always says "not problematic" gets 80.5% accuracy but finds no complaints. The two models find 86% (Logistic Regression) and 87% (Random Forest) of complaints.
+- The two models are close. Logistic Regression raises 2,205 fewer false alarms (16% fewer) and so has the higher accuracy, precision and F1; Random Forest finds 541 more complaints and has the slightly higher PR-AUC.
+- The result holds on future weeks: training on April–August and testing on 1–20 September lowers PR-AUC by less than 0.01.
 
 Limitations:
 
-- The target comes from the star rating. The model predicts "low rating", not a confirmed app failure.
-- Only one train/test split was used, with no cross-validation.
+- The target comes from the star rating. The model predicts "low rating", not a confirmed app failure. Some users give 1 star with praise text, and these count as problems.
+- Most reviews are 1 to 3 words, so for them the model mostly reads sentiment.
+- Payment apps are harder (PR-AUC 0.75), partly because complaints there are rarer and shorter.
 - TF-IDF, SVD and the scaler were fitted on all rows before the split. These steps do not use the target, but a stricter setup would fit them on the training rows only.
-- The split is random, so it mixes reviews from before and after the July 2026 change. The scores do not tell us how the model would do on future weeks.
 
 ### 7.4 Initial business findings
 
-- Reviews can be sorted automatically. Problem reviews can be sent to the support team without reading every review.
-- If missing a complaint is costly, use Random Forest (recall 97.6%).
-- If the support team is small and false alarms waste time, use Logistic Regression (precision 94.9%).
+- Reviews can be sorted automatically. Of about 52,000 reviews the Random Forest flags in the test set, about 3 in 4 are real complaints, and it finds 87.0% of all complaints. Logistic Regression flags about 50,000, of which about 77% are real complaints.
+- Choose the model by cost: Random Forest when missing a complaint is costly, Logistic Regression when the team's reading time is the limit.
+- For payment apps, expect about 4 in 10 flags to be false alarms; a person should check them.
 - Sentiment is the strongest signal. The way a user writes tells us a lot about the rating they will give.
 
 ---
 
-## 8. Method 1: Text Mining
-
-Scripts: `scripts/03_tag_issues.py` and `scripts/04_sentiment_analysis.py`. Full details are in `TEXT_MINING.md`.
-
-### 8.1 Data preparation and implementation
-
-Issue tagging:
-
-- We defined 9 issue categories that fit food delivery, shopping and payment apps.
-- Each category has a list of keyword patterns. If a review matches a pattern, the category is marked 1.
-- A review can have more than one category. For example, a crash can lead to a double payment and then a support complaint.
-- The category with the most matches becomes the `primary_issue`.
-
-| Category | Examples of what it covers |
-|---|---|
-| Crash and Stability | App crashes, freezing, loading errors |
-| Payment and Refund | Failed payment, money deducted, refund delay |
-| Delivery Delay | Late delivery, rider delay, wrong tracking |
-| Order Quality | Wrong or missing item, damaged or stale product |
-| Cancellation and Return | Cannot cancel, return rejected, pickup delay |
-| Customer Support | No reply, chatbot loop, ticket closed without a fix |
-| Account, Login and OTP | OTP not received, login failure, blocked account |
-| Pricing and Fraud | Hidden fees, overcharging, coupon not applied |
-| UI/UX and Update | Bad update, confusing screen, too many ads |
-
-Sentiment scoring:
-
-- We used VADER from the NLTK library. It is rule-based and made for short informal text. It handles capital letters, exclamation marks and words like "very".
-- It needs no training, so it cannot leak information into the classifier.
-- Each review gets a compound score from -1 to +1. The label is Negative if the score is -0.05 or below, Positive if it is +0.05 or above, and Neutral in between.
-
-### 8.2 Evaluation and interpretation
-
-Issue tagging results:
-
-- 9,801 of 14,988 reviews (65.4%) have at least one issue tag. On average a review has 1.12 tags.
-
-| Issue | Reviews | % of all reviews | Mean sentiment | Average rating |
-|---|---:|---:|---:|---:|
-| Customer Support | 5,150 | 34.4 | -0.331 | 1.19 |
-| Cancellation and Return | 2,923 | 19.5 | -0.348 | 1.56 |
-| Delivery Delay | 2,301 | 15.4 | -0.437 | 1.23 |
-| Payment and Refund | 2,278 | 15.2 | -0.379 | 1.27 |
-| Pricing and Fraud | 1,414 | 9.4 | -0.445 | 1.30 |
-| Order Quality | 996 | 6.6 | -0.504 | 1.13 |
-| Crash and Stability | 938 | 6.3 | -0.102 | 1.71 |
-| UI/UX and Update | 364 | 2.4 | +0.139 | 2.71 |
-| Account, Login and OTP | 356 | 2.4 | -0.170 | 1.49 |
-
-![Mean sentiment by issue category](data/charts/03_sentiment_by_issue_category.png)
-
-Sentiment validation against star ratings:
-
-- Pearson correlation between the sentiment score and the rating: 0.60.
-- Spearman correlation: 0.56.
-- The sentiment label matches the rating class (1-2 stars negative, 3 stars neutral, 4-5 stars positive) for 72.0% of reviews.
-
-| Rating | Reviews | Mean sentiment | % Negative | % Positive |
-|---|---:|---:|---:|---:|
-| 1 star | 10,366 | -0.355 | 71.9 | 24.1 |
-| 2 stars | 742 | -0.136 | 54.7 | 35.3 |
-| 3 stars | 579 | +0.069 | 41.3 | 49.7 |
-| 4 stars | 673 | +0.399 | 19.0 | 74.4 |
-| 5 stars | 2,628 | +0.673 | 6.7 | 90.4 |
-
-![Sentiment score by star rating](data/charts/01_sentiment_validation_by_rating.png)
-
-Sentiment by app:
-
-| App | Average rating | % Negative | % Positive | Top issue |
-|---|---:|---:|---:|---|
-| Swiggy | 1.21 | 73.8 | 22.8 | Customer Support |
-| Zomato | 1.43 | 68.5 | 27.9 | Customer Support |
-| Paytm | 2.06 | 49.7 | 43.3 | Customer Support |
-| Myntra | 2.65 | 47.3 | 50.9 | Cancellation and Return |
-| PhonePe | 2.46 | 40.8 | 52.8 | Customer Support |
-
-![Sentiment by app](data/charts/02_sentiment_distribution_by_app.png)
-
-What this tells us:
-
-- Problems with money and physical goods make users the angriest. Order Quality has the most negative sentiment (-0.504), then Pricing and Fraud (-0.445).
-- Customer Support is the most common complaint in four of the five apps.
-- Crash reviews use calmer, more technical language (-0.102).
-
-Limitations of the text mining:
-
-- 24.1% of 1-star reviews get a positive sentiment label. These are mostly sarcastic reviews, or reviews that start politely before complaining. VADER cannot detect sarcasm.
-- The tagger looks for keywords and does not know if the user is praising or complaining. 333 five-star reviews are tagged Cancellation and Return, and 92% of them are Myntra users praising easy returns.
-- 22% of 1-2 star reviews get no tag. Missed topics include Paytm security-scan warnings, QR scanning, notifications and rewards.
-
----
-
-## 9. Method 2: Time-Series Analysis
-
-Script: `scripts/13_time_series_forecast.py`. Full details are in `TIME_SERIES.md`.
-
-### 9.1 Data preparation and implementation
-
-- Input: `data/app_reviews_tagged.csv`, using the `review_date` column.
-- Reviews were grouped into Monday-to-Sunday weeks, for each app and for all apps together.
-- Weekly measures: number of reviews, average rating, share of 1-2 star reviews, share of negative-sentiment reviews, share of reviews with an issue tag, and the share for each of the 9 issue categories.
-- Weeks with no reviews are kept with a count of 0. We did not fill them in with estimated values.
-- The last week (14 to 20 September) is not complete, so it was left out.
-- Modelling window: 20 April to 13 September 2026. These are the 21 complete weeks in which every app has at least 30 reviews. They contain 12,428 reviews (82.9% of the data).
-- We did not forecast review volume. Each app was scraped up to a fixed 3,000 reviews, so the weekly count shows how the feed spread those reviews over time. It does not show how many reviews users actually posted.
-
-Forecasting models (all simple and easy to explain):
-
-| Model | How it forecasts |
-|---|---|
-| Naive | Same as last week |
-| Mean of all history | Average of all past weeks |
-| Level-shift mean | Average of the weeks after the July 2026 change |
-| 4-week moving average | Average of the last 4 weeks |
-| Simple exponential smoothing (SES) | Weighted average that gives more weight to recent weeks |
-
-Why not ARIMA or seasonal models: 21 weeks is too short. There is no full year to learn seasonality from, and there is a sudden level change in the middle of the series.
-
-Test setup:
-
-- The last 6 weeks (3 August to 13 September) were held out as the test period.
-- Each test week was forecast 1, 2, 3 and 4 weeks ahead, using only the weeks before it.
-- No test week is used in training, so there is no data leakage.
-- Error measures: MAE, RMSE, bias, and skill compared with the naive forecast.
-- Final forecast: SES, for the 4 weeks starting 14 September, 21 September, 28 September and 5 October 2026, with an 80% prediction interval.
-
-### 9.2 Evaluation and interpretation
-
-Weekly trend:
-
-![Weekly trends by app](data/charts/timeseries/ts_03_weekly_trend_by_app.png)
-
-| Series | % rated 1-2 stars, before July | After July | Change |
-|---|---:|---:|---:|
-| Swiggy | 97.8 | 93.4 | -4.3 |
-| Zomato | 88.9 | 88.5 | -0.4 |
-| Myntra | 63.6 | 54.3 | -9.3 |
-| Paytm | 74.5 | 60.8 | -13.8 |
-| PhonePe | 65.7 | 43.5 | -22.2 |
-| All apps | 77.9 | 71.1 | -6.8 |
-
-- The weekly series shows one step down around 1 July 2026 and is then flat.
-- After the step, no app shows a statistically significant trend in rating, 1-2 star share, sentiment or issue rate.
-- As explained in Section 4, most of the step comes from the change in sampling.
-
-Forecast accuracy on the 6 test weeks (MAE in percentage points for the share of 1-2 star reviews, 1 to 4 weeks ahead):
-
-| Series | Naive | All-history mean | Level-shift mean | 4-week average | SES |
-|---|---:|---:|---:|---:|---:|
-| Swiggy | 1.31 | 2.98 | 0.85 | 1.03 | 1.16 |
-| Zomato | 2.06 | 1.25 | 1.21 | 1.18 | 1.23 |
-| Myntra | 7.94 | 6.74 | 5.73 | 6.65 | 7.06 |
-| Paytm | 5.04 | 13.13 | 6.13 | 5.35 | 4.77 |
-| PhonePe | 5.04 | 17.72 | 5.97 | 4.89 | 5.34 |
-| All apps | 2.65 | 5.85 | 2.68 | 2.75 | 3.05 |
-
-![Forecast accuracy by model](data/charts/timeseries/ts_05_forecast_backtest_accuracy.png)
-
-- SES beats the naive forecast in 19 of the 24 series we tested (6 series and 4 measures).
-- The level-shift mean has the best average rank (2.04), then the 4-week average (2.29), then SES (2.67). The differences among these three are small.
-- The mean of all history is the worst model in 18 of 24 series, because it ignores the July change.
-- For Swiggy and Zomato the error is about 1 point. This is as low as the weekly sample size allows.
-- The 80% intervals are on the safe side: 92% of the actual test values fall inside them.
-
-Forecast for the next 4 weeks (SES):
-
-| Series | % rated 1-2 stars | 80% interval at week 4 | Average rating |
-|---|---:|---|---:|
-| Swiggy | 93.2 | 89.0 to 97.4 | 1.25 |
-| Zomato | 88.6 | 84.8 to 92.5 | 1.41 |
-| Myntra | 58.1 | 45.3 to 70.9 | 2.74 |
-| Paytm | 58.7 | 46.5 to 71.0 | 2.54 |
-| PhonePe | 38.2 | 17.0 to 59.4 | 3.23 |
-| All apps | 67.9 | 61.5 to 74.2 | 2.20 |
-
-![Forecast of the share of 1-2 star reviews, by app](data/charts/timeseries/ts_07_forecast_low_star_by_app.png)
-
-Search for sudden spikes:
-
-- For each app, each issue and each week, we checked whether the issue rate was far above that app's normal rate.
-- Only 1 of 523 cases was flagged (Swiggy, Order Quality, week of 29 June), and about 1 would be expected by chance. So no failure spike linked to a release is visible.
-
-Limitations of the time-series analysis:
-
-- Only 21 weeks of data, with one sudden change in the middle.
-- The forecast is a flat line. It gives the expected level, not a rise or fall.
-- The forecast holds only if the Play Store feed keeps behaving as it has since July.
-- Weekly samples are small (38 to 312 reviews per app), so 1 to 4 points of error is unavoidable.
-
----
-
-## 10. Combined Business Insights and Recommendations
-
-### 10.1 What the methods say together
-
-- Text Mining tells us what the problems are. Time-Series tells us when they move. The classifier finds which reviews carry a problem. EDA tells us how far the data can be trusted.
-- Weekly negative sentiment moves together with the weekly share of 1-2 star reviews (correlation 0.82 for all apps). So sentiment can be used as an early signal even before ratings are averaged.
-- The issue mix of each app stays the same from week to week. The problems are steady and long-running. They are not short spikes.
-- The one big movement in the data (July 2026) comes from how the reviews were sampled. All four stages point to this.
-- The star-rating target used by the classifier is the same quantity that the time-series tracks each week (share of 1-2 star reviews). Its level is not fixed: 77.9% before July and 71.1% after.
-
-### 10.2 Recommendations
-
-1. Swiggy and Zomato: fix customer support first. It appears in 48% and 45% of their reviews, with an average rating of 1.19 stars. Delivery delay (about 29%) comes next.
-2. Myntra: review the cancellation and return process. It appears in 40% of reviews.
-3. Paytm: look into crashes and stability. This issue is in 17% of reviews, and it is the one major issue that did not fall after July (18.9% to 20.1%).
-4. Treat Order Quality complaints as high priority in all apps. They are few (6.6%) but have the worst rating (1.13 stars) and the most negative sentiment.
-5. Use the classifier to sort incoming reviews. Use Random Forest when no complaint should be missed and Logistic Regression when false alarms must be low.
-6. Track the weekly share of 1-2 star reviews against the forecast band. A week outside the 80% band should be checked. This works well for Swiggy and Zomato, whose bands are narrow (about 4 points on each side). The band is too wide for PhonePe (about 21 points on each side).
-7. Collect reviews every week using the `NEWEST` order, not one large `MOST_RELEVANT` pull. This removes the sampling problem and makes it possible to measure the effect of each app update.
-8. Improve the tagger: separate praise from complaints for returns, and add patterns for security warnings, QR scanning, notifications and rewards.
-
----
-
-## 11. Interactive Dashboard
-
-Files: `dashboard/app.py`, `dashboard/utils.py`, `dashboard/charts.py`. Built with Streamlit and Plotly.
-
-How to run:
-
-```bash
-pip install -r dashboard/requirements.txt
-streamlit run dashboard/app.py
-```
-
-The dashboard reads the files already produced by the scripts. It does not run the analysis again, so it opens quickly.
-
-Filters in the sidebar:
-
-- App: All apps or one of the five apps
-- Period: common window, 2026 to date, full history, or a custom date range
-- Metric: review volume, average rating, share of 1-2 stars, share of 4-5 stars, negative sentiment, issue-tag rate, review length
-- Option to hide weeks with fewer than 30 reviews
-
-| Tab | What it shows |
-|---|---|
-| Overview | 12 summary numbers, app comparison chart and table. When one app is chosen it also shows that app's profile. |
-| Weekly trends | The chosen metric by week, for each app or pooled, and the weekly rating mix |
-| Forecast | History, 4-week forecast and 80% band, with a choice of metric, model and horizon, and the accuracy of each model |
-| Sentiment and issues | Sentiment split, rating split, issue ranking, app by issue heatmap, weekly issue trend |
-| Key findings | Ten main findings, with the numbers read from the saved result files |
-
-All charts update when a filter is changed, and hovering over a chart shows the exact value and the number of reviews behind it.
-
-![Dashboard: overview tab](docs/images/dashboard_overview.png)
-
-![Dashboard: weekly trends tab](docs/images/dashboard_weekly_trends.png)
-
-![Dashboard: forecast tab](docs/images/dashboard_forecast.png)
-
----
-
-## 12. Project Tracking
-
-- Tool: GitHub (issues and commit history).
-- Link: https://github.com/Adithya-Monish-Kumar-K/ba-capstone-app-reviews
+## 8. Project Tracking
+
+- Tool: GitHub Projects (board), with GitHub issues and pull requests.
+- Board: https://github.com/users/Adithya-Monish-Kumar-K/projects/4
+- Repository: https://github.com/Adithya-Monish-Kumar-K/ba-capstone-app-reviews
 - Stages used on the board: Backlog, To Do, In Progress, Review/Testing, Completed.
-- Each stage of the pipeline was split into issues and assigned to one member. The evidence for each issue is the script, data file, chart or document listed below.
+- Each stage of the pipeline was split into issues and assigned to the member or members who did it (EDA and predictive modelling were each done by two members together). The evidence for each issue is the script, data file, chart or document listed below.
 
 | Stage | Issues | Owner | Evidence |
 |---|---|---|---|
-| Data collection and cleaning | Stage 1-2 | Aditya Monish Kumar K | `scripts/01`, `scripts/02`, `data/app_reviews_raw.csv`, `data/app_reviews_clean.csv`, `DATA_SOURCES.md` |
-| Text mining | #101 to #103 | Regella Krishna Saketh | `scripts/03`, `scripts/04`, `data/app_reviews_tagged.csv`, `data/charts/`, `TEXT_MINING.md` |
-| Exploratory data analysis | #104 to #106 | Akshay KS | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `EDA.md` |
-| Predictive modelling | #107 to #110 | Harshini Vennela | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
-| Time-series | #111 | Kanishka D | `scripts/13_time_series_forecast.py`, `data/timeseries/`, `data/charts/timeseries/`, `TIME_SERIES.md` |
-| Dashboard | #112 | Kanishka D | `dashboard/` |
-| Slides, report and final documents | #113, #114 | Kanishka D | `docs/`, `REPORT.md`|
+| Data collection and cleaning | #53, #54, #56 to #58 | Aditya Monish Kumar K | `scripts/01`, `scripts/02`, `scripts/apps.py`, `scripts/data_io.py`, `data/raw/`, `data/clean/`, `DATA_SOURCES.md` |
+| Exploratory data analysis | #104 to #106, #118 to #120 | Akshay KS and Regella Krishna Saketh | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `EDA.md` |
+| Predictive modelling | #107 to #110 | Harshini Vennela and Kanishka D | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
 
 
 ---
 
-## 13. Individual Contributions
+## 9. Individual Contributions
 
 | Member | Register number | Role | Work completed | Evidence |
 |---|---|---|---|---|
-| Aditya Monish Kumar K | CB.SC.U4CSE23103 | Data collection and preprocessing | Wrote the Play Store scraper and collected 15,000 reviews of five apps. Removed duplicates, empty and non-English reviews. Added the month and review length fields. Wrote the data source document. | `scripts/01_scrape_reviews.py`, `scripts/02_clean_reviews.py`, `data/app_reviews_raw.csv`, `data/app_reviews_clean.csv`, `data/app_metadata.csv`, `DATA_SOURCES.md` |
-| Regella Krishna Saketh | CB.SC.U4CSE23649 | Text mining | Designed the 9 issue categories and the keyword tagger. Scored sentiment with VADER and checked it against star ratings. Made 4 charts and the summary tables. | `scripts/03_tag_issues.py`, `scripts/04_sentiment_analysis.py`, `data/app_reviews_tagged.csv`, `data/charts/`, `TEXT_MINING.md` |
-| Akshay KS | CB.SC.U4CSE23104 | Exploratory data analysis | Made 13 charts and ran the statistical tests. Found the sample bias and the July 2026 sampling change. Prepared the monthly and version tables used by later stages. | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `data/eda/`, `EDA.md` |
-| Harshini Vennela | CB.SC.U4CSE23455 | Feature engineering and predictive model | Built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
-| Kanishka D | CB.SC.U4CSE23155 | Time-series, dashboard and final assembly | Built the weekly tables and the forecasting test with five models. Built the Streamlit dashboard. Prepared the slide deck, this report, the final notebook and the contribution summary. | `scripts/13_time_series_forecast.py`, `data/timeseries/`, `data/charts/timeseries/`, `TIME_SERIES.md`, `dashboard/`, `slides/`, `REPORT.md`, `notebooks/` |
+| Aditya Monish Kumar K | CB.SC.U4CSE23103 | Data collection and preprocessing | Wrote the Play Store scraper. Collected the first dataset (15,000 reviews of five apps), then rebuilt the collection as every review of 11 apps from 1 April to 20 September 2026 (1,202,729 raw, 1,137,987 clean). Removed duplicates, empty reviews, reviews without letters and non-English reviews. Added the month and review length fields. Wrote the data source document. | `scripts/01_scrape_reviews.py`, `scripts/02_clean_reviews.py`, `scripts/apps.py`, `scripts/data_io.py`, `data/raw/`, `data/clean/`, `data/app_metadata.csv`, `DATA_SOURCES.md` |
+| Regella Krishna Saketh | CB.SC.U4CSE23649 | Exploratory data analysis (with Akshay KS) | With Akshay KS, built the EDA script and ran the statistical tests (15 charts on the current data): coverage and bias audit, issue analysis and version analysis. | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `data/eda/`, `EDA.md` |
+| Akshay KS | CB.SC.U4CSE23104 | Exploratory data analysis (with Regella Krishna Saketh) | With Regella Krishna Saketh, built the EDA script and ran the statistical tests (15 charts on the current data). On the first dataset, found the sample bias and the July 2026 sampling change. Prepared the monthly and version tables used by later stages. | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `data/eda/`, `EDA.md` |
+| Harshini Vennela | CB.SC.U4CSE23455 | Feature engineering and predictive model (with Kanishka D) | With Kanishka D, built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
+| Kanishka D | CB.SC.U4CSE23155 | Feature engineering and predictive model (with Harshini Vennela) | With Harshini Vennela, built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
 
-All planned work for Review 1 and Review 2 is complete. There are no pending tasks.
+Review 1 work is complete.
 
 ---
 
-## 14. Conclusion
+## 10. Conclusion
 
-We collected 15,000 Play Store reviews of five Indian apps ourselves and built a complete pipeline on them: cleaning, issue tagging, sentiment scoring, exploratory analysis, a problem-review classifier, weekly forecasting and an interactive dashboard.
+We collected 1,137,987 Play Store reviews of 11 Indian apps ourselves and built a pipeline on them: cleaning, issue tagging, sentiment scoring, exploratory analysis and a problem-review classifier.
 
 The main things we learned:
 
 - Complaints are mostly about service, not about the app software. Customer support, delivery, refunds and returns come up far more often than crashes.
-- Each app has a clear and steady problem profile. Swiggy and Zomato: support and delivery. Myntra: returns. Paytm: stability.
-- A simple classifier can find problem reviews with an F1 score of about 0.93, using the review text, the issue tags and the sentiment scores.
-- VADER sentiment agrees reasonably well with star ratings (correlation 0.60), and at the weekly level it moves closely with the share of low ratings.
-- The weekly share of negative reviews can be forecast within about 1 to 7 percentage points using simple models. The forecast is a level, not a trend.
-- The way data is collected matters as much as the model. The largest change in our data, in July 2026, was caused by sampling. Without the EDA check we would have reported a false improvement.
+- Each app has a clear and steady problem profile. Food & Grocery apps: support and delivery. Shopping apps: returns and support, with Amazon the worst on almost every issue. Payment apps: support and stability.
+- A Random Forest finds 87.0% of problem reviews, with about 3 in 4 of its flags correct (PR-AUC 0.87 against a 0.19 base rate), using the review text, the issue tags and the sentiment scores. It works as well on later weeks as on the weeks it was trained on.
+- The way data is collected matters as much as the model. The July 2026 change in our first sample turned out to be caused by `MOST_RELEVANT` sampling, and in the new data a two-week Play Store gap in positive reviews would have looked like a wave of complaints. Without the EDA checks we would have reported both as real.
 
 
 
 ---
 
-## 15. How to Reproduce
+## 11. How to Reproduce
 
 ```bash
 pip install google-play-scraper pandas numpy scipy scikit-learn nltk matplotlib seaborn joblib
 
-python scripts/01_scrape_reviews.py          # collect reviews (gives fresh data)
+python scripts/01_scrape_reviews.py          # collect reviews (~1 hour; e.g. `... flipkart amazon` scrapes a subset in parallel)
 python scripts/02_clean_reviews.py           # clean
 python scripts/03_tag_issues.py              # issue tags
 python scripts/04_sentiment_analysis.py      # VADER sentiment
 python scripts/05_eda.py                     # EDA charts and summary
 python scripts/05_feature_engineering.py     # TF-IDF, SVD, scaling
 python scripts/06_model_training.py          # train and evaluate models
-python scripts/13_time_series_forecast.py    # weekly tables, forecasts, charts
-
-pip install -r dashboard/requirements.txt
-streamlit run dashboard/app.py               # dashboard
+python scripts/07_model_evaluation_charts.py # ... and scripts 08 to 12 for the remaining evaluation charts and tables
 ```
 
 
 ---
 
-## 16. References
+## 12. References
 
 [1] D. Pagano and W. Maalej, "User feedback in the AppStore: An empirical study," IEEE International Requirements Engineering Conference (RE), 2013.
 
@@ -661,5 +443,3 @@ streamlit run dashboard/app.py               # dashboard
 [4] W. Maalej and H. Nabil, "Bug report, feature request, or simply praise? On automatically classifying app reviews," IEEE International Requirements Engineering Conference (RE), 2015.
 
 [5] C. J. Hutto and E. Gilbert, "VADER: A parsimonious rule-based model for sentiment analysis of social media text," International AAAI Conference on Weblogs and Social Media (ICWSM), 2014.
-
-[6] R. J. Hyndman and G. Athanasopoulos, Forecasting: Principles and Practice, 3rd edition, OTexts, 2021.

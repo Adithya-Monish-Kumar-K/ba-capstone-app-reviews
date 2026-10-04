@@ -1,28 +1,29 @@
 """
-Stage 4: Exploratory Data Analysis (Person 3)
+Stage 4: Exploratory Data Analysis (Persons 3 and 2)
 
-Reads data/app_reviews_tagged.csv and produces
-  * 13 charts              -> data/charts/eda/eda_XX_*.png
+Reads data/tagged/*.csv.gz (11 apps, every English/India review since 1 Apr 2026) and produces
+  * 15 charts              -> data/charts/eda/eda_XX_*.png
   * data/eda_summary.json  -> every number quoted in EDA.md, plus the statistical tests
-  * data/eda/monthly_trend.csv   -> monthly per-app metrics over all months, with window/regime flags (Person 5)
-  * data/eda/version_metrics.csv -> rating per app version with z-scores (Person 5)
+  * data/eda/monthly_trend.csv   -> monthly per-app metrics (full months flagged)
+  * data/eda/weekly_trend.csv    -> weekly per-app metrics (complete weeks only)
+  * data/eda/version_metrics.csv -> rating per app version with z-scores
 
 Charts
-  01 coverage timeline           07 issue co-occurrence
-  02 ratings + sample bias       08 issues by star rating (tagger false positives)
-  03 length + upvotes            09 taxonomy coverage gap
-  04 correlation matrix          10 monthly trends (common window)
-  05 issue size vs severity      11 July-2026 sampling regime shift
-  06 issues by app               12 rating by app version
-                                 13 which issues are elevated in the worse-rated versions
+  01 coverage (reviews/day)      08 issues by star rating (tagger false positives)
+  02 ratings vs public rating    09 taxonomy coverage gap
+  03 length + upvotes            10 weekly trends, one panel per domain
+  04 correlation matrix          11 July 2026 check (did the old sample's shift survive?)
+  05 issue size vs severity      12 rating by app version
+  06 issues by app               13 which issues are elevated in the worse-rated versions
+  07 issue co-occurrence         14 domain comparison
+                                 15 late-April feed gap (positive reviews missing)
 
-Key methodological choice: Swiggy/Zomato/Myntra reviews are almost all from 2026,
-while Paytm/PhonePe reach back to 2018 (see DATA_SOURCES.md, MOST_RELEVANT sampling).
-Cross-app *trend* comparisons are therefore restricted to a COMMON WINDOW of months in
-which every app has at least MIN_MONTH_N reviews.
+Every app is collected over the same fixed window (Sort.NEWEST back to 1 Apr 2026), so
+cross-app comparisons need no common-window restriction. Eleven series never share one
+panel: time charts are faceted by domain (Food & Grocery, Shopping, Payments).
 """
 import json
-import re
+import sys
 import textwrap
 from pathlib import Path
 
@@ -36,17 +37,20 @@ from matplotlib.colors import LinearSegmentedColormap, to_rgb
 from scipy import stats
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from apps import APP_COLORS, APP_DOMAIN, APP_NAMES, DOMAIN_COLORS, DOMAINS  # noqa: E402
+from data_io import read_stage  # noqa: E402
+
 # ----------------------------------------------------------------------------
 # Paths & constants
 # ----------------------------------------------------------------------------
 REPO_ROOT = Path(__file__).resolve().parent.parent
-INPUT_PATH = REPO_ROOT / "data" / "app_reviews_tagged.csv"
 META_PATH = REPO_ROOT / "data" / "app_metadata.csv"
 CHARTS_DIR = REPO_ROOT / "data" / "charts" / "eda"
 TABLES_DIR = REPO_ROOT / "data" / "eda"
 SUMMARY_PATH = REPO_ROOT / "data" / "eda_summary.json"
 
-APPS = ["Swiggy", "Zomato", "Myntra", "Paytm", "PhonePe"]
+APPS = APP_NAMES
 ISSUES = [
     "crash_bugs_stability",
     "payment_refund",
@@ -71,16 +75,21 @@ ISSUE_LABELS = {
 }
 ISSUE_COLS = [f"issue_{i}" for i in ISSUES]
 
-MIN_MONTH_N = 50        # min reviews per app-month to count as "covered"
-MIN_CELL_N = 30         # min reviews before a rate/mean is plotted or flagged
-PARTIAL_MONTH = "2026-09"   # scrape ran on 20 Sep 2026 -> last month is incomplete
+WINDOW_START = pd.Timestamp("2026-04-01")
+JULY = pd.Timestamp("2026-07-01")
+# 21 Apr - 5 May 2026: short positive reviews are largely missing from the Play Store feed for several apps
+# while negative reviews fall far less (chart 15). Share-based metrics are distorted
+# in this window, so trend comparisons, the July check and the version analysis exclude it.
+GAP_START, GAP_END = pd.Timestamp("2026-04-21"), pd.Timestamp("2026-05-05")
+MIN_CELL_N = 30            # min reviews before a rate/mean is plotted or a version is analysed
+VERSION_MIN_GAP = 0.25     # a version is flagged only if it is >= 0.25 stars from its app mean ...
+VERSION_Z = 3              # ... AND |z| >= 3 (with ~1.5M rows, z >= 2 alone flags trivial gaps)
 
 # ----------------------------------------------------------------------------
 # Visual style (palette validated with dataviz validate_palette.js)
 # ----------------------------------------------------------------------------
 SURFACE = "#fcfcfb"
 INK, INK2, MUTED, GRID = "#0b0b0b", "#52514e", "#8a8985", "#e6e5e1"
-APP_COLORS = dict(zip(APPS, ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4"]))
 STAR_COLORS = {1: "#c93a39", 2: "#ee8f8a", 3: "#c9c8c3", 4: "#86b6ef", 5: "#2a78d6"}
 BLUE = "#2a78d6"
 SEQ = LinearSegmentedColormap.from_list("seq_blue", ["#eef5fd", "#9ec5f4", "#2a78d6", "#0d366b"])
@@ -113,7 +122,7 @@ def save(fig, name, title, sub=None):
     path = CHARTS_DIR / f"{name}.png"
     fig.savefig(path, dpi=150)
     plt.close(fig)
-    CHART_INDEX.append({"file": f"data/charts/eda/{name}.png", "title": title})
+    CHART_INDEX.append({"file": f"data/charts/eda/{name}.png", "title": title, "subtitle": sub})
     print(f"  saved {path.name}")
 
 
@@ -122,11 +131,8 @@ def text_on(rgb_or_hex):
     return "#ffffff" if 0.299 * r + 0.587 * g + 0.114 * b < 0.55 else INK
 
 
-def heatmap(ax, data, xlabels, ylabels, cmap, fmt="{:.0f}", vmin=None, vmax=None, center=None):
+def heatmap(ax, data, xlabels, ylabels, cmap, fmt="{:.0f}", vmin=None, vmax=None, fontsize=8.5):
     vals = np.asarray(data, dtype=float)
-    if center is not None:
-        span = max(abs(np.nanmin(vals) - center), abs(np.nanmax(vals) - center))
-        vmin, vmax = center - span, center + span
     im = ax.imshow(vals, cmap=cmap, vmin=vmin, vmax=vmax, aspect="auto")
     ax.set_xticks(range(len(xlabels)), xlabels)
     ax.set_yticks(range(len(ylabels)), ylabels)
@@ -139,9 +145,19 @@ def heatmap(ax, data, xlabels, ylabels, cmap, fmt="{:.0f}", vmin=None, vmax=None
             if np.isnan(vals[i, j]):
                 continue
             ax.add_patch(plt.Rectangle((j - .5, i - .5), 1, 1, fill=False, ec=SURFACE, lw=2))
-            ax.text(j, i, fmt.format(vals[i, j]), ha="center", va="center", fontsize=8.5,
+            ax.text(j, i, fmt.format(vals[i, j]), ha="center", va="center", fontsize=fontsize,
                     color=text_on(im.cmap(im.norm(vals[i, j]))[:3]))
     return im
+
+
+def domain_dividers(ax, axis="x"):
+    """Thin rules between domain blocks on a heatmap whose apps are in APPS order."""
+    pos, k = [], 0
+    for d in DOMAINS[:-1]:
+        k += sum(APP_DOMAIN[a] == d for a in APPS)
+        pos.append(k - 0.5)
+    for p in pos:
+        (ax.axvline if axis == "x" else ax.axhline)(p, color=INK, lw=1.2)
 
 
 def cramers_v(table):
@@ -155,25 +171,48 @@ def month_label(m):
     return pd.Period(m).strftime("%b '%y")
 
 
+def domain_apps(domain):
+    return [a for a in APPS if APP_DOMAIN[a] == domain]
+
+
+def label_line_ends(ax, series_by_app, x_of):
+    """Direct labels at line ends, nudged apart so they never overlap."""
+    ends = sorted(((s.iloc[-1], a, x_of(s.index[-1])) for a, s in series_by_app.items() if len(s)), key=lambda t: t[0])
+    lo, hi = ax.get_ylim()
+    gap = (hi - lo) * 0.055
+    placed = []
+    for y, a, x in ends:
+        y_adj = max(y, placed[-1] + gap) if placed else y
+        placed.append(y_adj)
+        ax.text(x, y_adj, f"  {a}", color=INK, fontsize=8.5, va="center")
+
+
 # ----------------------------------------------------------------------------
 # Load & prepare
 # ----------------------------------------------------------------------------
 def load():
-    df = pd.read_csv(INPUT_PATH, parse_dates=["review_date"])
+    df = read_stage("tagged", parse_dates=["review_date"])
     df.attrs["n_source_columns"] = df.shape[1]
     df["app_name"] = pd.Categorical(df["app_name"], APPS, ordered=True)
-    df["hour"] = df["review_date"].dt.hour
-    df["dow"] = df["review_date"].dt.dayofweek
+    df["domain"] = pd.Categorical(df["domain"], DOMAINS, ordered=True)
     df["week"] = df["review_date"].dt.to_period("W-SUN").dt.start_time
-    df["is_low"] = (df["score"] <= 2).astype(int)         # Person 4's `is_problematic`
+    df["is_low"] = (df["score"] <= 2).astype(np.int8)         # Person 4's `is_problematic`
     df["log_thumbs"] = np.log1p(df["thumbs_up"])
+    day = df["review_date"].dt.normalize()
+    df["in_gap"] = (day >= GAP_START) & (day <= GAP_END)
     return df
 
 
-def common_window(df):
-    counts = df.groupby(["month", "app_name"], observed=True).size().unstack(fill_value=0)
-    ok = counts[(counts.reindex(columns=APPS, fill_value=0) >= MIN_MONTH_N).all(axis=1)]
-    return list(ok.index), counts
+def shade_gap(ax):
+    ax.axvspan(GAP_START, GAP_END + pd.Timedelta(days=1), color="#000", alpha=0.06, lw=0)
+
+
+def periods(df):
+    """Full months and complete weeks inside the collection window shared by every app."""
+    end = df.groupby("app_name", observed=True)["review_date"].max().min().normalize()   # last day every app has
+    months = [str(p) for p in pd.period_range(WINDOW_START, end, freq="M") if p.end_time.normalize() <= end]
+    weeks = sorted(w for w in df["week"].unique() if w >= WINDOW_START and w + pd.Timedelta(days=6) <= end)
+    return end, months, weeks
 
 
 # ============================================================================
@@ -206,71 +245,111 @@ def a_quality_audit(df, summary):
         "very_short_reviews_le3_words_pct": round(float((df["review_length"] <= 3).mean() * 100), 2),
         "untagged_reviews_pct": round(float((df["has_issue"] == 0).mean() * 100), 2),
         "outliers_iqr": {c: iqr_outliers(df[c]) for c in ["thumbs_up", "review_length", "sentiment_compound"]},
-        "outlier_policy": "No rows removed. thumbs_up outliers are genuine viral reviews (kept, handled with medians / log1p / rank statistics); "
-                          "review_length and sentiment_compound outliers are few and plausible.",
+        "outlier_policy": "No rows removed. thumbs_up outliers are genuine heavily-upvoted reviews (kept, handled with medians / "
+                          "log1p / rank statistics); review_length and sentiment_compound outliers are plausible.",
     }
     per_app = df.groupby("app_name", observed=True).agg(
-        reviews=("review_id", "size"), first_review=("review_date", "min"),
-        last_review=("review_date", "max"), months_covered=("month", "nunique"),
-        distinct_versions=("app_version", "nunique"),
+        domain=("domain", "first"), reviews=("review_id", "size"), first_review=("review_date", "min"),
+        last_review=("review_date", "max"), distinct_versions=("app_version", "nunique"),
         version_missing_pct=("app_version", lambda s: s.isna().mean() * 100),
-        mean_rating=("score", "mean"), median_thumbs_up=("thumbs_up", "median"),
-        median_length_words=("review_length", "median"),
+        mean_rating=("score", "mean"), pct_low_star=("is_low", "mean"),
+        median_thumbs_up=("thumbs_up", "median"), median_length_words=("review_length", "median"),
     )
+    per_app["pct_low_star"] *= 100
     per_app = per_app.apply(lambda c: c.round(3) if c.dtype.kind == "f" else c)
     summary["coverage_by_app"] = json.loads(per_app.reset_index().astype(str).to_json(orient="records"))
+    summary["reviews_by_domain"] = {d: int(n) for d, n in df["domain"].value_counts().reindex(DOMAINS).items()}
 
 
-def chart_02_ratings_and_bias(df, meta, summary):
-    """Rating mix per app (left) and how far the sample sits below the public rating (right)."""
+def chart_01_coverage(df, end, weeks, summary):
+    """Reviews per day by complete week, one panel per domain."""
+    w = df[df["week"].isin(weeks)]
+    per_day = w.groupby(["week", "app_name"], observed=True).size().unstack(fill_value=0) / 7
+    days = (end - WINDOW_START).days + 1                     # the last common day is complete, so it counts
+    avg = df[df["review_date"] < end + pd.Timedelta(days=1)].groupby("app_name", observed=True).size() / days
+    summary["reviews_per_day"] = {a: round(float(v), 1) for a, v in avg.items()}
+    fig, axes = plt.subplots(1, 3, figsize=(15.5, 4.9), sharey=True)
+    for ax, d in zip(axes, DOMAINS):
+        series = {}
+        for a in domain_apps(d):
+            s = per_day[a]
+            ax.plot(s.index, s.values, color=APP_COLORS[a], lw=2, label=a)
+            series[a] = s
+        shade_gap(ax)
+        ax.set_title(d, loc="left", fontsize=10.5, color=INK2)
+        ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%b"))
+        ax.legend(fontsize=8.5, loc="upper left", bbox_to_anchor=(0, -0.1), ncol=4)
+    axes[0].set_ylabel("Reviews per day (weekly average)")
+    hi, lo = avg.idxmax(), avg.idxmin()
+    n_days = (df["review_date"].max().normalize() - WINDOW_START).days + 1
+    days_with = df.assign(d=df["review_date"].dt.normalize()).groupby("app_name", observed=True)["d"].nunique()
+    summary["days_with_reviews"] = {"window_days": int(n_days), **{a: int(v) for a, v in days_with.items()}}
+    full = int((days_with == n_days).sum())
+    gaps = [f"{a} {int(v)}/{n_days}" for a, v in days_with.items() if v < n_days]
+    save(fig, "eda_01_coverage",
+         f"{full} of {len(APPS)} apps have reviews on all {n_days} days from 1 Apr 2026; volume ranges {avg[lo]:,.0f}/day ({lo}) to {avg[hi]:,.0f}/day ({hi})"
+         + (f"; {', '.join(gaps)} days" if gaps else ""),
+         f"{len(df):,} reviews in total. Complete weeks only ({pd.Timestamp(weeks[0]):%d %b} – {pd.Timestamp(weeks[-1]) + pd.Timedelta(days=6):%d %b}). "
+         f"Grey band = {GAP_START:%d %b}–{GAP_END:%d %b} feed gap (chart 15). The time window is identical for every app, so apps and weeks compare directly.")
+
+
+def chart_02_ratings_vs_public(df, meta, summary):
+    """Rating mix per app (left) and sample mean vs the public Play Store rating (right)."""
     ct = pd.crosstab(df["app_name"], df["score"], normalize="index") * 100
-    ct.loc["All apps"] = df["score"].value_counts(normalize=True).sort_index() * 100
-    order = ["All apps"] + APPS
+    dom = pd.crosstab(df["domain"], df["score"], normalize="index") * 100
+    ct = pd.concat([pd.DataFrame([df["score"].value_counts(normalize=True).sort_index() * 100], index=["All apps"]),
+                    dom, ct])
+    order = ["All apps"] + DOMAINS + APPS
     ct = ct.loc[order]
     summary["rating_distribution_pct"] = {k: {int(s_): round(float(v), 2) for s_, v in r.items()} for k, r in ct.iterrows()}
-    m = meta.copy()
-    m["app_name"] = m["app_name"].str.extract(r"^(Swiggy|Zomato|Myntra|Paytm|PhonePe)")[0]
-    tbl = pd.DataFrame({"public_rating": m.set_index("app_name")["current_score"],
+    tbl = pd.DataFrame({"public_rating": meta.set_index("app_name")["current_score"],
                         "sample_mean_rating": df.groupby("app_name", observed=True)["score"].mean()}).loc[APPS]
     tbl["gap"] = tbl["public_rating"] - tbl["sample_mean_rating"]
     summary["sample_vs_public_rating"] = json.loads(tbl.round(3).to_json(orient="index"))
     chi2, p, dof, v = cramers_v(pd.crosstab(df["app_name"], df["score"]))
     summary["rating_vs_app_chi2"] = {"chi2": round(chi2, 1), "dof": dof, "p": p, "cramers_v": round(v, 3)}
 
-    fig, (ax, bx) = plt.subplots(1, 2, figsize=(14, 4.8), gridspec_kw={"width_ratios": [6, 5]})
-    y = np.arange(len(order))[::-1]
+    fig, (ax, bx) = plt.subplots(1, 2, figsize=(15, 7.4), gridspec_kw={"width_ratios": [6, 5]})
+    y = np.arange(len(order))[::-1].astype(float)
+    y[1 + len(DOMAINS):] -= 0.5          # small gap between the domain block and the app block
+    y[1:] -= 0.5                          # and between "All apps" and the domains
     left = np.zeros(len(order))
     for s_ in range(1, 6):
         w = ct[s_].values
-        ax.barh(y, w, left=left, color=STAR_COLORS[s_], edgecolor=SURFACE, linewidth=2, height=0.62, label=f"{s_}★")
+        ax.barh(y, w, left=left, color=STAR_COLORS[s_], edgecolor=SURFACE, linewidth=2, height=0.72, label=f"{s_}★")
         for yi, li, wi in zip(y, left, w):
-            if wi >= 4:
-                ax.text(li + wi / 2, yi, f"{wi:.0f}%", ha="center", va="center", fontsize=9, color=text_on(STAR_COLORS[s_]))
+            if wi >= 5:
+                ax.text(li + wi / 2, yi, f"{wi:.0f}%", ha="center", va="center", fontsize=8.5, color=text_on(STAR_COLORS[s_]))
         left += w
     ax.set_yticks(y, order)
+    for lbl in ax.get_yticklabels():
+        if lbl.get_text() in ["All apps"] + DOMAINS:
+            lbl.set_fontweight("bold")
     ax.set_xlim(0, 100)
-    ax.set_xlabel("% of sampled reviews")
+    ax.set_xlabel("% of reviews")
     ax.set_title("Rating mix", loc="left", fontsize=10.5, color=INK2)
     ax.grid(axis="y", visible=False)
-    ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.16), fontsize=8.5)
+    ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.07), fontsize=8.5)
 
-    y = np.arange(len(APPS))[::-1]
-    for yi, app in zip(y, APPS):
+    yy = np.arange(len(APPS))[::-1]
+    for yi, app in zip(yy, APPS):
         r = tbl.loc[app]
         bx.plot([r["sample_mean_rating"], r["public_rating"]], [yi, yi], color=GRID, lw=3, zorder=1)
-        bx.scatter(r["public_rating"], yi, s=90, color=INK2, zorder=3, edgecolor=SURFACE, linewidth=2)
-        bx.scatter(r["sample_mean_rating"], yi, s=90, color=APP_COLORS[app], zorder=3, edgecolor=SURFACE, linewidth=2)
+        bx.scatter(r["public_rating"], yi, s=90, color=MUTED, zorder=3, edgecolor=SURFACE, linewidth=2)
+        bx.scatter(r["sample_mean_rating"], yi, s=90, color=BLUE, zorder=3, edgecolor=SURFACE, linewidth=2)
         bx.text(r["sample_mean_rating"] - 0.06, yi, f"{r['sample_mean_rating']:.2f}", ha="right", va="center", fontsize=9)
         bx.text(r["public_rating"] + 0.06, yi, f"{r['public_rating']:.2f}", ha="left", va="center", fontsize=9, color=INK2)
-    bx.set_yticks(y, APPS)
-    bx.set_xlim(0.7, 5.2)
-    bx.set_xlabel("Mean star rating (grey = public Play Store rating)")
-    bx.set_title("Sample vs public rating", loc="left", fontsize=10.5, color=INK2)
+    bx.set_yticks(yy, APPS)
+    bx.set_xlim(1.5, 5.3)
+    bx.set_xlabel("Mean star rating: blue = written reviews since 1 Apr, grey = public Play Store rating")
+    bx.set_title("Written reviews vs public rating", loc="left", fontsize=10.5, color=INK2)
     bx.grid(axis="y", visible=False)
-    save(fig, "eda_02_ratings_and_sample_bias",
-         f"{ct.loc['All apps', 1]:.0f}% of sampled reviews are 1★, and every app sits {tbl['gap'].min():.1f}–{tbl['gap'].max():.1f} stars below its public rating",
-         f"Swiggy ({ct.loc['Swiggy', 1]:.0f}% 1★) and Zomato ({ct.loc['Zomato', 1]:.0f}%) are far harsher than Myntra ({ct.loc['Myntra', 1]:.0f}%). "
-         f"App effect on rating: Cramér's V = {v:.2f}. Compare apps and months; never quote absolute negativity.")
+    harsh = ct.loc[APPS, [1, 2]].sum(axis=1)
+    save(fig, "eda_02_ratings_vs_public",
+         f"{ct.loc['All apps', 5]:.0f}% of reviews are 5★ and {ct.loc['All apps', 1]:.0f}% are 1★; "
+         f"{harsh.idxmax()} is the harshest app ({harsh.max():.0f}% 1–2★), {harsh.idxmin()} the mildest ({harsh.min():.0f}%)",
+         f"Written reviews sit {tbl['gap'].min():.1f}–{tbl['gap'].max():.1f} stars below each app's public rating, which also counts "
+         f"ratings without a written review. App effect on rating: Cramér's V = {v:.2f}.")
 
 
 def chart_03_engagement(df, summary):
@@ -283,12 +362,12 @@ def chart_03_engagement(df, summary):
     for patch, s_ in zip(bp["boxes"], range(1, 6)):
         patch.set(facecolor=STAR_COLORS[s_], edgecolor=SURFACE)
     for i, d in enumerate(data, 1):
-        ax.text(i, d.median() + 1.5, f"{d.median():.0f}", ha="center", fontsize=9, fontweight="bold")
+        ax.text(i, d.median() + 0.8, f"{d.median():.0f}", ha="center", fontsize=9, fontweight="bold")
     ax.set_xticks(range(1, 6), [f"{s_}★" for s_ in range(1, 6)])
     ax.set_ylabel("Review length (words)")
     ax.set_title("Length by star rating", loc="left", fontsize=10.5, color=INK2)
     rho, p = stats.spearmanr(df["score"], df["review_length"])
-    r_up, p_up = stats.spearmanr(df["review_length"], df["thumbs_up"])
+    r_up, _ = stats.spearmanr(df["review_length"], df["thumbs_up"])
     summary["review_length"] = {"spearman_score_vs_length": round(float(rho), 4), "spearman_p": float(p),
                                 "median_words_by_score": {s_: float(d.median()) for s_, d in zip(range(1, 6), data)},
                                 "spearman_length_vs_thumbs": round(float(r_up), 4)}
@@ -298,6 +377,7 @@ def chart_03_engagement(df, summary):
     x = np.arange(1, len(t) + 1) / len(t)
     gini = 1 - 2 * float(np.sum((cum[1:] + cum[:-1]) / 2 * np.diff(x)) + cum[0] * x[0] / 2)
     top1 = t[int(len(t) * 0.99):].sum() / t.sum()
+    zero = (t == 0).mean()
     ax = axes[1]
     ax.plot(x, cum, color=BLUE, lw=2)
     ax.plot([0, 1], [0, 1], color=MUTED, lw=1, ls="--")
@@ -305,7 +385,7 @@ def chart_03_engagement(df, summary):
     ax.set_xlabel("Cumulative share of reviews (least → most upvoted)")
     ax.set_ylabel("Cumulative share of all upvotes")
     ax.set_title(f"Upvote concentration (Gini = {gini:.2f})", loc="left", fontsize=10.5, color=INK2)
-    ax.text(0.3, 0.42, f"Top 1% of reviews hold\n{top1 * 100:.0f}% of all upvotes", fontsize=9.5)
+    ax.text(0.05, 0.6, f"{zero * 100:.0f}% of reviews have 0 upvotes;\ntop 1% hold {top1 * 100:.0f}% of all upvotes", fontsize=9.5)
 
     share = df.groupby("score")["thumbs_up"].sum() / df["thumbs_up"].sum() * 100
     rshare = df["score"].value_counts(normalize=True).sort_index() * 100
@@ -322,42 +402,17 @@ def chart_03_engagement(df, summary):
     ax.set_title("Share of reviews vs share of upvotes", loc="left", fontsize=10.5, color=INK2)
     ax.legend(fontsize=8.5)
     summary["thumbs_up"] = {"gini": round(gini, 4), "top1pct_share_of_upvotes": round(float(top1 * 100), 2),
+                            "zero_upvotes_pct": round(float(zero * 100), 2),
                             "share_of_upvotes_by_score_pct": {int(k): round(float(v), 2) for k, v in share.items()},
-                            "mean": round(float(df["thumbs_up"].mean()), 2), "median": float(df["thumbs_up"].median()),
-                            "mean_by_app": {a: round(float(v), 1) for a, v in df.groupby("app_name", observed=True)["thumbs_up"].mean().items()}}
+                            "mean": round(float(df["thumbs_up"].mean()), 2), "median": float(df["thumbs_up"].median())}
+    ratio = data[0].median() / max(data[4].median(), 1)
     save(fig, "eda_03_length_and_upvotes",
-         f"Unhappy users write twice as much ({data[0].median():.0f} vs {data[4].median():.0f} words); upvotes are winner-take-all (top 1% = {top1 * 100:.0f}%)",
-         f"1★ is {rshare[1]:.0f}% of reviews but {share[1]:.0f}% of upvotes, so upvotes alone do not explain the negative skew. Use median or log(upvotes), never the mean.")
+         f"1★ reviews are {ratio:.0f}× longer than 5★ ({data[0].median():.0f} vs {data[4].median():.0f} words); upvotes are winner-take-all (Gini {gini:.2f})",
+         f"1★ is {rshare[1]:.0f}% of reviews but {share[1]:.0f}% of upvotes"
+         + (": other users endorse complaints far more than praise. " if share[1] > 1.5 * rshare[1] else ". ") +
+         f"{zero * 100:.0f}% of reviews have no upvotes, so use log(1+upvotes) or medians, never the mean.")
 
 
-def chart_01_coverage_timeline(df, window):
-    """Monthly sample volume per app: reveals the unequal time windows."""
-    monthly = df.groupby(["month", "app_name"], observed=True).size().unstack(fill_value=0)
-    idx = pd.period_range(monthly.index.min(), monthly.index.max(), freq="M").astype(str)
-    monthly = monthly.reindex(idx, fill_value=0)
-    fig, axes = plt.subplots(len(APPS), 1, figsize=(11, 8.6), sharex=True)
-    xs = np.arange(len(idx))
-    for ax, app in zip(axes, APPS):
-        ax.bar(xs, monthly[app].values, color=APP_COLORS[app], width=0.85)
-        if window:
-            ax.axvspan(idx.get_loc(window[0]) - .5, idx.get_loc(window[-1]) + .5, color="#000", alpha=0.05, lw=0)
-        ax.set_ylabel(app, rotation=0, ha="right", va="center", fontweight="bold", color=INK)
-        ax.grid(axis="x", visible=False)
-        ax.tick_params(axis="y", labelsize=8)
-        n = int(monthly[app].sum())
-        ax.text(0.005, 0.9, f"{n:,} reviews · {(monthly[app] > 0).sum()} months with data",
-                transform=ax.transAxes, ha="left", va="top", fontsize=8.5, color=INK2)
-    ticks = [i for i, m in enumerate(idx) if m.endswith("-01")]
-    axes[-1].set_xticks(ticks, [m[:4] for m in [idx[i] for i in ticks]])
-    axes[-1].set_xlabel("Review month (grey band = common comparison window)")
-    save(fig, "eda_01_coverage_timeline",
-         "Three apps are almost entirely 2026 reviews; only Paytm and PhonePe reach back to 2018",
-         "Monthly reviews in the scraped sample (not true review volume). Cross-app trends use the grey window only.")
-
-
-# ============================================================================
-# B. RATINGS, LENGTH & ENGAGEMENT
-# ============================================================================
 def chart_04_correlation(df, summary):
     cols = {"score": "Star rating", "sentiment_compound": "VADER compound", "sentiment_neg": "VADER neg",
             "sentiment_pos": "VADER pos", "issue_count": "Issue count", "review_length": "Review length",
@@ -372,76 +427,16 @@ def chart_04_correlation(df, summary):
     pairs = pairs.reindex(pairs.abs().sort_values(ascending=False).index)
     summary["strongest_correlations"] = [{"a": a, "b": b, "spearman": round(float(v), 3)} for (a, b), v in pairs.head(6).items()]
     r_len_issue = corr.loc["issue_count", "review_length"]
+    r_sent = corr.loc["score", "sentiment_compound"]
+    r_issue = corr.loc["score", "issue_count"]
     save(fig, "eda_04_correlation_matrix",
-         f"Issue tags track review length (ρ={r_len_issue:.2f}); upvotes ignore rating and sentiment",
-         "Spearman rank correlations. Longer text has more chances to match a keyword rule, so recall of the tagger depends on length. Sentiment↔rating reproduces Person 2's validation.")
+         f"Rating tracks sentiment (ρ={r_sent:.2f}) and issue tags (ρ={r_issue:.2f}); issue tags also track review length (ρ={r_len_issue:.2f})",
+         "Spearman rank correlations. Longer text has more chances to match a keyword rule, so the model must not learn length alone.")
 
 
 # ============================================================================
 # C. ISSUE ANALYSIS
 # ============================================================================
-def chart_06_issue_by_app(df, summary):
-    tbl = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("app_name", observed=True)[f"issue_{i}"].mean() * 100 for i in ISSUES}).T[APPS]
-    summary["issue_prevalence_by_app_pct"] = json.loads(tbl.round(2).to_json())
-    # chi-square + Cramer's V per issue: does the issue depend on the app?
-    rows = []
-    for i in ISSUES:
-        ct = pd.crosstab(df["app_name"], df[f"issue_{i}"])
-        chi2, p, dof, v = cramers_v(ct)
-        rows.append({"issue": i, "chi2": round(chi2, 1), "p_value": p, "cramers_v": round(v, 3)})
-    summary["issue_vs_app_chi2"] = rows
-    fig, ax = plt.subplots(figsize=(10, 5.4))
-    im = heatmap(ax, tbl.values, APPS, list(tbl.index), SEQ, fmt="{:.0f}%", vmin=0, vmax=tbl.values.max())
-    top = max(rows, key=lambda r: r["cramers_v"])
-    cs = tbl.loc["Customer Support"]
-    maxp = max(r["p_value"] for r in rows)
-    save(fig, "eda_06_issue_by_app",
-         "Each app has its own failure fingerprint: delivery for food apps, returns for Myntra, crashes for Paytm",
-         f"% of each app's reviews tagged with the issue. Strongest app effect: {ISSUE_LABELS[top['issue']]} (Cramér's V={top['cramers_v']:.2f}); "
-         f"support {cs.idxmax()} {cs.max():.0f}% vs {cs.idxmin()} {cs.min():.0f}%. All 9 chi-square tests: max p={maxp:.1e}.")
-
-
-def chart_07_cooccurrence(df, summary):
-    X = df[ISSUE_COLS].to_numpy()
-    n = len(X)
-    both = X.T @ X
-    cnt = np.diag(both).astype(float)
-    lift = both * n / np.outer(cnt, cnt)
-    labels = [ISSUE_LABELS[i] for i in ISSUES]
-    mask = np.eye(len(ISSUES), dtype=bool)
-    show = np.where(mask, np.nan, np.log2(lift))
-    fig, ax = plt.subplots(figsize=(9.2, 7))
-    im = heatmap(ax, show, labels, labels, DIV, fmt="{:+.1f}", vmin=-1.5, vmax=1.5)
-    ax.set_xticks(range(len(labels)), labels, rotation=40, ha="right")
-    fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02, label="log2(lift): + = co-occur more than chance")
-    pairs = []
-    for a in range(len(ISSUES)):
-        for b in range(a + 1, len(ISSUES)):
-            pairs.append({"issue_a": ISSUES[a], "issue_b": ISSUES[b], "co_count": int(both[a, b]), "lift": round(float(lift[a, b]), 2)})
-    pairs = sorted(pairs, key=lambda r: -r["lift"])
-    summary["issue_cooccurrence_top_pairs"] = [p for p in pairs if p["co_count"] >= 50][:6]
-    summary["issue_cooccurrence_bottom_pairs"] = [p for p in pairs if p["co_count"] >= 0][-3:]
-    top = summary["issue_cooccurrence_top_pairs"][0]
-    save(fig, "eda_07_issue_cooccurrence",
-         f"{ISSUE_LABELS[top['issue_a']]} + {ISSUE_LABELS[top['issue_b']]} co-occur {top['lift']:.1f}× more than chance (n={top['co_count']})",
-         "Pairwise lift = P(A∧B) / (P(A)·P(B)), shown as log2. Blue = issues travel together, red = tend to be mutually exclusive.")
-
-
-def chart_08_issue_by_rating(df, summary):
-    tbl = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("score")[f"issue_{i}"].mean() * 100 for i in ISSUES}).T
-    tbl.loc["Any issue"] = df.groupby("score")["has_issue"].mean() * 100
-    tbl.columns = [f"{c}★" for c in tbl.columns]
-    fig, ax = plt.subplots(figsize=(9.5, 5.6))
-    heatmap(ax, tbl.values, list(tbl.columns), list(tbl.index), SEQ, fmt="{:.0f}%", vmin=0, vmax=np.nanmax(tbl.values))
-    ax.axhline(len(ISSUES) - .5, color=INK, lw=1.2)
-    summary["issue_any_by_rating_pct"] = {c: round(float(v), 2) for c, v in tbl.loc["Any issue"].items()}
-    fp = df[(df["score"] == 5) & (df["issue_cancellation_return"] == 1)]
-    summary["cancellation_tag_on_5star"] = {"count": int(len(fp)), "myntra_share_pct": round(float((fp["app_name"] == "Myntra").mean() * 100), 1)}
-    save(fig, "eda_08_issue_by_rating",
-         f"Tags track rating ({tbl.loc['Any issue', '1★']:.0f}% of 1★ vs {tbl.loc['Any issue', '5★']:.0f}% of 5★); 5★ 'Cancellation & Return' is a false-positive cluster",
-         f"{len(fp)} five-star reviews carry the Cancellation & Return tag, {(fp['app_name'] == 'Myntra').mean() * 100:.0f}% of them Myntra praising easy returns/exchanges: the rule ignores sentiment polarity.")
-
-
 def chart_05_issue_priority(df, summary):
     rows = []
     base_score = df["score"].mean()
@@ -450,36 +445,113 @@ def chart_05_issue_priority(df, summary):
         rows.append({"issue": i, "label": ISSUE_LABELS[i], "n": len(s), "prevalence_pct": len(s) / len(df) * 100,
                      "mean_score": s["score"].mean(), "mean_sentiment": s["sentiment_compound"].mean(),
                      "pct_1_2_star": s["is_low"].mean() * 100, "median_thumbs": s["thumbs_up"].median(),
-                     "mean_thumbs": s["thumbs_up"].mean(), "pct_50plus_thumbs": (s["thumbs_up"] >= 50).mean() * 100})
+                     "mean_thumbs": s["thumbs_up"].mean()})
     q = pd.DataFrame(rows).set_index("issue")
     summary["issue_priority"] = json.loads(q.round(3).to_json(orient="index"))
     fig, ax = plt.subplots(figsize=(10.5, 6.2))
-    ax.scatter(q["prevalence_pct"], q["mean_score"], s=np.sqrt(q["n"]) * 9, color=BLUE, alpha=0.75, edgecolor=SURFACE, linewidth=2)
-    offsets = {"Pricing & Fraud": (-10, 12), "Delivery Delay": (12, -12), "Payment & Refund": (-12, 12),
-               "Cancellation & Return": (-10, 14), "Order Quality": (12, -4), "Customer Support": (-12, 14)}
-    for _, r in q.iterrows():
-        dx, dy = offsets.get(r["label"], (10, 6))
-        ax.annotate(r["label"], (r["prevalence_pct"], r["mean_score"]), xytext=(dx, dy), textcoords="offset points",
-                    fontsize=9, ha="left" if dx > 0 else "right", color=INK)
+    ax.scatter(q["prevalence_pct"], q["mean_score"], s=np.sqrt(q["n"]) * 2.2, color=BLUE, alpha=0.75, edgecolor=SURFACE, linewidth=2)
+    placed = []
+    for _, r in q.sort_values("mean_score", ascending=False).iterrows():
+        near = any(abs(r["prevalence_pct"] - px) < 0.3 and abs(r["mean_score"] - py) < 0.12 for px, py in placed)
+        ax.annotate(r["label"], (r["prevalence_pct"], r["mean_score"]), xytext=(10, -14 if near else 6),
+                    textcoords="offset points", fontsize=9, ha="left", color=INK)
+        placed.append((r["prevalence_pct"], r["mean_score"]))
     ax.axhline(base_score, color=MUTED, ls="--", lw=1)
-    ax.text(ax.get_xlim()[1], base_score + 0.02, f"dataset mean {base_score:.2f}★", ha="right", fontsize=8.5, color=INK2)
+    ax.text(ax.get_xlim()[1], base_score + 0.03, f"dataset mean {base_score:.2f}★", ha="right", fontsize=8.5, color=INK2)
     ax.set_xlabel("Prevalence: % of all reviews (bubble area ∝ review count)")
     ax.set_ylabel("Mean star rating of reviews with the issue")
     worst, big = q["mean_score"].idxmin(), q["prevalence_pct"].idxmax()
-    save(fig, "eda_05_issue_priority",
-         f"{ISSUE_LABELS[big]} is the largest problem ({q.loc[big, 'prevalence_pct']:.0f}%, {q.loc[big, 'mean_score']:.2f}★); {ISSUE_LABELS[worst]} is the most damaging ({q.loc[worst, 'mean_score']:.2f}★)",
-         "Bottom-right = frequent AND low-rated. Only UI/UX & Update reviews are rated above the dataset mean (dashed line).")
+    above = [ISSUE_LABELS[i] for i in q.index if q.loc[i, "mean_score"] > base_score]
+    title = (f"{ISSUE_LABELS[big]} is both the most common issue ({q.loc[big, 'prevalence_pct']:.1f}% of reviews) and the most damaging ({q.loc[big, 'mean_score']:.2f}★)"
+             if big == worst else
+             f"{ISSUE_LABELS[big]} is the most common issue ({q.loc[big, 'prevalence_pct']:.1f}%, {q.loc[big, 'mean_score']:.2f}★); "
+             f"{ISSUE_LABELS[worst]} is the most damaging ({q.loc[worst, 'mean_score']:.2f}★)")
+    save(fig, "eda_05_issue_priority", title,
+         "Bottom-right = frequent AND low-rated. " + (f"Rated above the dataset mean: {', '.join(above)}." if above
+                                                    else "Every issue category is rated below the dataset mean (dashed line)."))
 
 
-# ============================================================================
-# D. TEXT SIGNAL
-# ============================================================================
-BRAND_STOP = {"swiggy", "zomato", "myntra", "paytm", "phonepe", "phone", "pe", "app", "application", "im", "ive", "dont",
-              "doesnt", "didnt", "cant", "just", "really", "like", "get", "got", "use", "using", "one"}
+def chart_06_issue_by_app(df, summary):
+    tbl = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("app_name", observed=True)[f"issue_{i}"].mean() * 100 for i in ISSUES}).T[APPS]
+    summary["issue_prevalence_by_app_pct"] = json.loads(tbl.round(2).to_json())
+    rows = []
+    for i in ISSUES:
+        chi2, p, dof, v = cramers_v(pd.crosstab(df["app_name"], df[f"issue_{i}"]))
+        rows.append({"issue": i, "chi2": round(chi2, 1), "p_value": p, "cramers_v": round(v, 3)})
+    summary["issue_vs_app_chi2"] = rows
+    fig, ax = plt.subplots(figsize=(13, 5.6))
+    heatmap(ax, tbl.values, APPS, list(tbl.index), SEQ, fmt="{:.1f}", vmin=0, vmax=tbl.values.max())
+    ax.set_xticks(range(len(APPS)), APPS, rotation=30, ha="right")
+    domain_dividers(ax, "x")
+    top = max(rows, key=lambda r: r["cramers_v"])
+    pooled = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("domain", observed=True)[f"issue_{i}"].mean() for i in ISSUES})
+    leaders = {d: pooled.loc[d].idxmax() for d in DOMAINS}
+    summary["top_issue_by_domain"] = leaders
+    grouped = {}
+    for d in DOMAINS:
+        grouped.setdefault(leaders[d], []).append(d.lower())
+    load = tbl.sum()
+    save(fig, "eda_06_issue_by_app",
+         "; ".join(f"{iss} leads {' and '.join(ds)}" for iss, ds in grouped.items())
+         + f"; {load.idxmax()} carries the heaviest issue load",
+         f"% of each app's reviews tagged with the issue (vertical rules separate domains). Strongest app effect: "
+         f"{ISSUE_LABELS[top['issue']]} (Cramér's V={top['cramers_v']:.2f}). All 9 chi-square tests p<0.001.")
+
+
+def chart_07_cooccurrence(df, summary):
+    X = df[ISSUE_COLS].to_numpy(dtype=np.int64)
+    n = len(X)
+    both = X.T @ X
+    cnt = np.diag(both).astype(float)
+    lift = both * n / np.outer(cnt, cnt)
+    labels = [ISSUE_LABELS[i] for i in ISSUES]
+    show = np.where(np.eye(len(ISSUES), dtype=bool), np.nan, np.log2(lift))
+    fig, ax = plt.subplots(figsize=(9.2, 7))
+    im = heatmap(ax, show, labels, labels, DIV, fmt="{:+.1f}", vmin=-2, vmax=2)
+    ax.set_xticks(range(len(labels)), labels, rotation=40, ha="right")
+    fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02, label="log2(lift): + = co-occur more than chance")
+    pairs = []
+    for a in range(len(ISSUES)):
+        for b in range(a + 1, len(ISSUES)):
+            pairs.append({"issue_a": ISSUES[a], "issue_b": ISSUES[b], "co_count": int(both[a, b]), "lift": round(float(lift[a, b]), 2)})
+    pairs = sorted(pairs, key=lambda r: -r["lift"])
+    summary["issue_cooccurrence_top_pairs"] = [p for p in pairs if p["co_count"] >= 200][:6]
+    summary["issue_cooccurrence_bottom_pairs"] = pairs[-3:]
+    top = summary["issue_cooccurrence_top_pairs"][0]
+    save(fig, "eda_07_issue_cooccurrence",
+         f"{ISSUE_LABELS[top['issue_a']]} + {ISSUE_LABELS[top['issue_b']]} co-occur {top['lift']:.1f}× more than chance (n={top['co_count']:,})",
+         "Pairwise lift = P(A∧B) / (P(A)·P(B)), shown as log2. Blue = issues travel together, red = tend to be mutually exclusive.")
+
+
+def chart_08_issue_by_rating(df, summary):
+    tbl = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("score")[f"issue_{i}"].mean() * 100 for i in ISSUES}).T
+    tbl.loc["Any issue"] = df.groupby("score")["has_issue"].mean() * 100
+    tbl.columns = [f"{c}★" for c in tbl.columns]
+    fig, ax = plt.subplots(figsize=(9.5, 5.6))
+    heatmap(ax, tbl.values, list(tbl.columns), list(tbl.index), SEQ, fmt="{:.1f}", vmin=0, vmax=np.nanmax(tbl.values))
+    ax.axhline(len(ISSUES) - .5, color=INK, lw=1.2)
+    summary["issue_any_by_rating_pct"] = {c: round(float(v), 2) for c, v in tbl.loc["Any issue"].items()}
+    five = tbl["5★"].drop("Any issue")
+    fp_issue = [i for i in ISSUES if ISSUE_LABELS[i] == five.idxmax()][0]
+    fp = df[(df["score"] == 5) & (df[f"issue_{fp_issue}"] == 1)]
+    fp_top = fp["app_name"].value_counts()
+    summary["five_star_false_positive_cluster"] = {"issue": fp_issue, "count": int(len(fp)),
+                                                   "top_app": str(fp_top.index[0]),
+                                                   "top_app_share_pct": round(float(fp_top.iloc[0] / len(fp) * 100), 1)}
+    save(fig, "eda_08_issue_by_rating",
+         f"Tags track rating ({tbl.loc['Any issue', '1★']:.0f}% of 1★ vs {tbl.loc['Any issue', '5★']:.0f}% of 5★ carry an issue); "
+         f"5★ '{ISSUE_LABELS[fp_issue]}' is the largest false-positive cluster",
+         f"{len(fp):,} five-star reviews carry the {ISSUE_LABELS[fp_issue]} tag ({fp_top.iloc[0] / len(fp) * 100:.0f}% of them {fp_top.index[0]}): "
+         "keyword rules ignore polarity, so praise such as 'easy returns' still matches.")
+
+
+BRAND_STOP = {"swiggy", "zomato", "myntra", "paytm", "phonepe", "phone", "pe", "blinkit", "dominos", "domino", "flipkart",
+              "amazon", "meesho", "google", "gpay", "pay", "app", "application", "im", "ive", "dont", "doesnt", "didnt",
+              "cant", "just", "really", "like", "get", "got", "use", "using", "one"}
 STOP = list(ENGLISH_STOP_WORDS | BRAND_STOP)
 
 
-def distinctive_terms(docs_a, docs_b, apps_a, apps_b, k=14, min_df=25):
+def distinctive_terms(docs_a, docs_b, apps_a, k=14, min_df=100):
     """Log-odds (Laplace smoothed) of document frequency in A vs B."""
     cv = CountVectorizer(ngram_range=(1, 2), stop_words=STOP, min_df=min_df, binary=True,
                          token_pattern=r"(?u)\b[a-zA-Z][a-zA-Z]+\b")
@@ -489,215 +561,184 @@ def distinctive_terms(docs_a, docs_b, apps_a, apps_b, k=14, min_df=25):
     na, nb = xa.shape[0], xb.shape[0]
     lo = np.log((da + .5) / (na - da + .5)) - np.log((db + .5) / (nb - db + .5))
     vocab = np.array(cv.get_feature_names_out())
-
-    def pick(order):
-        chosen, used = [], set()
-        for j in order:
-            toks = set(vocab[j].split())
-            if toks & used:
-                continue
-            chosen.append(j)
-            used |= toks
-            if len(chosen) == k:
-                break
-        return chosen
-
-    ja = pick(np.argsort(-lo))
-    jb = pick(np.argsort(lo))
-    def top_app(x, apps, js):
-        out = []
-        for j in js:
-            vc = apps.iloc[x[:, j].nonzero()[0]].value_counts()
-            out.append((str(vc.index[0]), float(vc.iloc[0] / vc.sum() * 100)))
-        return out
-
-    def mk(js, d, n, sign, x, apps):
-        t = pd.DataFrame({"term": vocab[js], "odds_ratio": np.exp(sign * lo[js]), "df_pct": d[js] / n * 100})
-        t["top_app"], t["top_app_share_pct"] = zip(*top_app(x.tocsc(), apps, js))
-        return t
-
-    return mk(ja, da, na, 1, xa, apps_a), mk(jb, db, nb, -1, xb, apps_b), (na, nb)
-
-
-def hbar_terms(ax, t, color, title, na):
-    t = t.iloc[::-1]
-    ax.barh(t["term"], t["odds_ratio"], color=color, height=0.65)
-    for yi, (o, d, a, sh) in enumerate(zip(t["odds_ratio"], t["df_pct"], t["top_app"], t["top_app_share_pct"])):
-        ax.text(o * 1.02, yi, f"{o:.1f}×  ({d:.1f}% of reviews)  ·  {a} {sh:.0f}%", va="center", fontsize=8.3)
-    ax.set_xlim(0, t["odds_ratio"].max() * 1.9)
-    ax.set_title(title, loc="left", fontsize=10.5, color=INK2)
-    ax.grid(axis="y", visible=False)
-    ax.set_xlabel("Odds ratio vs the other group")
+    chosen, used = [], set()
+    for j in np.argsort(-lo):
+        toks = set(vocab[j].split())
+        if toks & used:
+            continue
+        chosen.append(j)
+        used |= toks
+        if len(chosen) == k:
+            break
+    xa = xa.tocsc()
+    tops = []
+    for j in chosen:
+        vc = apps_a.iloc[xa[:, j].nonzero()[0]].value_counts()
+        tops.append((str(vc.index[0]), float(vc.iloc[0] / vc.sum() * 100)))
+    t = pd.DataFrame({"term": vocab[chosen], "odds_ratio": np.exp(lo[chosen]), "df_pct": da[chosen] / na * 100})
+    t["top_app"], t["top_app_share_pct"] = zip(*tops)
+    return t, (na, nb)
 
 
 def chart_09_taxonomy_gap(df, summary):
     low = df[df["score"] <= 2]
     un, tg = low.loc[low["has_issue"] == 0, "content"], low.loc[low["has_issue"] == 1, "content"]
-    a, _, (na, nb) = distinctive_terms(un, tg, low.loc[un.index, "app_name"], low.loc[tg.index, "app_name"], k=16)
+    a, (na, nb) = distinctive_terms(un.fillna(""), tg.fillna(""), low.loc[un.index, "app_name"].astype(str), k=16)
     pct_un = len(un) / len(low) * 100
     summary["taxonomy_gap"] = {"low_star_reviews": int(len(low)), "low_star_untagged": int(len(un)),
-                               "low_star_untagged_pct": round(float(pct_un), 2), "terms": a["term"].tolist(),
+                               "low_star_untagged_pct": round(float(pct_un), 2),
+                               "terms": a[["term", "odds_ratio", "df_pct", "top_app", "top_app_share_pct"]].round(2).to_dict("records"),
                                "median_words_untagged": float(low.loc[low["has_issue"] == 0, "review_length"].median()),
                                "median_words_tagged": float(low.loc[low["has_issue"] == 1, "review_length"].median())}
-    fig, ax = plt.subplots(figsize=(9.5, 6.4))
-    hbar_terms(ax, a, "#eb6834", f"Terms over-represented in untagged 1–2★ reviews (n={na:,}) vs tagged (n={nb:,})", na)
+    fig, ax = plt.subplots(figsize=(10, 6.6))
+    t = a.iloc[::-1]
+    ax.barh(t["term"], t["odds_ratio"], color="#eb6834", height=0.65)
+    for yi, (o, d, ap, sh) in enumerate(zip(t["odds_ratio"], t["df_pct"], t["top_app"], t["top_app_share_pct"])):
+        ax.text(o * 1.02, yi, f"{o:.1f}×  ({d:.1f}% of reviews)  ·  {ap} {sh:.0f}%", va="center", fontsize=8.3)
+    ax.set_xlim(0, t["odds_ratio"].max() * 1.9)
+    ax.set_title(f"Terms over-represented in untagged 1–2★ reviews (n={na:,}) vs tagged (n={nb:,})", loc="left", fontsize=10.5, color=INK2)
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("Odds ratio vs the other group")
+    head = ", ".join(f"'{x}'" for x in a["term"].head(4))
+    one_word = float((low.loc[low["has_issue"] == 0, "review_length"] <= 2).mean() * 100)
+    summary["taxonomy_gap"]["untagged_le2_words_pct"] = round(one_word, 1)
     save(fig, "eda_09_taxonomy_gap",
-         f"{pct_un:.0f}% of 1–2★ reviews have no issue tag; security-scan alerts, QR/scan and notifications are the gaps",
-         f"Terms over-represented in untagged vs tagged low-star reviews. Untagged ones are shorter (median {summary['taxonomy_gap']['median_words_untagged']:.0f} vs {summary['taxonomy_gap']['median_words_tagged']:.0f} words); 'malicious'/'detected' is almost all Paytm.")
+         f"{pct_un:.0f}% of 1–2★ reviews get no issue tag; the most distinctive untagged terms are {head}",
+         f"Untagged low-star reviews are short (median {summary['taxonomy_gap']['median_words_untagged']:.0f} vs "
+         f"{summary['taxonomy_gap']['median_words_tagged']:.0f} words; {one_word:.0f}% are 1–2 words), so many carry no issue to tag. "
+         "Praise words among them point to users who mis-rate. Right-hand labels give the app that uses each term most.")
 
 
 # ============================================================================
-# E. TRENDS, SPIKES & VERSIONS
+# E. TRENDS, JULY CHECK, VERSIONS, DOMAINS
 # ============================================================================
-def monthly_table(df, window):
-    w = df[df["month"].isin(window)]
-    g = w.groupby(["app_name", "month"], observed=True).agg(
+def weekly_table(df, weeks):
+    w = df[df["week"].isin(weeks)]
+    g = w.groupby(["app_name", "week"], observed=True).agg(
         n=("score", "size"), mean_rating=("score", "mean"), pct_low_star=("is_low", "mean"),
         pct_has_issue=("has_issue", "mean"), mean_sentiment=("sentiment_compound", "mean"),
-        mean_issue_count=("issue_count", "mean"), median_length=("review_length", "median")).reset_index()
-    for c in ["pct_low_star", "pct_has_issue"]:
-        g[c] *= 100
+        median_length=("review_length", "median"),
+        **{f"pct_{i}": (f"issue_{i}", "mean") for i in ISSUES}).reset_index()
+    pct_cols = [c for c in g.columns if c.startswith("pct_")]
+    g[pct_cols] *= 100
+    g["domain"] = g["app_name"].map(APP_DOMAIN)
+    g["overlaps_gap"] = (g["week"] <= GAP_END) & (g["week"] + pd.Timedelta(days=6) >= GAP_START)
     return g
 
 
-def line_panel(ax, g, col, ylabel, window, fmt="{:.1f}"):
-    xs = {m: i for i, m in enumerate(window)}
-    for app in APPS:
-        s = g[(g["app_name"] == app)].set_index("month").reindex(window)
-        y = s[col].where(s["n"] >= MIN_CELL_N)
-        ax.plot(range(len(window)), y.values, color=APP_COLORS[app], lw=2.2, marker="o", ms=5, label=app)
-        last = y.dropna()
-        if len(last):
-            ax.text(xs[last.index[-1]] + 0.12, last.iloc[-1], f" {app}", color=INK, fontsize=8.5, va="center")
-    ax.set_xticks(range(len(window)), [month_label(m) + ("*" if m == PARTIAL_MONTH else "") for m in window])
-    ax.set_xlim(-0.3, len(window) - 1 + 1.1)
-    ax.set_ylabel(ylabel)
+def chart_10_weekly_trend(df, weeks, summary):
+    g = weekly_table(df, weeks)
+    g.apply(lambda c: c.round(3) if c.dtype.kind == "f" else c).to_csv(TABLES_DIR / "weekly_trend.csv", index=False)
+    fig, axes = plt.subplots(2, 3, figsize=(16, 8.6), sharex=True, sharey="row")
+    for col_i, d in enumerate(DOMAINS):
+        for row_i, (col, ylabel) in enumerate([("mean_rating", "Mean star rating"), ("pct_low_star", "% rated 1–2★")]):
+            ax = axes[row_i, col_i]
+            for a in domain_apps(d):
+                s = g[g["app_name"] == a].set_index("week")[col]
+                ax.plot(s.index, s.values, color=APP_COLORS[a], lw=2, marker="o", ms=3.5, label=a)
+            shade_gap(ax)
+            if row_i == 0:
+                ax.set_title(d, loc="left", fontsize=10.5, color=INK2, pad=24)
+                ax.legend(fontsize=8.5, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=4, borderaxespad=0.2)
+            if col_i == 0:
+                ax.set_ylabel(ylabel)
+            ax.xaxis.set_major_formatter(matplotlib.dates.DateFormatter("%b"))
+    # Compare two clean periods outside the gap: May 6 - Jun 30 vs Aug 1 - end.
+    early = g[(g["week"] > GAP_END) & (g["week"] + pd.Timedelta(days=6) < JULY)]
+    late = g[g["week"] >= pd.Timestamp("2026-08-01")]
+    d_low = (late.groupby("app_name", observed=True)["pct_low_star"].mean()
+             - early.groupby("app_name", observed=True)["pct_low_star"].mean()).reindex(APPS)
+    d_rating = (late.groupby("app_name", observed=True)["mean_rating"].mean()
+                - early.groupby("app_name", observed=True)["mean_rating"].mean()).reindex(APPS)
+    summary["change_may_jun_to_aug_sep"] = {"pct_low_star_pp": {a: round(float(v), 2) for a, v in d_low.items()},
+                                            "mean_rating": {a: round(float(v), 3) for a, v in d_rating.items()}}
+    clean = g[~g["overlaps_gap"]]
+    vol = clean.groupby("app_name", observed=True)["mean_rating"].std().reindex(APPS)
+    summary["weekly_rating_sd_outside_gap"] = {a: round(float(v), 3) for a, v in vol.items()}
+    w = df[df["week"].isin(weeks) & ~df["in_gap"]]
+    h, p = stats.kruskal(*[w.loc[w["app_name"] == a, "score"] for a in APPS])
+    chi2, pc, dof, v = cramers_v(pd.crosstab(w["app_name"], w["score"]))
+    summary["rating_differs_by_app"] = {"kruskal_H": round(float(h), 1), "kruskal_p": float(p), "chi2": round(chi2, 1),
+                                        "chi2_p": pc, "cramers_v": round(v, 3), "n": int(len(w))}
+    worse, better = d_low.idxmax(), d_low.idxmin()
+    save(fig, "eda_10_weekly_trend",
+         f"From May–Jun to Aug–Sep, {worse} worsened most ({d_low[worse]:+.1f} pp 1–2★) and {better} improved most ({d_low[better]:+.1f} pp); "
+         f"{int((d_low.abs() < 2.5).sum())} of {len(APPS)} apps move by less than 2.5 pp",
+         f"Complete weeks; grey band = {GAP_START:%d %b}–{GAP_END:%d %b} feed gap, excluded from the comparison (chart 15). "
+         f"Differences between apps (Cramér's V = {v:.2f}) are far larger than any app's movement over time.")
 
 
-def app_legend(fig, h):
-    handles = [plt.Line2D([], [], color=APP_COLORS[a], lw=2.2, marker="o", ms=5, label=a) for a in APPS]
-    fig.legend(handles=handles, ncol=5, loc="upper right", bbox_to_anchor=(0.99, 1 - 0.80 / h), fontsize=9, frameon=False)
+LEN_BINS = [0, 5, 15, 40, 10_000]
+LEN_LABELS = ["≤5 words", "6–15", "16–40", "41+"]
 
 
-REGIME_START = pd.Timestamp("2026-07-01")   # all five apps change sampling regime here (see chart 11)
-
-
-LEN_BINS = [0, 20, 40, 70, 10_000]
-LEN_LABELS = ["≤20 words", "21–40", "41–70", "71+"]
-
-
-def regime_adjusted(df, window):
-    """Pre/post-July change per app, raw vs standardised to the app's own review-length mix."""
-    w = df[df["month"].isin(window)].copy()
-    w["post"] = w["review_date"] >= REGIME_START
+def chart_11_july_check(df, months, summary):
+    """The old MOST_RELEVANT sample showed a July-2026 'regime shift'. Does it exist in a complete NEWEST census?"""
+    w = df[df["month"].isin(months) & ~df["in_gap"]].copy()
+    w["post"] = w["review_date"] >= JULY
     w["lb"] = pd.cut(w["review_length"], LEN_BINS, labels=LEN_LABELS)
-    rows = []
+    m = w.groupby(["app_name", "month"], observed=True).agg(n=("score", "size"), med_len=("review_length", "median"))
+    days_present = w.assign(d=w["review_date"].dt.normalize()).groupby("month")["d"].nunique()   # gap days excluded
+    m["per_day"] = m["n"] / m.index.get_level_values("month").map(days_present).to_numpy()
+    per_day = m["per_day"].unstack()[months]
+    med_len = m["med_len"].unstack()[months]
+    pre_m = [x for x in months if pd.Period(x).start_time < JULY]
+    post_m = [x for x in months if pd.Period(x).start_time >= JULY]
+    vol_ratio = per_day[post_m].mean(axis=1) / per_day[pre_m].mean(axis=1)
+    len_change = med_len[post_m].median(axis=1) - med_len[pre_m].median(axis=1)
+    rows = {}
     for app, g in w.groupby("app_name", observed=True):
         wt = g["lb"].value_counts(normalize=True)
-        row = {"app_name": app, "n_pre": int((~g["post"]).sum()), "n_post": int(g["post"].sum()),
-               "median_len_pre": float(g.loc[~g["post"], "review_length"].median()),
-               "median_len_post": float(g.loc[g["post"], "review_length"].median())}
+        row = {}
         for col in ["score", "has_issue"]:
-            for post, tag in [(False, "pre"), (True, "post")]:
+            vals = {}
+            for post in (False, True):
                 gg = g[g["post"] == post]
-                m = gg.groupby("lb", observed=True)[col].mean()
-                ww = wt.reindex(m.index)
-                ww /= ww.sum()
-                row[f"{col}_raw_{tag}"] = gg[col].mean()
-                row[f"{col}_adj_{tag}"] = (m * ww).sum()
-            row[f"{col}_raw_change"] = row[f"{col}_raw_post"] - row[f"{col}_raw_pre"]
-            row[f"{col}_adj_change"] = row[f"{col}_adj_post"] - row[f"{col}_adj_pre"]
-        rows.append(row)
-    return w, pd.DataFrame(rows).set_index("app_name").loc[APPS]
-
-
-def chart_11_regime_shift(df, window, summary):
-    """All five apps change character at the same time in July 2026 -> a collection artefact, not app behaviour."""
-    w, adj = regime_adjusted(df, window)
-    summary["regime_shift"] = {
-        "start": str(REGIME_START.date()),
-        "median_length_pre_post": {a: [adj.loc[a, "median_len_pre"], adj.loc[a, "median_len_post"]] for a in APPS},
-        "rating_change_raw": {a: round(float(adj.loc[a, "score_raw_change"]), 3) for a in APPS},
-        "rating_change_length_adjusted": {a: round(float(adj.loc[a, "score_adj_change"]), 3) for a in APPS},
-        "issue_rate_change_raw_pp": {a: round(float(adj.loc[a, "has_issue_raw_change"] * 100), 1) for a in APPS},
-        "issue_rate_change_length_adjusted_pp": {a: round(float(adj.loc[a, "has_issue_adj_change"] * 100), 1) for a in APPS},
+                mm = gg.groupby("lb", observed=True)[col].mean()
+                ww = wt.reindex(mm.index) / wt.reindex(mm.index).sum()
+                vals[post] = (gg[col].mean(), (mm * ww).sum())
+            row[f"{col}_raw_change"] = vals[True][0] - vals[False][0]
+            row[f"{col}_adj_change"] = vals[True][1] - vals[False][1]
+        rows[app] = row
+    adj = pd.DataFrame(rows).T.loc[APPS]
+    summary["july_check"] = {
+        "reviews_per_day_ratio_jul_sep_vs_apr_jun": {a: round(float(v), 2) for a, v in vol_ratio.items()},
+        "median_length_change_words": {a: float(v) for a, v in len_change.items()},
+        "rating_change_raw": {a: round(float(v), 3) for a, v in adj["score_raw_change"].items()},
+        "rating_change_length_adjusted": {a: round(float(v), 3) for a, v in adj["score_adj_change"].items()},
+        "issue_rate_change_raw_pp": {a: round(float(v * 100), 2) for a, v in adj["has_issue_raw_change"].items()},
+        "issue_rate_change_length_adjusted_pp": {a: round(float(v * 100), 2) for a, v in adj["has_issue_adj_change"].items()},
     }
-    fig, axes = plt.subplots(1, 3, figsize=(15.5, 5))
-    med = w.groupby(["month", "app_name"], observed=True)["review_length"].median().unstack().reindex(window)
-    ax = axes[0]
-    for a in APPS:
-        ax.plot(range(len(window)), med[a], color=APP_COLORS[a], lw=2.2, marker="o", ms=5, label=a)
-    cut = window.index(f"{REGIME_START.year}-{REGIME_START.month:02d}") - 0.5
-    ax.axvline(cut, color=INK2, ls="--", lw=1)
-    ax.text(cut + 0.05, ax.get_ylim()[1] * 0.98, "regime shift", fontsize=8.5, color=INK2, va="top")
-    ax.set_xticks(range(len(window)), [month_label(m) for m in window], rotation=30)
-    ax.set_ylabel("Median review length (words)")
-    ax.set_title("Median review length by month", loc="left", fontsize=10.5, color=INK2)
-    for ax, col, ylabel, ttl, fmt in [(axes[1], "has_issue", "% with ≥1 issue tag", "Issue-tag rate by length band", "{:.0f}"),
-                                      (axes[2], "score", "Mean star rating", "Mean rating by length band", "{:.2f}")]:
-        g = w.groupby(["lb", "post"], observed=True)[col].agg(["mean", "size"]).reset_index()
-        scale = 100 if col == "has_issue" else 1
-        x = np.arange(len(LEN_LABELS))
-        for k, (post, colr, lab) in enumerate([(False, "#9ec5f4", "Apr–Jun '26"), (True, "#1c5cab", "Jul–Sep '26")]):
-            gg = g[g["post"] == post].set_index("lb").reindex(LEN_LABELS)
-            bars = ax.bar(x + (k - .5) * 0.38, gg["mean"] * scale, 0.36, color=colr, label=lab)
-            for xi, v in zip(x + (k - .5) * 0.38, gg["mean"] * scale):
-                ax.text(xi, v + (1 if col == "has_issue" else 0.03), fmt.format(v), ha="center", fontsize=8)
-        ax.set_xticks(x, LEN_LABELS)
-        ax.set_xlabel("Review length band")
-        ax.set_ylabel(ylabel)
-        ax.set_title(ttl, loc="left", fontsize=10.5, color=INK2)
-        ax.set_ylim(0, ax.get_ylim()[1] * 1.15)
-        ax.legend(fontsize=8.5, loc="upper center", ncol=2)
-        ax.grid(axis="x", visible=False)
-    axes[0].legend(fontsize=8.5, loc="upper right", ncol=1)
-    tot = w.groupby("post").size()
-    days = {False: (REGIME_START - w["review_date"].min().normalize()).days, True: (w["review_date"].max().normalize() - REGIME_START).days + 1}
-    vol_ratio = (tot[True] / days[True]) / (tot[False] / days[False])
-    shrink = 1 - adj["median_len_post"] / adj["median_len_pre"]
-    short = w[w["lb"] == LEN_LABELS[0]].groupby("post")["score"].mean()
-    ia, ir = adj["has_issue_adj_change"] * 100, adj["has_issue_raw_change"] * 100
-    summary["regime_shift"]["interpretation"] = (
-        f"Reviews/day rise {vol_ratio:.1f}x and median review length falls {shrink.min() * 100:.0f}-{shrink.max() * 100:.0f}% in all five apps "
-        f"in July 2026. Issue-tag rate changes of {ir.min():.0f} to {ir.max():.0f} pp shrink to {ia.min():.0f} to {ia.max():.0f} pp after "
-        "standardising to each app's own review-length mix, so most apparent post-July change is a length-composition effect of the "
-        "collection rather than a change in the apps.")
-    summary["regime_shift"]["reviews_per_day_ratio_post_vs_pre"] = round(float(vol_ratio), 2)
-    summary["regime_shift"]["median_length_shrink_pct"] = {a: round(float(v * 100), 1) for a, v in shrink.items()}
-    save(fig, "eda_11_july_regime_shift",
-         f"In July 2026 all five apps shift together: {vol_ratio:.1f}× more reviews per day, {shrink.min() * 100:.0f}–{shrink.max() * 100:.0f}% shorter; issue rates barely move within length bands",
-         f"{tot[False]:,} reviews before vs {tot[True]:,} from 1 Jul. Exceptions: 21–40 word reviews are tagged more often after July, and ≤20-word reviews are rated {short[True] - short[False]:+.1f}★ higher. Most post-July 'improvement' is a length-mix effect of the collection.")
-
-
-def chart_10_monthly_trend(df, window, summary):
-    g = monthly_table(df, window)
-    fig, axes = plt.subplots(1, 2, figsize=(13.5, 5))
-    line_panel(axes[0], g, "mean_rating", "Mean star rating", window)
-    axes[0].set_title("Common window, monthly mean rating", loc="left", fontsize=10.5, color=INK2)
-    line_panel(axes[1], g, "pct_low_star", "% rated 1–2★", window)
-    axes[1].set_title("Common window, share of 1–2★ reviews", loc="left", fontsize=10.5, color=INK2)
-    app_legend(fig, fig.get_figheight())
-    ch = g.pivot(index="month", columns="app_name", values="mean_rating").reindex(window)
-    delta = (ch.iloc[-2] - ch.iloc[0]) if len(window) > 2 else ch.iloc[-1] - ch.iloc[0]
-    summary["monthly_rating_change_first_to_last_full_month"] = {a: round(float(v), 3) for a, v in delta.items()}
-    # Kruskal-Wallis of rating across apps in the window + pairwise-friendly effect size
-    w = df[df["month"].isin(window)]
-    groups = [w.loc[w["app_name"] == a, "score"] for a in APPS]
-    h, p = stats.kruskal(*groups)
-    ct = pd.crosstab(w["app_name"], w["score"])
-    chi2, pc, dof, v = cramers_v(ct)
-    summary["rating_differs_by_app"] = {"kruskal_H": round(float(h), 1), "kruskal_p": float(p), "chi2": round(chi2, 1),
-                                        "chi2_p": pc, "cramers_v": round(v, 3), "window_n": int(len(w))}
-    _, adj = regime_adjusted(df, window)
-    ceil = ch[["Swiggy", "Zomato"]].max().max()
-    save(fig, "eda_10_monthly_trend",
-         f"Swiggy and Zomato never exceed {ceil:.1f}★; other apps' gains after July shrink to {adj['score_adj_change'].drop(['Swiggy', 'Zomato']).min():+.2f}…{adj['score_adj_change'].drop(['Swiggy', 'Zomato']).max():+.2f}★ once review length is controlled",
-         f"Points need ≥{MIN_CELL_N} reviews. * = partial month. Rating differs by app: Cramér's V = {v:.2f} (Kruskal–Wallis p<0.001). See chart 11 for the length adjustment.")
+    fig, axes = plt.subplots(1, 2, figsize=(15.5, 5.6))
+    idx = per_day.div(per_day[pre_m].mean(axis=1), axis=0) * 100
+    heatmap(axes[0], idx.values, [month_label(x) for x in months], APPS, DIV, fmt="{:.0f}", vmin=0, vmax=200, fontsize=8)
+    axes[0].axvline(len(pre_m) - 0.5, color=INK, lw=1.2)
+    domain_dividers(axes[0], "y")
+    axes[0].set_title("Reviews per day, indexed to the app's Apr–Jun average (=100)", loc="left", fontsize=10.5, color=INK2)
+    heatmap(axes[1], med_len.values, [month_label(x) for x in months], APPS, SEQ, fmt="{:.0f}",
+            vmin=0, vmax=np.nanmax(med_len.values), fontsize=8)
+    axes[1].axvline(len(pre_m) - 0.5, color=INK, lw=1.2)
+    domain_dividers(axes[1], "y")
+    axes[1].set_title("Median review length (words)", loc="left", fontsize=10.5, color=INK2)
+    up = int((vol_ratio > 1.5).sum())
+    shorter = int((len_change <= -2).sum())
+    common_shift = up > len(APPS) / 2 and shorter > len(APPS) / 2
+    summary["july_check"]["apps_with_volume_up_50pct"] = up
+    summary["july_check"]["apps_with_reviews_2plus_words_shorter"] = shorter
+    summary["july_check"]["verdict"] = ("A common July shift exists in the full review stream." if common_shift else
+                                        "No common July shift in the full review stream; the July 'regime shift' in the old "
+                                        "MOST_RELEVANT sample was produced by that sampling method.")
+    title = (f"July 2026 shift confirmed: {up} of {len(APPS)} apps jump ≥1.5× in volume" if common_shift else
+             f"No July 2026 shift in the full review stream: {up} of {len(APPS)} apps jump ≥1.5× in volume, {shorter} get shorter reviews")
+    save(fig, "eda_11_july_check", title,
+         f"The old MOST_RELEVANT sample showed a sudden July change in all apps; this complete NEWEST collection tests it. Full months, "
+         f"vertical rule = 1 Jul, gap days excluded. Length-adjusted rating change Jul–Sep vs Apr–Jun: "
+         f"{adj['score_adj_change'].min():+.2f} to {adj['score_adj_change'].max():+.2f}★.")
 
 
 def chart_12_app_versions(df, summary):
-    """Rating by app version: candidate 'bad release' detector (uses top versions per app)."""
-    d = df.dropna(subset=["app_version"])
+    """Rating by app version: candidate 'bad release' detector (gap days excluded: they understate ratings)."""
+    d = df[~df["in_gap"]].dropna(subset=["app_version"])
     rows = []
     for app in APPS:
         a = d[d["app_name"] == app]
@@ -706,84 +747,177 @@ def chart_12_app_versions(df, summary):
             if len(grp) < MIN_CELL_N:
                 continue
             se = sd / np.sqrt(len(grp))
-            rows.append({"app_name": app, "app_version": v, "n": len(grp), "mean_rating": grp["score"].mean(),
+            rows.append({"app_name": app, "domain": APP_DOMAIN[app], "app_version": v, "n": len(grp),
+                         "mean_rating": grp["score"].mean(), "gap_vs_app_mean": grp["score"].mean() - mu,
                          "pct_low_star": grp["is_low"].mean() * 100, "pct_has_issue": grp["has_issue"].mean() * 100,
                          "mean_sentiment": grp["sentiment_compound"].mean(), "first_seen": grp["review_date"].min(),
                          "median_date": grp["review_date"].median(), "z_vs_app_mean": (grp["score"].mean() - mu) / se})
     vt = pd.DataFrame(rows)
-    vt["flag"] = np.where(vt["z_vs_app_mean"] <= -2, "worse than app average",
-                          np.where(vt["z_vs_app_mean"] >= 2, "better than app average", ""))
+    worse = (vt["z_vs_app_mean"] <= -VERSION_Z) & (vt["gap_vs_app_mean"] <= -VERSION_MIN_GAP)
+    better = (vt["z_vs_app_mean"] >= VERSION_Z) & (vt["gap_vs_app_mean"] >= VERSION_MIN_GAP)
+    vt["flag"] = np.where(worse, "worse than app average", np.where(better, "better than app average", ""))
     vt.apply(lambda c: c.round(3) if c.dtype.kind == "f" else c).to_csv(TABLES_DIR / "version_metrics.csv", index=False)
     summary["version_analysis"] = {
         "versions_with_min_n": int(len(vt)), "min_n": MIN_CELL_N,
-        "worse_than_average": vt[vt["flag"] == "worse than app average"][["app_name", "app_version", "n", "mean_rating"]].round(2).to_dict("records"),
-        "better_than_average": vt[vt["flag"] == "better than app average"][["app_name", "app_version", "n", "mean_rating"]].round(2).to_dict("records"),
-        "caveat": "Reviews are attributed to the reviewer's installed version, not the version at posting time; PhonePe mixes two version schemes.",
+        "flag_rule": f"|z| >= {VERSION_Z} AND |gap| >= {VERSION_MIN_GAP} stars vs the app's mean",
+        "worse_than_average": vt[worse][["app_name", "app_version", "n", "mean_rating", "gap_vs_app_mean"]].round(2).to_dict("records"),
+        "better_than_average_count": int(better.sum()),
+        "caveat": "Reviews are attributed to the reviewer's installed version, not necessarily the version that caused the problem.",
     }
-    fig, axes = plt.subplots(len(APPS), 1, figsize=(12.5, 11.5))
-    for ax, app in zip(axes, APPS):
-        v = vt[vt["app_name"] == app].nlargest(10, "n").sort_values("median_date")
-        mu = df.loc[df["app_name"] == app, "score"].mean()
-        colors = [APP_COLORS[app] if f == "" else ("#c93a39" if f.startswith("worse") else "#1c5cab") for f in v["flag"]]
+    fig, axes = plt.subplots(4, 3, figsize=(16, 12.5))
+    for ax, app in zip(axes.ravel(), APPS):
+        v = vt[vt["app_name"] == app].nlargest(8, "n").sort_values("median_date")
+        mu = d.loc[d["app_name"] == app, "score"].mean()
+        colors = [MUTED if f == "" else ("#c93a39" if f.startswith("worse") else "#1c5cab") for f in v["flag"]]
         ax.bar(range(len(v)), v["mean_rating"], color=colors, width=0.62)
         ax.axhline(mu, color=INK2, ls="--", lw=1)
-        for i, (r, n, f) in enumerate(zip(v["mean_rating"], v["n"], v["flag"])):
-            ax.text(i, r + 0.04, f"{r:.2f}", ha="center", fontsize=8.5, fontweight="bold")
-            ax.text(i, 0.05, f"n={n}", ha="center", fontsize=7.5, color="#ffffff" if r > 0.5 else INK)
-            if f:
-                ax.text(i, r + 0.42, "▼" if f.startswith("worse") else "▲", ha="center", fontsize=9, color=colors[i])
-        ax.set_xticks(range(len(v)), v["app_version"], fontsize=8.5)
-        ax.set_ylim(0, v["mean_rating"].max() + 1.0)
-        ax.set_ylabel(f"{app}\n(app mean {mu:.2f}, dashed)", rotation=0, ha="right", va="center", fontweight="bold", color=INK)
+        for i, r in enumerate(v["mean_rating"]):
+            ax.text(i, r + 0.06, f"{r:.2f}", ha="center", fontsize=7.5)
+        ax.set_xticks(range(len(v)), [str(x).split(" (")[0][:14] for x in v["app_version"]], fontsize=6.5, rotation=35, ha="right")
+        ax.set_ylim(0, 5.3)
+        ax.set_title(f"{app}  (mean {mu:.2f}★, dashed)", loc="left", fontsize=10, color=INK2)
         ax.grid(axis="x", visible=False)
-    axes[-1].set_xlabel("Ten most-reviewed versions per app, ordered by median review date (▼/▲ = |z|>2 vs the app's mean)")
-    nw = len(summary["version_analysis"]["worse_than_average"])
-    exp_fp = 0.0228 * len(vt)
-    summary["version_analysis"]["expected_false_flags_per_direction"] = round(float(exp_fp), 1)
+    for ax in axes.ravel()[len(APPS):]:
+        ax.set_visible(False)
+    nw = int(worse.sum())
     save(fig, "eda_12_app_versions",
-         f"{nw} of {len(vt)} versions rate significantly worse than their app's mean (~{exp_fp:.0f} expected by chance); version is confounded with time",
-         f"Mean rating per version with ≥{MIN_CELL_N} reviews. Red ▼ z ≤ −2, dark blue ▲ z ≥ 2. Newer PhonePe/Paytm versions rate higher partly because of the July sample shift (chart 11). Full table: data/eda/version_metrics.csv.")
+         f"{nw} of {len(vt)} app versions rate clearly worse than their app's average (≥{VERSION_MIN_GAP}★ below, z ≤ −{VERSION_Z})",
+         f"Eight most-reviewed versions per app, ordered by median review date. Red = flagged worse, dark blue = flagged better, grey = not flagged. "
+         f"Versions need ≥{MIN_CELL_N} reviews; {GAP_START:%d %b}–{GAP_END:%d %b} gap days excluded. Full table: data/eda/version_metrics.csv.")
     return vt
 
 
 def chart_13_version_issue_mix(df, vt, summary):
-    """For the versions that rate significantly worse: WHICH failure is elevated vs the app's baseline?"""
-    worse = vt[vt["flag"].str.startswith("worse")].copy()
+    """For the worst flagged versions: WHICH failure is elevated vs the app's baseline?"""
+    worse = vt[vt["flag"].str.startswith("worse")].nsmallest(15, "z_vs_app_mean").copy()
     worse["order"] = worse["app_name"].map({a: i for i, a in enumerate(APPS)})
     worse = worse.sort_values(["order", "median_date"])
     diff = np.full((len(worse), len(ISSUES)), np.nan)
     signals = []
+    clean = df[~df["in_gap"]]
     for r, (_, v) in enumerate(worse.iterrows()):
-        app_df = df[df["app_name"] == v["app_name"]]
+        app_df = clean[clean["app_name"] == v["app_name"]]
         ver_df = app_df[app_df["app_version"] == v["app_version"]]
         n = len(ver_df)
         for c, i in enumerate(ISSUES):
             p0, p1 = app_df[f"issue_{i}"].mean(), ver_df[f"issue_{i}"].mean()
             se = np.sqrt(max(p0 * (1 - p0), 1e-9) / n)
-            if abs(p1 - p0) > 2 * se and abs(p1 - p0) >= 0.03:      # significant AND at least 3 pp
+            if abs(p1 - p0) > 3 * se and abs(p1 - p0) >= 0.02:
                 diff[r, c] = (p1 - p0) * 100
                 signals.append({"app_name": v["app_name"], "app_version": v["app_version"], "issue": i,
                                 "version_pct": round(float(p1 * 100), 1), "app_baseline_pct": round(float(p0 * 100), 1)})
     summary["version_issue_signals"] = signals
-    rows = [f"{a} {v}  (n={n}, {m:.2f}★)" for a, v, n, m in zip(worse["app_name"], worse["app_version"], worse["n"], worse["mean_rating"])]
-    fig, ax = plt.subplots(figsize=(11.5, 0.55 * len(rows) + 2.6))
-    im = heatmap(ax, diff, [ISSUE_LABELS[i] for i in ISSUES], rows, DIV, fmt="{:+.0f}", vmin=-25, vmax=25)
+    if worse.empty:
+        summary["version_issue_summary"] = {"flagged_versions": 0}
+        return
+    rows = [f"{a} {str(v).split(' (')[0][:14]}  (n={n:,}, {m:.2f}★)" for a, v, n, m in zip(worse["app_name"], worse["app_version"], worse["n"], worse["mean_rating"])]
+    fig, ax = plt.subplots(figsize=(12, 0.5 * len(rows) + 2.8))
+    vmax = np.nanmax(np.abs(diff)) if np.isfinite(diff).any() else 10
+    im = heatmap(ax, diff, [ISSUE_LABELS[i] for i in ISSUES], rows, DIV, fmt="{:+.0f}", vmin=-vmax, vmax=vmax)
     ax.set_xticks(range(len(ISSUES)), [ISSUE_LABELS[i] for i in ISSUES], rotation=30, ha="right")
     fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02, label="pp vs the app's overall rate")
     ups = [x for x in signals if x["version_pct"] > x["app_baseline_pct"]]
-    ops = [x for x in ups if x["issue"] in ("delivery_delay", "customer_support", "order_quality_fulfillment", "cancellation_return")]
-    crash = [x for x in ups if x["issue"] in ("crash_bugs_stability", "ui_ux_update")]
+    by_issue = pd.Series([x["issue"] for x in ups]).value_counts()
     quiet = len(worse) - len({(x["app_name"], x["app_version"]) for x in signals})
-    summary["version_issue_summary"] = {"flagged_versions": int(len(worse)), "elevated_signals": len(ups),
-                                        "operational_signals": len(ops), "crash_or_ui_signals": len(crash),
+    summary["version_issue_summary"] = {"versions_shown": int(len(worse)), "elevated_signals": len(ups),
+                                        "elevated_by_issue": {k: int(v) for k, v in by_issue.items()},
                                         "versions_with_no_specific_signal": int(quiet)}
-    save(fig, "eda_13_version_issue_mix",
-         f"Worse-rated versions show more fulfilment/support complaints ({len(ops)} of {len(ups)} signals), never crash or UI ({len(crash)})",
-         f"Issue rate in each flagged version minus its app's overall rate (pp). Blank = not significant (|diff| < 2 SE or < 3 pp). {quiet} of {len(worse)} flagged versions show no specific issue: a general drop not tied to one issue type.")
+    top_n = int(by_issue.iloc[0]) if len(by_issue) else 0
+    leads = [ISSUE_LABELS[i] for i, n in by_issue.items() if n == top_n]
+    title = (f"In the worst-rated versions, {leads[0]} is the issue most often elevated ({top_n} of {len(ups)} signals)" if len(leads) == 1 else
+             f"In the worst-rated versions, {' and '.join(leads)} are the issues most often elevated ({top_n} signals each, of {len(ups)})")
+    save(fig, "eda_13_version_issue_mix", title,
+         f"Issue rate in each of the {len(worse)} most significantly worse versions minus its app's overall rate (pp). Blank = not significant "
+         f"(|diff| < 3 SE or < 2 pp). {quiet} of {len(worse)} {'shows' if quiet == 1 else 'show'} no specific issue: a general drop rather than one failure type.")
 
 
-def export_monthly_trend(df, window):
-    """Monthly per-app metrics over ALL months (with flags) - the trend dataset for Person 5."""
+def chart_14_domains(df, summary):
+    """Domain comparison: issue prevalence and rating mix."""
+    prev = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("domain", observed=True)[f"issue_{i}"].mean() * 100 for i in ISSUES}).T[DOMAINS]
+    low = df.groupby("domain", observed=True)["is_low"].mean().reindex(DOMAINS) * 100
+    summary["domain_comparison"] = {"issue_prevalence_pct": json.loads(prev.round(2).to_json()),
+                                    "pct_low_star": {d: round(float(v), 2) for d, v in low.items()},
+                                    "mean_rating": {d: round(float(v), 3) for d, v in df.groupby("domain", observed=True)["score"].mean().items()}}
+    fig, ax = plt.subplots(figsize=(13, 5.4))
+    order = prev.max(axis=1).sort_values(ascending=False).index
+    x = np.arange(len(order))
+    w = 0.26
+    for k, d in enumerate(DOMAINS):
+        vals = prev.loc[order, d].values
+        ax.bar(x + (k - 1) * w, vals, w * 0.92, color=DOMAIN_COLORS[d], label=f"{d} ({low[d]:.0f}% rated 1–2★)")
+        for xi, v in zip(x + (k - 1) * w, vals):
+            if v >= 0.5:
+                ax.text(xi, v + 0.12, f"{v:.1f}", ha="center", fontsize=7.5, color=INK2)
+    ax.set_xticks(x, order, rotation=20, ha="right")
+    ax.set_ylabel("% of the domain's reviews")
+    ax.grid(axis="x", visible=False)
+    ax.legend(fontsize=9)
+    lead = {d: prev[d].idxmax() for d in DOMAINS}
+    ratio = (prev.max(axis=1) + 0.05) / (prev.min(axis=1) + 0.05)
+    gap_issue = ratio.idxmax()
+    summary["domain_comparison"]["most_domain_specific_issue"] = {"issue": gap_issue, "high_domain": prev.loc[gap_issue].idxmax(),
+                                                                  "low_domain": prev.loc[gap_issue].idxmin(),
+                                                                  "ratio": round(float(ratio[gap_issue]), 1)}
+    save(fig, "eda_14_domain_comparison",
+         f"{low.idxmax()} reviews are the most negative ({low.max():.0f}% 1–2★ vs {low.min():.0f}% for {low.idxmin()}); "
+         f"{gap_issue} is the most domain-specific issue",
+         "Top issue: " + "; ".join(f"{d} – {lead[d]}" for d in DOMAINS) + f". {gap_issue}: "
+         f"{prev.loc[gap_issue].max():.1f}% in {prev.loc[gap_issue].idxmax()} vs {prev.loc[gap_issue].min():.1f}% in {prev.loc[gap_issue].idxmin()}. "
+         "Bars sorted by the highest domain.")
+
+
+def chart_15_april_gap(df, summary):
+    """21 Apr - 5 May: positive reviews largely vanish from the feed while negative reviews fall far less."""
+    span = 13
+    periods_ = {"Before\n(8–20 Apr)": (GAP_START - pd.Timedelta(days=span), GAP_START - pd.Timedelta(days=1)),
+                "Gap\n(21 Apr–5 May)": (GAP_START, GAP_END),
+                "After\n(6–18 May)": (GAP_END + pd.Timedelta(days=1), GAP_END + pd.Timedelta(days=span))}
+    day = df["review_date"].dt.normalize()
+    pos, neg, med = {}, {}, {}
+    for label, (a, b) in periods_.items():
+        w = df[(day >= a) & (day <= b)]
+        n_days = (b - a).days + 1
+        pos[label] = w[w["score"] >= 4].groupby("app_name", observed=True).size().reindex(APPS) / n_days
+        neg[label] = w[w["score"] <= 2].groupby("app_name", observed=True).size().reindex(APPS) / n_days
+        med[label] = w.groupby("app_name", observed=True)["review_length"].median().reindex(APPS)
+    pos, neg, med = pd.DataFrame(pos), pd.DataFrame(neg), pd.DataFrame(med)
+    base = (pos.iloc[:, 0] + pos.iloc[:, 2]) / 2
+    nbase = (neg.iloc[:, 0] + neg.iloc[:, 2]) / 2
+    pos_idx = pos.div(base, axis=0) * 100
+    neg_idx = neg.div(nbase, axis=0) * 100
+    gap_col = list(periods_)[1]
+    affected = pos_idx.index[(pos_idx[gap_col] < 60) & (pos_idx[gap_col] < 0.6 * neg_idx[gap_col])].tolist()
+    summary["april_gap"] = {
+        "window": [str(GAP_START.date()), str(GAP_END.date())],
+        "positive_per_day": json.loads(pos.round(1).to_json(orient="index")),
+        "negative_per_day": json.loads(neg.round(1).to_json(orient="index")),
+        "median_words": json.loads(med.to_json(orient="index")),
+        "affected_apps": affected,
+        "rule": "affected = positive reviews/day in the gap < 60% of the before/after average AND fallen to less than 0.6x "
+                "the relative level of negative reviews/day",
+        "reviews_in_gap": int(df["in_gap"].sum()),
+    }
+    labels = [p.replace("\n", " ") for p in periods_]
+    fig, axes = plt.subplots(1, 3, figsize=(16, 6), gridspec_kw={"width_ratios": [3, 3, 3]})
+    for ax, data, ttl, cmap, fmt, vmax in [
+        (axes[0], pos_idx, "Positive (4–5★) reviews/day, index (before/after avg = 100)", DIV, "{:.0f}", 200),
+        (axes[1], neg_idx, "Negative (1–2★) reviews/day, same index", DIV, "{:.0f}", 200),
+        (axes[2], med, "Median review length (words)", SEQ, "{:.0f}", float(np.nanmax(med.values)))]:
+        heatmap(ax, data.values, labels if ax is not axes[0] else labels, APPS, cmap, fmt=fmt, vmin=0, vmax=vmax, fontsize=8.5)
+        ax.set_xticks(range(3), [p for p in periods_], fontsize=8.5)
+        domain_dividers(ax, "y")
+        ax.set_title(ttl, loc="left", fontsize=10, color=INK2)
+        if ax is not axes[0]:
+            ax.set_yticklabels([])
+    drop = 100 - pos_idx.loc[affected, gap_col].median() if affected else 0
+    save(fig, "eda_15_april_gap",
+         f"21 Apr–5 May: in {len(affected)} of {len(APPS)} apps positive reviews fall ~{drop:.0f}% while negative reviews fall far less — a feed gap, not an incident",
+         f"Affected: {', '.join(affected) if affected else 'none'}. Short positive reviews ('good', 'nice') are what disappear, so median length jumps. "
+         "Shares such as '% rated 1–2★' are inflated in this window; counts of negative reviews per day are far less affected. The gap is kept in the dataset "
+         "and flagged; trend, version and July analyses exclude it.")
+
+
+def export_monthly_trend(df, months):
     g = df.groupby(["app_name", "month"], observed=True).agg(
         n=("score", "size"), mean_rating=("score", "mean"), pct_low_star=("is_low", "mean"),
         pct_has_issue=("has_issue", "mean"), mean_sentiment=("sentiment_compound", "mean"),
@@ -791,10 +925,10 @@ def export_monthly_trend(df, window):
         **{f"pct_{i}": (f"issue_{i}", "mean") for i in ISSUES}).reset_index()
     pct_cols = [c for c in g.columns if c.startswith("pct_")]
     g[pct_cols] = g[pct_cols] * 100
-    g["in_common_window"] = g["month"].isin(window)
-    g["post_regime_shift"] = g["month"] >= f"{REGIME_START.year}-{REGIME_START.month:02d}"
-    g["partial_month"] = g["month"] == PARTIAL_MONTH
-    g["n_ge_min"] = g["n"] >= MIN_CELL_N
+    g["domain"] = g["app_name"].map(APP_DOMAIN)
+    g["full_month"] = g["month"].isin(months)
+    g["post_july"] = g["month"] >= "2026-07"
+    g["contains_gap_days"] = g["month"].isin(["2026-04", "2026-05"])
     g = g.sort_values(["app_name", "month"])
     g.apply(lambda c: c.round(3) if c.dtype.kind == "f" else c).to_csv(TABLES_DIR / "monthly_trend.csv", index=False)
     print(f"  saved monthly_trend.csv ({len(g)} app-months)")
@@ -806,15 +940,15 @@ def export_monthly_trend(df, window):
 def statistical_tests(df, summary):
     print("\n[Stats] hypothesis tests")
     t = {}
-    ct = pd.crosstab(df["app_name"], df["score"])
-    chi2, p, dof, v = cramers_v(ct)
+    chi2, p, dof, v = cramers_v(pd.crosstab(df["app_name"], df["score"]))
     t["rating_vs_app_chi2"] = {"chi2": round(chi2, 1), "dof": dof, "p": p, "cramers_v": round(v, 3)}
-    groups = [df.loc[df["app_name"] == a, "score"] for a in APPS]
-    h, p = stats.kruskal(*groups)
+    chi2, p, dof, v = cramers_v(pd.crosstab(df["domain"], df["score"]))
+    t["rating_vs_domain_chi2"] = {"chi2": round(chi2, 1), "dof": dof, "p": p, "cramers_v": round(v, 3)}
+    h, p = stats.kruskal(*[df.loc[df["app_name"] == a, "score"] for a in APPS])
     t["rating_by_app_kruskal"] = {"H": round(float(h), 1), "p": float(p)}
     a, b = df.loc[df["has_issue"] == 1, "thumbs_up"], df.loc[df["has_issue"] == 0, "thumbs_up"]
     u = stats.mannwhitneyu(a, b)
-    t["thumbs_up_tagged_vs_untagged"] = {"median_tagged": float(a.median()), "median_untagged": float(b.median()),
+    t["thumbs_up_tagged_vs_untagged"] = {"mean_tagged": round(float(a.mean()), 3), "mean_untagged": round(float(b.mean()), 3),
                                          "mannwhitney_p": float(u.pvalue),
                                          "rank_biserial": round(float(1 - 2 * u.statistic / (len(a) * len(b))), 4)}
     hi_len, lo_len = df.loc[df["has_issue"] == 1, "review_length"], df.loc[df["has_issue"] == 0, "review_length"]
@@ -822,9 +956,6 @@ def statistical_tests(df, summary):
                                       "mannwhitney_p": float(stats.mannwhitneyu(hi_len, lo_len).pvalue)}
     r = stats.spearmanr(df["review_length"], df["thumbs_up"])
     t["spearman_length_vs_thumbs"] = {"rho": round(float(r.statistic), 4), "p": float(r.pvalue)}
-    s = stats.spearmanr(df["sentiment_compound"], df["thumbs_up"])
-    t["spearman_sentiment_vs_thumbs"] = {"rho": round(float(s.statistic), 4), "p": float(s.pvalue)}
-    # issue effect on rating: Mann-Whitney per issue
     eff = {}
     for i in ISSUES:
         x, y = df.loc[df[f"issue_{i}"] == 1, "score"], df.loc[df[f"issue_{i}"] == 0, "score"]
@@ -833,24 +964,26 @@ def statistical_tests(df, summary):
                   "rank_biserial": round(float(1 - 2 * m.statistic / (len(x) * len(y))), 3), "p": float(m.pvalue)}
     t["rating_effect_of_each_issue"] = eff
     summary["statistical_tests"] = t
-    print("  ", json.dumps({k: v for k, v in t.items() if k != "rating_effect_of_each_issue"})[:400], "...")
 
 
 # ============================================================================
 def main():
     CHARTS_DIR.mkdir(parents=True, exist_ok=True)
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
+    for old in CHARTS_DIR.glob("eda_*.png"):
+        old.unlink()
     df = load()
     meta = pd.read_csv(META_PATH)
-    window, _ = common_window(df)
-    print(f"Loaded {len(df):,} reviews; common window = {window}")
+    end, months, weeks = periods(df)
+    print(f"Loaded {len(df):,} reviews; full months = {months}; {len(weeks)} complete weeks; last common day {end:%Y-%m-%d}")
     summary = {"input_rows": int(len(df)),
-               "common_window": {"months": window, "min_reviews_per_app_month": MIN_MONTH_N, "partial_month": PARTIAL_MONTH}}
+               "window": {"start": str(WINDOW_START.date()), "last_common_day": str(end.date()),
+                          "full_months": months, "complete_weeks": len(weeks)}}
 
     a_quality_audit(df, summary)
     print("[A] coverage, ratings, engagement")
-    chart_01_coverage_timeline(df, window)
-    chart_02_ratings_and_bias(df, meta, summary)
+    chart_01_coverage(df, end, weeks, summary)
+    chart_02_ratings_vs_public(df, meta, summary)
     chart_03_engagement(df, summary)
     chart_04_correlation(df, summary)
     print("[B] issues")
@@ -859,19 +992,21 @@ def main():
     chart_07_cooccurrence(df, summary)
     chart_08_issue_by_rating(df, summary)
     chart_09_taxonomy_gap(df, summary)
-    print("[C] time and versions")
-    chart_10_monthly_trend(df, window, summary)
-    chart_11_regime_shift(df, window, summary)
+    print("[C] time, versions, domains")
+    chart_10_weekly_trend(df, weeks, summary)
+    chart_11_july_check(df, months, summary)
     vt = chart_12_app_versions(df, summary)
     chart_13_version_issue_mix(df, vt, summary)
-    export_monthly_trend(df, window)
+    chart_14_domains(df, summary)
+    chart_15_april_gap(df, summary)
+    export_monthly_trend(df, months)
     statistical_tests(df, summary)
 
     summary["charts"] = CHART_INDEX
     with open(SUMMARY_PATH, "w") as f:
         json.dump(summary, f, indent=2, default=str)
     print(f"\nSaved {len(CHART_INDEX)} charts to {CHARTS_DIR}")
-    print(f"Saved version table to {TABLES_DIR} and summary to {SUMMARY_PATH}")
+    print(f"Saved tables to {TABLES_DIR} and summary to {SUMMARY_PATH}")
 
 
 if __name__ == "__main__":

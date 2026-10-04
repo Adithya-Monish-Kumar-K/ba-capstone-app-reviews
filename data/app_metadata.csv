@@ -1,6 +1,12 @@
-app_id,app_name,category,current_score,installs,total_ratings
-in.swiggy.android,Swiggy: Food Instamart Dineout,Food & Drink,4.4957523,"100,000,000+",13493055
-com.application.zomato,Zomato: Food Delivery & Dining,Food & Drink,4.561454,"100,000,000+",14360826
-com.myntra.android,Myntra - Fashion Shopping App,Shopping,4.601628,"100,000,000+",5809653
-net.one97.paytm,Paytm: Secure UPI Payments,Finance,4.6642184,"500,000,000+",24264499
-com.phonepe.app,"PhonePe UPI Payments, Loan App",Finance,4.4316974,"1,000,000,000+",14245294
+app_id,app_name,domain,store_title,category,current_score,installs,total_ratings,metadata_collected_at
+in.amazon.mShop.android.shopping,Amazon,Shopping,"Amazon India Shop, Pay, miniTV",Shopping,4.182552,"500,000,000+",10454561,2026-10-04T20:57:42
+com.grofers.customerapp,Blinkit,Food & Grocery,Blinkit: Groceries & more,Food & Drink,4.5750604,"100,000,000+",9719396,2026-10-04T20:49:51
+com.Dominos,Domino's,Food & Grocery,Domino's Pizza - Food Delivery,Food & Drink,4.5385065,"100,000,000+",4402697,2026-10-04T21:10:22
+com.flipkart.android,Flipkart,Shopping,Flipkart Online Shopping App,Shopping,4.3419766,"1,000,000,000+",76777408,2026-10-04T20:59:54
+com.google.android.apps.nbu.paisa.user,Google Pay,Payments,Google Pay: Secure UPI payment,Finance,4.336493,"1,000,000,000+",11377320,2026-10-04T21:01:18
+com.meesho.supply,Meesho,Shopping,Meesho: Online Shopping App,Shopping,4.3848863,"500,000,000+",6119922,2026-10-04T20:49:44
+com.myntra.android,Myntra,Shopping,Myntra - Fashion Shopping App,Shopping,4.60151,"100,000,000+",5838570,2026-10-04T21:25:14
+net.one97.paytm,Paytm,Payments,Paytm: Secure UPI Payments,Finance,4.6696177,"500,000,000+",24346554,2026-10-04T20:52:34
+com.phonepe.app,PhonePe,Payments,"PhonePe UPI Payments, Loan App",Finance,4.4315276,"1,000,000,000+",14273970,2026-10-04T21:05:54
+in.swiggy.android,Swiggy,Food & Grocery,Swiggy: Food Instamart Dineout,Food & Drink,4.496276,"100,000,000+",13588907,2026-10-04T21:06:04
+com.application.zomato,Zomato,Food & Grocery,Zomato: Food Delivery & Dining,Food & Drink,4.560704,"100,000,000+",14530549,2026-10-04T21:03:36

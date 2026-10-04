@@ -1,19 +1,18 @@
 import json
-import os
 import re
-from pathlib import Path
+from concurrent.futures import ProcessPoolExecutor
+
 import pandas as pd
 
-# Define paths relative to repository root
-REPO_ROOT = Path(__file__).resolve().parent.parent
-INPUT_PATH = REPO_ROOT / "data" / "app_reviews_clean.csv"
-OUTPUT_PATH = REPO_ROOT / "data" / "app_reviews_tagged.csv"
-SUMMARY_PATH = REPO_ROOT / "data" / "issue_tagging_summary.json"
+from apps import APPS
+from data_io import DATA_DIR, read_app, read_stage, write_app
+
+SUMMARY_PATH = DATA_DIR / "issue_tagging_summary.json"
 
 # =============================================================================
 # DOMAIN-SPECIFIC ISSUE TAXONOMY
-# Covers 5 apps across Food Delivery (Swiggy, Zomato), E-Commerce (Myntra),
-# and Fintech / UPI Payments (Paytm, PhonePe).
+# Covers 11 apps across Food & Grocery (Swiggy, Zomato, Blinkit, Domino's),
+# Shopping (Myntra, Flipkart, Amazon, Meesho) and Payments (Paytm, PhonePe, Google Pay).
 # =============================================================================
 TAXONOMY = {
     "crash_bugs_stability": {
@@ -215,24 +214,23 @@ def tag_review_text(text: str) -> dict:
     }
 
 
+def tag_app(slug):
+    df = read_app("clean", slug)
+    tag_df = pd.DataFrame(df["content"].apply(tag_review_text).tolist())
+    write_app(pd.concat([df, tag_df], axis=1), "tagged", slug)
+    return slug, len(df)
+
+
 def main():
-    print(f"Loading cleaned reviews from: {INPUT_PATH}")
-    df = pd.read_csv(INPUT_PATH)
-    n_total = len(df)
-    print(f"Loaded {n_total:,} rows.")
+    print("Applying keyword taxonomy rules to data/clean/*.csv.gz (one process per app)...")
+    with ProcessPoolExecutor(max_workers=11) as pool:
+        for slug, n in pool.map(tag_app, APPS):
+            print(f"  {APPS[slug]['name']:10s} {n:>9,} reviews tagged")
 
-    print("Applying keyword taxonomy rules...")
-    tag_results = df["content"].apply(tag_review_text)
-    tag_df = pd.DataFrame(tag_results.tolist())
-
-    tagged_df = pd.concat([df, tag_df], axis=1)
-
-    # Save output dataset
-    print(f"Saving tagged dataset to: {OUTPUT_PATH}")
-    tagged_df.to_csv(OUTPUT_PATH, index=False)
-
-    # Compute summary statistics
     issue_cols = [f"issue_{c}" for c in TAXONOMY]
+    tagged_df = read_stage("tagged", columns=["app_name", "issue_count", "has_issue"] + issue_cols)
+    n_total = len(tagged_df)
+
     total_tagged = int((tagged_df["has_issue"] == 1).sum())
     coverage_pct = round(total_tagged / n_total * 100, 2)
 
@@ -278,14 +276,14 @@ def main():
     print(f"Average issues per review: {summary['avg_issues_per_review']}")
     print("\nCategory Distribution:")
     for cat, info in category_summary.items():
-        print(f"  {cat:28s}: {info['count']:5,d} ({info['pct_of_total']:5.1f}%)")
+        print(f"  {cat:28s}: {info['count']:9,d} ({info['pct_of_total']:5.1f}%)")
 
     print("\nApp Breakdown:")
     for app, info in app_breakdown.items():
         top_str = ", ".join(f"{c} ({cnt})" for c, cnt in info["top_categories"])
         print(f"  {app:10s}: {info['coverage_pct']:5.1f}% tagged | Top: {top_str}")
 
-    print(f"\nSaved output dataset: {OUTPUT_PATH}")
+    print("\nSaved output dataset: data/tagged/*.csv.gz")
     print(f"Saved summary metrics: {SUMMARY_PATH}")
 
 

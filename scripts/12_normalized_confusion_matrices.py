@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 
-PREDICTION_PATH = "data/model_predictions.csv"
+PREDICTION_PATH = "data/model_predictions.csv.gz"
 FIGURE_DIR = "figures"
 
 os.makedirs(FIGURE_DIR, exist_ok=True)

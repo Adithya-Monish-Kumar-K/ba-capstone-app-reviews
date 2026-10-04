@@ -3,6 +3,8 @@
 **Capstone Project — Stage 3: Text Mining (Issue Tagging + Sentiment Analysis)**  
 *Owner: Person 2 (Resolving Issues #101, #102, #103)*
 
+> **Data version note (Oct 2026).** The numbers below describe the first dataset (14,988 `MOST_RELEVANT` reviews of 5 apps, now in `data/v1_most_relevant/`). The tagging and sentiment scripts have been re-run on the new 1,218,358-review, 11-app collection, so `data/issue_tagging_summary.json`, `data/sentiment_summary.json` and the charts in `data/charts/` now reflect the new data. This document has not been updated yet.
+
 ---
 
 ## 1. Executive Summary & Pipeline Context

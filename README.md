@@ -2,21 +2,22 @@
 
 **23CSE452 Business Analytics · Team 10**
 
-This project analyzes Google Play Store reviews from five major Indian consumer apps:
+This project analyzes Google Play Store reviews from 11 major Indian consumer apps in three domains:
 
-* Swiggy
-* Zomato
-* Myntra
-* Paytm
-* PhonePe
+* **Food & Grocery:** Swiggy, Zomato, Blinkit, Domino's
+* **Shopping:** Myntra, Flipkart, Amazon, Meesho
+* **Payments:** Paytm, PhonePe, Google Pay
 
-The project combines **data collection, preprocessing, text mining, exploratory data analysis, predictive modelling, time-series forecasting, and an interactive dashboard**.
+This repository is set up for **Review 1: data collection, preprocessing, exploratory data analysis and predictive modelling**. Review 2 material (text-mining write-up, time-series forecasting, dashboard) is kept separately in [`review_2_prep/`](review_2_prep/) and will be rebuilt on the current dataset.
 
 ### Project Pipeline
 
-**Reviews → Cleaning → Issue Tagging & Sentiment → EDA → Predictive Modelling → Time-Series Forecasting → Dashboard**
+**Reviews → Cleaning → Issue Tagging & Sentiment → EDA → Predictive Modelling** (Review 1) → Time-Series Forecasting → Dashboard (Review 2)
 
-The goal is to identify major user-reported problems, detect reviews that are likely to be problematic, monitor complaint patterns over time, and provide business-oriented insights.
+The goal is to identify major user-reported problems, detect reviews that are likely to be problematic, measure how app versions affect ratings and complaints, monitor complaint patterns over time, and provide business-oriented insights.
+
+* **Problem review** = a review rated 1–2 stars; the 9 issue tags name the failure when the text mentions one.
+* **Update impact** = how ratings and complaints change between app versions: version-level comparison in Review 1 (EDA charts 12–13), before/after each release in Review 2.
 
 ---
 
@@ -25,50 +26,46 @@ The goal is to identify major user-reported problems, detect reviews that are li
 | # | Name                   | Roll Number      | Contribution                                       |
 | - | ---------------------- | ---------------- | -------------------------------------------------- |
 | 1 | Aditya Monish Kumar K  | CB.SC.U4CSE23103 | Data collection and preprocessing                  |
-| 2 | Regella Krishna Saketh | CB.SC.U4CSE23649 | Text mining: issue tagging and sentiment           |
-| 3 | Akshay KS              | CB.SC.U4CSE23104 | Exploratory data analysis                          |
-| 4 | Harshini Vennela       | CB.SC.U4CSE23455 | Feature engineering and predictive modelling       |
-| 5 | Kanishka D             | CB.SC.U4CSE23155 | Time-series analysis, dashboard and final assembly |
+| 2 | Regella Krishna Saketh | CB.SC.U4CSE23649 | Exploratory data analysis (with Akshay)            |
+| 3 | Akshay KS              | CB.SC.U4CSE23104 | Exploratory data analysis (with Saketh)            |
+| 4 | Harshini Vennela       | CB.SC.U4CSE23455 | Feature engineering and predictive modelling (with Kanishka) |
+| 5 | Kanishka D             | CB.SC.U4CSE23155 | Feature engineering and predictive modelling (with Harshini) |
 
 ---
 
 ## Dataset
 
-Reviews were collected from the **Google Play Store** using `google-play-scraper`.
+Reviews were collected from the **Google Play Store** using `google-play-scraper`: every English-language review from India posted since **1 April 2026**.
 
-| Property              | Details                                |
-| --------------------- | -------------------------------------- |
-| Apps                  | Swiggy, Zomato, Myntra, Paytm, PhonePe |
-| Reviews collected     | 15,000                                 |
-| Reviews per app       | 3,000                                  |
-| Language              | English                                |
-| Country               | India                                  |
-| Sort order            | `MOST_RELEVANT`                        |
-| Final cleaned reviews | 14,988                                 |
-| Final tagged dataset  | 14,988 rows, 28 columns                |
-| Collection date       | 20 September 2026                      |
+| Property              | Details                                                        |
+| --------------------- | -------------------------------------------------------------- |
+| Apps                  | 11 (4 Food & Grocery, 4 Shopping, 3 Payments)                  |
+| Window                | 1 April – 20 September 2026, identical for every app           |
+| Sort order            | `NEWEST`, paginated back to the start date                     |
+| Language / Country    | English / India                                                |
+| Raw reviews           | 1,202,729                                                      |
+| Final cleaned reviews | 1,137,987                                                      |
+| Final tagged dataset  | 1,137,987 rows, 29 columns                                     |
+| Largest / smallest app | Flipkart 266,285 / Google Pay 20,320 (after cleaning)         |
+| Storage               | one gzipped CSV per app per stage: `data/raw/`, `data/clean/`, `data/tagged/` |
 
-The dataset was collected specifically for this project rather than downloaded from Kaggle or another public dataset repository.
+The dataset was collected specifically for this project rather than downloaded from Kaggle or another public dataset repository. See `DATA_SOURCES.md` for the full method.
 
-### Important Sampling Note
+The first version of the project used 15,000 `MOST_RELEVANT` reviews of 5 apps (collected 20 September 2026). That data is kept in `review_2_prep/data/v1_most_relevant/` together with the Review 2 work built on it.
 
-The collected reviews are **not representative of all users of the five apps**.
+### Important Data Notes
 
-The `MOST_RELEVANT` Play Store feed is complaint-heavy. In our sample:
-
-* 69.2% of reviews are 1-star.
-* 74.1% are classified as problematic using the 1–2 star definition.
-* Public app ratings are much higher than the sample average.
-
-Therefore, the results should mainly be used for **relative comparison between apps and weeks**, rather than estimating overall customer satisfaction.
+* **Most reviews are short and positive.** 67% are 5-star, 17% are 1-star, and the median review is 2 words. Only 19.5% are problematic (1–2 stars).
+* **Written reviews are harsher than the public rating**, which also counts ratings without text (gap of 0.0–1.4 stars by app). Use the results for **relative comparison between apps and weeks**, not as overall customer satisfaction.
+* **21 April – 5 May 2026 feed gap:** for Swiggy, Blinkit, Domino's, Flipkart and Amazon, positive reviews drop 59–90% while negative reviews drop only 3–37%. The rows are kept and flagged; trend analyses exclude the window.
 
 ---
 
 ## Key Results
 
-### Text Mining
+### Issue Tagging and Sentiment (inputs to EDA and the model)
 
-Nine issue categories were identified using a keyword-based multi-label approach:
+Each review is tagged with nine keyword-based issue categories (multi-label) and scored with VADER sentiment:
 
 1. Crash & Stability
 2. Payment & Refund
@@ -80,65 +77,40 @@ Nine issue categories were identified using a keyword-based multi-label approach
 8. Pricing & Fraud
 9. UI/UX & Update
 
-**65.4%** of cleaned reviews received at least one issue tag.
-
-**Customer Support** was the largest issue category at **34.4%** of reviews.
-
-VADER sentiment had a **Pearson correlation of 0.60** with star rating.
-
 ### Exploratory Analysis
 
-Different apps showed different complaint patterns:
+* **Amazon and Swiggy stand out:** 54% and 35% of their reviews are 1–2 stars, against 10–24% for the other apps. PhonePe (9.8%) and Myntra (10.3%) are the mildest.
+* **Each domain has its own problem profile:** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping; Payments has Crash & Stability and Customer Support, tied. Delivery Delay is about 50× more common in Food & Grocery than in Payments.
+* **Customer Support** is the most common issue (4.1% of reviews) and the most damaging (1.23★ average).
+* **Late-April feed gap:** a "% negative" metric jumps for five apps because positive reviews are missing, not because complaints rose. Counts of negative reviews per day are far less affected.
+* **No July 2026 shift:** the sudden July change seen in the first dataset does not exist in the complete data; it was caused by `MOST_RELEVANT` sampling.
 
-* **Swiggy:** Customer Support and Delivery Delay
-* **Zomato:** Customer Support and Delivery Delay
-* **Myntra:** Cancellation & Return
-* **Paytm:** Customer Support and Crash & Stability
-* **PhonePe:** Customer Support
-
-A major sampling change was observed in **July 2026**. Review volume increased substantially while review length decreased, causing issue rates to appear lower. This should not automatically be interpreted as a real improvement in app quality.
+15 charts in `data/charts/eda/`; details in `EDA.md`.
 
 ### Predictive Modelling
 
 The classification target was:
 
-> **Problematic = 1–2 star review**
+> **Problematic = 1–2 star review** (19.5% of reviews)
 
 Features included:
 
-* TF-IDF text features
-* Truncated SVD components
+* TF-IDF text features (20,000 terms; no stop-word list, so negations such as "not good" are kept)
+* Truncated SVD components (200)
 * Issue indicators
 * Sentiment features
 * Review length
 * Upvotes
 
-The final feature set contained **115 features**.
+The final feature set contained **215 features** for **1,137,987 reviews**.
 
-| Model               | Accuracy | Precision | Recall |    F1 |
-| ------------------- | -------: | --------: | -----: | ----: |
-| Logistic Regression |    89.3% |     94.9% |  90.4% | 92.6% |
-| Random Forest       |    90.6% |     90.5% |  97.6% | 93.9% |
+| Model                   | Accuracy | Precision | Recall |    F1 | PR-AUC |
+| ----------------------- | -------: | --------: | -----: | ----: | -----: |
+| Majority-class baseline |    80.5% |      0.0% |   0.0% |  0.0% |  0.195 |
+| Logistic Regression     |    92.2% |     76.7% |  85.8% | 81.0% |  0.871 |
+| Random Forest           |    91.4% |     73.7% |  87.0% | 79.8% |  0.873 |
 
-Random Forest achieved the higher F1 and recall, while Logistic Regression produced fewer false positives.
-
-### Time-Series Forecasting
-
-Weekly review metrics were created for the common period **20 April – 13 September 2026**.
-
-Five simple forecasting approaches were compared:
-
-* Naive
-* Historical Mean
-* Level-Shift Mean
-* 4-Week Moving Average
-* Simple Exponential Smoothing
-
-There were **21 usable complete weeks**.
-
-Simple Exponential Smoothing performed better than the naive forecast in **19 of 24 tested series**.
-
-The final forecasts estimate the expected weekly share of **1–2 star reviews**. They should be interpreted as level forecasts rather than predictions of a strong future trend.
+The two models are close: Logistic Regression is more accurate and precise at the default threshold (16% fewer false alarms), while Random Forest has the higher recall and PR-AUC. Trained on April–August and tested on 1–20 September, PR-AUC drops by less than 0.01 (Random Forest 0.866). Payment apps are the hardest domain (PR-AUC 0.75). Details in `MODEL_EVALUATION.md`.
 
 ---
 
@@ -146,15 +118,13 @@ The final forecasts estimate the expected weekly share of **1–2 star reviews**
 
 | Stage               | Method                                                          | Main Output                     |
 | ------------------- | --------------------------------------------------------------- | ------------------------------- |
-| Data Collection     | `google-play-scraper`, English, India, `MOST_RELEVANT`          | Raw reviews                     |
-| Cleaning            | Duplicate checking, empty/non-English filtering, derived fields | Clean dataset                   |
+| Data Collection     | `google-play-scraper`, English, India, `NEWEST` since 1 Apr 2026 | Raw reviews                     |
+| Cleaning            | Duplicate, empty, no-letter and non-English filtering; derived fields | Clean dataset              |
 | Text Mining         | Keyword-based 9-category issue tagging                          | Issue indicators                |
 | Sentiment           | VADER                                                           | Sentiment scores and labels     |
 | EDA                 | Distributions, app comparisons, correlations, statistical tests | EDA charts and summaries        |
-| Feature Engineering | TF-IDF → SVD + structural features                              | 115 model features              |
+| Feature Engineering | TF-IDF → SVD + structural features                              | 215 model features              |
 | Classification      | Logistic Regression and Random Forest                           | Problem-review predictions      |
-| Time-Series         | Weekly aggregation and five baseline forecasting models         | Forecasts and backtesting       |
-| Dashboard           | Streamlit + Plotly                                              | Interactive analytics dashboard |
 
 ---
 
@@ -166,13 +136,13 @@ ba-capstone-app-reviews/
 ├── README.md
 ├── REPORT.md
 ├── DATA_SOURCES.md
-├── TEXT_MINING.md
 ├── EDA.md
 ├── MODEL_EVALUATION.md
 ├── MODEL_EVALUATION_SUMMARY.md
-├── TIME_SERIES.md
 │
 ├── scripts/
+│   ├── apps.py                  # the 11 apps, domains and colours (single source of truth)
+│   ├── data_io.py               # read/write the per-app data files
 │   ├── 01_scrape_reviews.py
 │   ├── 02_clean_reviews.py
 │   ├── 03_tag_issues.py
@@ -185,19 +155,15 @@ ba-capstone-app-reviews/
 │   ├── 09_model_performance_comparison.py
 │   ├── 10_auc_summary.py
 │   ├── 11_prediction_error_summary.py
-│   ├── 12_normalized_confusion_matrices.py
-│   └── 13_time_series_forecast.py
+│   └── 12_normalized_confusion_matrices.py
 │
 ├── data/
-│   ├── app_reviews_raw.csv
-│   ├── app_reviews_clean.csv
-│   ├── app_reviews_tagged.csv
+│   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
+│   ├── clean/<app>.csv.gz       # cleaned
+│   ├── tagged/<app>.csv.gz      # + issue tags and VADER sentiment (input to EDA and modelling)
 │   ├── app_metadata.csv
-│   ├── charts/
-│   │   ├── eda/
-│   │   └── timeseries/
-│   ├── eda/
-│   └── timeseries/
+│   ├── charts/                  # sentiment charts (01–04) and eda/ (15 EDA charts)
+│   └── eda/                     # monthly, weekly and version tables
 │
 ├── models/
 │   ├── logistic_regression.pkl
@@ -209,53 +175,15 @@ ba-capstone-app-reviews/
 ├── figures/
 │   └── model evaluation charts
 │
-├── dashboard/
-│   ├── app.py
-│   ├── charts.py
-│   ├── utils.py
-│   └── requirements.txt
+├── notebooks/
+│   └── Review_1_Analysis.ipynb
 │
-└── docs/
-    ├── Final_Report.pdf
-    └── Review_Presentation.key.pptx
+├── docs/
+│   ├── Review_1_Presentation.pptx
+│   └── Review_1_Contribution_Summary.md
+│
+└── review_2_prep/               # Review 2 work kept aside (first-dataset results, dashboard, time series)
 ```
-
----
-
-## Dashboard
-
-The project includes an interactive **Streamlit + Plotly dashboard**.
-
-The dashboard provides:
-
-* Overview
-* Weekly Trends
-* Forecast
-* Sentiment & Issues
-* Key Findings
-
-It allows users to filter results by app, period and metric.
-
-### Run the Dashboard
-
-From the repository root:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-
-pip install -r dashboard/requirements.txt
-
-streamlit run dashboard/app.py
-```
-
-The dashboard will normally open at:
-
-```text
-http://localhost:8501
-```
-
-The dashboard uses the already-generated files in `data/`, so the complete analysis does not need to be rerun just to view the dashboard.
 
 ---
 
@@ -263,7 +191,7 @@ The dashboard uses the already-generated files in `data/`, so the complete analy
 
 After activating the virtual environment and installing the required packages, the main analysis scripts can be run in sequence.
 
-### Text Mining
+### Issue Tagging and Sentiment
 
 ```bash
 python scripts/03_tag_issues.py
@@ -289,12 +217,6 @@ python scripts/11_prediction_error_summary.py
 python scripts/12_normalized_confusion_matrices.py
 ```
 
-### Time-Series Analysis
-
-```bash
-python scripts/13_time_series_forecast.py
-```
-
 ### VADER Setup
 
 If required:
@@ -310,25 +232,34 @@ python -c "import nltk; nltk.download('vader_lexicon')"
 Fresh data can be collected using:
 
 ```bash
-python scripts/01_scrape_reviews.py
+python scripts/01_scrape_reviews.py                    # all 11 apps, ~1 hour
+python scripts/01_scrape_reviews.py flipkart amazon    # a subset; run several in parallel to finish faster
 python scripts/02_clean_reviews.py
 ```
 
-**Important:** Running the scraper again will produce a different review sample. Therefore, the numerical results in the report may not be reproduced exactly from a new scrape.
+The scraper collects every review from `START_DATE` (1 April 2026) to `END_DATE` (20 September 2026) and skips apps whose file already exists in `data/raw/`; delete a file to re-scrape that app. Apps are listed in `scripts/apps.py`.
 
-The scripts should be checked to ensure their output paths point to this repository's `data/` directory before collecting fresh data.
+**Important:** Running the scraper again will produce a different review set (new reviews, edited or deleted ones). Therefore, the numerical results in the report may not be reproduced exactly from a new scrape.
 
 ---
 
 ## Important Analytical Limitations
 
-### Sampling Bias
+### Written Reviews vs Public Rating
 
-The `MOST_RELEVANT` Play Store sample is complaint-heavy and should not be interpreted as the actual satisfaction distribution of all app users.
+Written reviews sit 0.0–1.4 stars below each app's public rating, which also counts ratings without text. The results should not be interpreted as the satisfaction of all app users.
 
-### July 2026 Sampling Change
+### Late-April Feed Gap
 
-A sampling regime shift occurred in July 2026 across all five apps. Review volume increased while review length decreased. Apparent improvements in issue rates therefore need to be interpreted carefully.
+From 21 April to 5 May 2026, positive reviews drop 59–90% for five apps while negative reviews drop only 3–37%. Share-based metrics (% negative, mean rating) are distorted in this window; counts of negative reviews per day are far less affected.
+
+### Short Reviews
+
+The median review is 2 words. Issue tags and text features carry little information for these reviews, so only 10% of reviews have an issue tag.
+
+### July 2026 (first dataset only)
+
+The first dataset showed a sudden change in July 2026. The complete new data shows no such change; it was caused by `MOST_RELEVANT` sampling.
 
 ### Classification Target
 
@@ -336,15 +267,11 @@ The classifier predicts whether a review is **1–2 stars**, which is used as a 
 
 It does **not** directly confirm that an actual software failure occurred.
 
-### Text Mining Limitations
+### Issue Tagging and Sentiment Limitations
 
 The issue tagger uses keyword patterns and can miss context, sarcasm, or topics that do not contain the expected keywords.
 
 VADER sentiment can also misclassify sarcastic or politely worded negative reviews.
-
-### Time-Series Limitations
-
-Only 21 complete weeks were available for the common modelling period. The forecasts therefore provide short-term level estimates rather than strong long-term trend predictions.
 
 ### Upvote Distribution
 
@@ -356,29 +283,27 @@ Only 21 complete weeks were available for the common modelling period. The forec
 
 | Document                                                            | Description                                  |
 | ------------------------------------------------------------------- | -------------------------------------------- |
-| [`REPORT.md`](REPORT.md)                                            | Full project report                          |
-| [`Final_Report.pdf`](docs/Final_Report.pdf)                         | Final project report in PDF format           |
-| [`Review_Presentation.key.pptx`](docs/Review_Presentation.key.pptx) | Project presentation                         |
+| [`REPORT.md`](REPORT.md)                                            | Review 1 project report                      |
+| [`Review_1_Analysis.ipynb`](notebooks/Review_1_Analysis.ipynb)      | Review 1 notebook (executed, end to end)     |
+| [`Review_1_Presentation.pptx`](docs/Review_1_Presentation.pptx)     | Review 1 presentation                        |
+| [`Review_1_Contribution_Summary.md`](docs/Review_1_Contribution_Summary.md) | Review 1 individual contribution summary |
 | [`DATA_SOURCES.md`](DATA_SOURCES.md)                                | Data collection and sampling details         |
-| [`TEXT_MINING.md`](TEXT_MINING.md)                                  | Issue tagging and sentiment analysis         |
 | [`EDA.md`](EDA.md)                                                  | Exploratory data analysis                    |
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
-| [`TIME_SERIES.md`](TIME_SERIES.md)                                  | Weekly analysis and forecasting              |
+| [`review_2_prep/`](review_2_prep/)                                  | Review 2 work kept aside (see its README)    |
 
 ---
 
 ## Conclusion
 
-This project combines review mining, sentiment analysis, predictive modelling and time-series forecasting into a single business analytics workflow.
+Review 1 combines our own data collection, cleaning, issue tagging, sentiment scoring, exploratory analysis and predictive modelling into one business analytics workflow.
 
 The analysis shows that:
 
 * Customer support is a major complaint category across the dataset.
 * Different apps have different dominant problem areas.
-* Problematic reviews can be classified with an F1 score of approximately **0.93–0.94**.
-* Weekly low-rating share can be forecast reasonably well using simple methods.
-* Sampling changes can create misleading improvements if data collection is not monitored.
-* An interactive dashboard makes the results easier to monitor and interpret.
+* Problematic reviews (19.5% of all reviews) can be found with over 91% accuracy: 87% recall at 74% precision with Random Forest, or 77% precision at 86% recall with Logistic Regression (PR-AUC **0.87**), and the models hold up on later weeks.
+* Collection effects (the `MOST_RELEVANT` July shift, the late-April feed gap) can look like real changes if data collection is not checked.
 
-The project therefore demonstrates how unstructured app reviews can be converted into **actionable business insights for monitoring, prioritization and short-term forecasting**.
+It shows how unstructured app reviews can be turned into **actionable business insights for monitoring and prioritization**; Review 2 adds forecasting and an interactive dashboard.

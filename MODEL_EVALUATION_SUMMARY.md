@@ -7,14 +7,17 @@ Two classification models were evaluated for detecting problematic app reviews:
 - Logistic Regression
 - Random Forest
 
-The evaluation uses accuracy, precision, recall, F1-score, ROC-AUC, and PR-AUC.
+The evaluation uses accuracy, precision, recall, F1-score, ROC-AUC, and PR-AUC on a held-out test set of 227,598 reviews (20% of 1,137,987 reviews from 11 apps). 19.5% of reviews are problematic (rated 1–2★).
 
 ## Results
 
 | Model | Accuracy | Precision | Recall | F1 Score | ROC-AUC | PR-AUC |
 |---|---:|---:|---:|---:|---:|---:|
-| Logistic Regression | 0.8926 | 0.9485 | 0.9041 | 0.9258 | 0.9513 | 0.9798 |
-| Random Forest | 0.9059 | 0.9045 | 0.9761 | 0.9390 | 0.9439 | 0.9738 |
+| Majority-class baseline | 0.8053 | 0.0000 | 0.0000 | 0.0000 | 0.5000 | 0.1947 |
+| Logistic Regression | 0.9216 | 0.7672 | 0.8579 | 0.8100 | 0.9400 | 0.8710 |
+| Random Forest | 0.9143 | 0.7372 | 0.8701 | 0.7982 | 0.9411 | 0.8735 |
+
+Out-of-time check (train April–August 2026, test 1–20 September): Random Forest PR-AUC 0.8660, Logistic Regression 0.8617. Per-domain and per-app results are in `data/model_results_by_group.csv`; see `MODEL_EVALUATION.md` §7.
 
 ## Evaluation Artifacts
 
@@ -25,8 +28,11 @@ The following evaluation outputs are included in the project:
 - `figures/random_forest_confusion_matrix.png`
 - `figures/roc_curves.png`
 - `figures/precision_recall_curves.png`
+- `figures/normalized_confusion_matrix_comparison.png`
+- `figures/random_forest_feature_importance.png`, `figures/logistic_regression_feature_importance.png`, `figures/top_tfidf_terms.png`
 - `data/auc_summary.csv`
-- `data/model_results.csv`
+- `data/model_results.csv`, `data/baseline_results.csv`
+- `data/model_results_by_group.csv`, `data/model_results_out_of_time.csv`
 
 ## Interpretation
 
@@ -34,4 +40,4 @@ The evaluation provides multiple views of classifier performance. Accuracy measu
 
 ROC-AUC and PR-AUC summarize ranking performance across classification thresholds. The confusion matrices provide the corresponding counts of correct and incorrect predictions.
 
-These metrics should be considered together rather than relying on a single evaluation measure.
+These metrics should be considered together rather than relying on a single evaluation measure. Because only 19.5% of reviews are problematic, a model that never flags anything already scores 80.5% accuracy, so PR-AUC, precision and recall are the meaningful measures here. The two models are close. Logistic Regression is better at the default threshold (higher accuracy, precision and F1, 16% fewer false alarms); Random Forest ranks reviews slightly better (higher PR-AUC and ROC-AUC) and has the higher recall.
