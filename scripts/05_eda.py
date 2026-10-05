@@ -1,5 +1,5 @@
 """
-Stage 4: Exploratory Data Analysis (Persons 3 and 2)
+Stage 4: Exploratory Data Analysis (Akshay KS and Regella Krishna Saketh)
 
 Reads data/tagged/*.csv.gz (11 apps, every English/India review since 1 Apr 2026) and produces
   * 15 charts              -> data/charts/eda/eda_XX_*.png
@@ -9,14 +9,14 @@ Reads data/tagged/*.csv.gz (11 apps, every English/India review since 1 Apr 2026
   * data/eda/version_metrics.csv -> rating per app version with z-scores
 
 Charts
-  01 coverage (reviews/day)      08 issues by star rating (tagger false positives)
-  02 ratings vs public rating    09 taxonomy coverage gap
-  03 length + upvotes            10 weekly trends, one panel per domain
-  04 correlation matrix          11 July 2026 check (did the old sample's shift survive?)
-  05 issue size vs severity      12 rating by app version
-  06 issues by app               13 which issues are elevated in the worse-rated versions
-  07 issue co-occurrence         14 domain comparison
-                                 15 late-April feed gap (positive reviews missing)
+  01 coverage (reviews/day)      09 taxonomy coverage gap
+  02 ratings vs public rating    10 weekly trends, one panel per domain
+  03 length + upvotes            11 rating by app version
+  04 correlation matrix          12 domain comparison
+  05 issue size vs severity      13 late-April feed gap (positive reviews missing)
+  06 issues by app               14 within-domain ranking (best/worst app per domain, top two issues)
+  07 issue co-occurrence         15 what 1-2 star reviews are about: service vs app
+  08 issues by star rating (tagger false positives)
 
 Every app is collected over the same fixed window (Sort.NEWEST back to 1 Apr 2026), so
 cross-app comparisons need no common-window restriction. Eleven series never share one
@@ -78,12 +78,12 @@ ISSUE_COLS = [f"issue_{i}" for i in ISSUES]
 WINDOW_START = pd.Timestamp("2026-04-01")
 JULY = pd.Timestamp("2026-07-01")
 # 21 Apr - 5 May 2026: short positive reviews are largely missing from the Play Store feed for several apps
-# while negative reviews fall far less (chart 15). Share-based metrics are distorted
+# while negative reviews fall far less (chart 13). Share-based metrics are distorted
 # in this window, so trend comparisons, the July check and the version analysis exclude it.
 GAP_START, GAP_END = pd.Timestamp("2026-04-21"), pd.Timestamp("2026-05-05")
 MIN_CELL_N = 30            # min reviews before a rate/mean is plotted or a version is analysed
 VERSION_MIN_GAP = 0.25     # a version is flagged only if it is >= 0.25 stars from its app mean ...
-VERSION_Z = 3              # ... AND |z| >= 3 (with ~1.5M rows, z >= 2 alone flags trivial gaps)
+VERSION_Z = 3              # ... AND |z| >= 3 (with ~1.1M rows, z >= 2 alone flags trivial gaps)
 
 # ----------------------------------------------------------------------------
 # Visual style (palette validated with dataviz validate_palette.js)
@@ -196,7 +196,7 @@ def load():
     df["app_name"] = pd.Categorical(df["app_name"], APPS, ordered=True)
     df["domain"] = pd.Categorical(df["domain"], DOMAINS, ordered=True)
     df["week"] = df["review_date"].dt.to_period("W-SUN").dt.start_time
-    df["is_low"] = (df["score"] <= 2).astype(np.int8)         # Person 4's `is_problematic`
+    df["is_low"] = (df["score"] <= 2).astype(np.int8)         # the classifier's `is_problematic` target
     df["log_thumbs"] = np.log1p(df["thumbs_up"])
     day = df["review_date"].dt.normalize()
     df["in_gap"] = (day >= GAP_START) & (day <= GAP_END)
@@ -290,7 +290,7 @@ def chart_01_coverage(df, end, weeks, summary):
          f"{full} of {len(APPS)} apps have reviews on all {n_days} days from 1 Apr 2026; volume ranges {avg[lo]:,.0f}/day ({lo}) to {avg[hi]:,.0f}/day ({hi})"
          + (f"; {', '.join(gaps)} days" if gaps else ""),
          f"{len(df):,} reviews in total. Complete weeks only ({pd.Timestamp(weeks[0]):%d %b} – {pd.Timestamp(weeks[-1]) + pd.Timedelta(days=6):%d %b}). "
-         f"Grey band = {GAP_START:%d %b}–{GAP_END:%d %b} feed gap (chart 15). The time window is identical for every app, so apps and weeks compare directly.")
+         f"Grey band = {GAP_START:%d %b}–{GAP_END:%d %b} feed gap (chart 13). The time window is identical for every app, so apps and weeks compare directly.")
 
 
 def chart_02_ratings_vs_public(df, meta, summary):
@@ -664,7 +664,7 @@ def chart_10_weekly_trend(df, weeks, summary):
     save(fig, "eda_10_weekly_trend",
          f"From May–Jun to Aug–Sep, {worse} worsened most ({d_low[worse]:+.1f} pp 1–2★) and {better} improved most ({d_low[better]:+.1f} pp); "
          f"{int((d_low.abs() < 2.5).sum())} of {len(APPS)} apps move by less than 2.5 pp",
-         f"Complete weeks; grey band = {GAP_START:%d %b}–{GAP_END:%d %b} feed gap, excluded from the comparison (chart 15). "
+         f"Complete weeks; grey band = {GAP_START:%d %b}–{GAP_END:%d %b} feed gap, excluded from the comparison (chart 13). "
          f"Differences between apps (Cramér's V = {v:.2f}) are far larger than any app's movement over time.")
 
 
@@ -672,8 +672,9 @@ LEN_BINS = [0, 5, 15, 40, 10_000]
 LEN_LABELS = ["≤5 words", "6–15", "16–40", "41+"]
 
 
-def chart_11_july_check(df, months, summary):
-    """Does the review mix shift partway through the window (Apr–Jun vs Jul–Sep)? A shift would make a time-based test unreliable."""
+def midyear_check(df, months, summary):
+    """Does the review mix shift partway through the window (Apr–Jun vs Jul–Sep)? A shift would make a time-based test unreliable.
+    Statistics only (volume, length, rating and tag-rate changes per app); no chart, because the answer is 'no shift'."""
     w = df[df["month"].isin(months) & ~df["in_gap"]].copy()
     w["post"] = w["review_date"] >= JULY
     w["lb"] = pd.cut(w["review_length"], LEN_BINS, labels=LEN_LABELS)
@@ -709,17 +710,6 @@ def chart_11_july_check(df, months, summary):
         "issue_rate_change_raw_pp": {a: round(float(v * 100), 2) for a, v in adj["has_issue_raw_change"].items()},
         "issue_rate_change_length_adjusted_pp": {a: round(float(v * 100), 2) for a, v in adj["has_issue_adj_change"].items()},
     }
-    fig, axes = plt.subplots(1, 2, figsize=(15.5, 5.6))
-    idx = per_day.div(per_day[pre_m].mean(axis=1), axis=0) * 100
-    heatmap(axes[0], idx.values, [month_label(x) for x in months], APPS, DIV, fmt="{:.0f}", vmin=0, vmax=200, fontsize=8)
-    axes[0].axvline(len(pre_m) - 0.5, color=INK, lw=1.2)
-    domain_dividers(axes[0], "y")
-    axes[0].set_title("Reviews per day, indexed to the app's Apr–Jun average (=100)", loc="left", fontsize=10.5, color=INK2)
-    heatmap(axes[1], med_len.values, [month_label(x) for x in months], APPS, SEQ, fmt="{:.0f}",
-            vmin=0, vmax=np.nanmax(med_len.values), fontsize=8)
-    axes[1].axvline(len(pre_m) - 0.5, color=INK, lw=1.2)
-    domain_dividers(axes[1], "y")
-    axes[1].set_title("Median review length (words)", loc="left", fontsize=10.5, color=INK2)
     up = int((vol_ratio > 1.5).sum())
     shorter = int((len_change <= -2).sum())
     common_shift = up > len(APPS) / 2 and shorter > len(APPS) / 2
@@ -727,15 +717,9 @@ def chart_11_july_check(df, months, summary):
     summary["july_check"]["apps_with_reviews_2plus_words_shorter"] = shorter
     summary["july_check"]["verdict"] = ("A common July shift exists in the full review stream." if common_shift else
                                         "No common July shift in the full review stream; a time-based test split is safe.")
-    title = (f"July 2026 shift confirmed: {up} of {len(APPS)} apps jump ≥1.5× in volume" if common_shift else
-             f"No July 2026 shift in the full review stream: {up} of {len(APPS)} apps jump ≥1.5× in volume, {shorter} get shorter reviews")
-    save(fig, "eda_11_july_check", title,
-         f"Does the review mix change partway through the window? Full months, "
-         f"vertical rule = 1 Jul, gap days excluded. Length-adjusted rating change Jul–Sep vs Apr–Jun: "
-         f"{adj['score_adj_change'].min():+.2f} to {adj['score_adj_change'].max():+.2f}★.")
 
 
-def chart_12_app_versions(df, summary):
+def chart_11_app_versions(df, summary):
     """Rating by app version: candidate 'bad release' detector (gap days excluded: they understate ratings)."""
     d = df[~df["in_gap"]].dropna(subset=["app_version"])
     rows = []
@@ -779,58 +763,14 @@ def chart_12_app_versions(df, summary):
     for ax in axes.ravel()[len(APPS):]:
         ax.set_visible(False)
     nw = int(worse.sum())
-    save(fig, "eda_12_app_versions",
+    save(fig, "eda_11_app_versions",
          f"{nw} of {len(vt)} app versions rate clearly worse than their app's average (≥{VERSION_MIN_GAP}★ below, z ≤ −{VERSION_Z})",
          f"Eight most-reviewed versions per app, ordered by median review date. Red = flagged worse, dark blue = flagged better, grey = not flagged. "
          f"Versions need ≥{MIN_CELL_N} reviews; {GAP_START:%d %b}–{GAP_END:%d %b} gap days excluded. Full table: data/eda/version_metrics.csv.")
     return vt
 
 
-def chart_13_version_issue_mix(df, vt, summary):
-    """For the worst flagged versions: WHICH failure is elevated vs the app's baseline?"""
-    worse = vt[vt["flag"].str.startswith("worse")].nsmallest(15, "z_vs_app_mean").copy()
-    worse["order"] = worse["app_name"].map({a: i for i, a in enumerate(APPS)})
-    worse = worse.sort_values(["order", "median_date"])
-    diff = np.full((len(worse), len(ISSUES)), np.nan)
-    signals = []
-    clean = df[~df["in_gap"]]
-    for r, (_, v) in enumerate(worse.iterrows()):
-        app_df = clean[clean["app_name"] == v["app_name"]]
-        ver_df = app_df[app_df["app_version"] == v["app_version"]]
-        n = len(ver_df)
-        for c, i in enumerate(ISSUES):
-            p0, p1 = app_df[f"issue_{i}"].mean(), ver_df[f"issue_{i}"].mean()
-            se = np.sqrt(max(p0 * (1 - p0), 1e-9) / n)
-            if abs(p1 - p0) > 3 * se and abs(p1 - p0) >= 0.02:
-                diff[r, c] = (p1 - p0) * 100
-                signals.append({"app_name": v["app_name"], "app_version": v["app_version"], "issue": i,
-                                "version_pct": round(float(p1 * 100), 1), "app_baseline_pct": round(float(p0 * 100), 1)})
-    summary["version_issue_signals"] = signals
-    if worse.empty:
-        summary["version_issue_summary"] = {"flagged_versions": 0}
-        return
-    rows = [f"{a} {str(v).split(' (')[0][:14]}  (n={n:,}, {m:.2f}★)" for a, v, n, m in zip(worse["app_name"], worse["app_version"], worse["n"], worse["mean_rating"])]
-    fig, ax = plt.subplots(figsize=(12, 0.5 * len(rows) + 2.8))
-    vmax = np.nanmax(np.abs(diff)) if np.isfinite(diff).any() else 10
-    im = heatmap(ax, diff, [ISSUE_LABELS[i] for i in ISSUES], rows, DIV, fmt="{:+.0f}", vmin=-vmax, vmax=vmax)
-    ax.set_xticks(range(len(ISSUES)), [ISSUE_LABELS[i] for i in ISSUES], rotation=30, ha="right")
-    fig.colorbar(im, ax=ax, fraction=0.03, pad=0.02, label="pp vs the app's overall rate")
-    ups = [x for x in signals if x["version_pct"] > x["app_baseline_pct"]]
-    by_issue = pd.Series([x["issue"] for x in ups]).value_counts()
-    quiet = len(worse) - len({(x["app_name"], x["app_version"]) for x in signals})
-    summary["version_issue_summary"] = {"versions_shown": int(len(worse)), "elevated_signals": len(ups),
-                                        "elevated_by_issue": {k: int(v) for k, v in by_issue.items()},
-                                        "versions_with_no_specific_signal": int(quiet)}
-    top_n = int(by_issue.iloc[0]) if len(by_issue) else 0
-    leads = [ISSUE_LABELS[i] for i, n in by_issue.items() if n == top_n]
-    title = (f"In the worst-rated versions, {leads[0]} is the issue most often elevated ({top_n} of {len(ups)} signals)" if len(leads) == 1 else
-             f"In the worst-rated versions, {' and '.join(leads)} are the issues most often elevated ({top_n} signals each, of {len(ups)})")
-    save(fig, "eda_13_version_issue_mix", title,
-         f"Issue rate in each of the {len(worse)} most significantly worse versions minus its app's overall rate (pp). Blank = not significant "
-         f"(|diff| < 3 SE or < 2 pp). {quiet} of {len(worse)} {'shows' if quiet == 1 else 'show'} no specific issue: a general drop rather than one failure type.")
-
-
-def chart_14_domains(df, summary):
+def chart_12_domains(df, summary):
     """Domain comparison: issue prevalence and rating mix."""
     prev = pd.DataFrame({ISSUE_LABELS[i]: df.groupby("domain", observed=True)[f"issue_{i}"].mean() * 100 for i in ISSUES}).T[DOMAINS]
     low = df.groupby("domain", observed=True)["is_low"].mean().reindex(DOMAINS) * 100
@@ -857,7 +797,7 @@ def chart_14_domains(df, summary):
     summary["domain_comparison"]["most_domain_specific_issue"] = {"issue": gap_issue, "high_domain": prev.loc[gap_issue].idxmax(),
                                                                   "low_domain": prev.loc[gap_issue].idxmin(),
                                                                   "ratio": round(float(ratio[gap_issue]), 1)}
-    save(fig, "eda_14_domain_comparison",
+    save(fig, "eda_12_domain_comparison",
          f"{low.idxmax()} reviews are the most negative ({low.max():.0f}% 1–2★ vs {low.min():.0f}% for {low.idxmin()}); "
          f"{gap_issue} is the most domain-specific issue",
          "Top issue: " + "; ".join(f"{d} – {lead[d]}" for d in DOMAINS) + f". {gap_issue}: "
@@ -865,7 +805,7 @@ def chart_14_domains(df, summary):
          "Bars sorted by the highest domain.")
 
 
-def chart_15_april_gap(df, summary):
+def chart_13_april_gap(df, summary):
     """21 Apr - 5 May: positive reviews largely vanish from the feed while negative reviews fall far less."""
     span = 13
     periods_ = {"Before\n(8–20 Apr)": (GAP_START - pd.Timedelta(days=span), GAP_START - pd.Timedelta(days=1)),
@@ -909,11 +849,130 @@ def chart_15_april_gap(df, summary):
         if ax is not axes[0]:
             ax.set_yticklabels([])
     drop = 100 - pos_idx.loc[affected, gap_col].median() if affected else 0
-    save(fig, "eda_15_april_gap",
+    save(fig, "eda_13_april_gap",
          f"21 Apr–5 May: in {len(affected)} of {len(APPS)} apps positive reviews fall ~{drop:.0f}% while negative reviews fall far less — a feed gap, not an incident",
          f"Affected: {', '.join(affected) if affected else 'none'}. Short positive reviews ('good', 'nice') are what disappear, so median length jumps. "
          "Shares such as '% rated 1–2★' are inflated in this window; counts of negative reviews per day are far less affected. The gap is kept in the dataset "
          "and flagged; trend, version and July analyses exclude it.")
+
+
+def chart_14_within_domain(df, summary):
+    """Within each domain: apps ranked from worst to best by % of 1-2 star reviews, with each app's two most frequent issues."""
+    low = df.groupby("app_name", observed=True)["is_low"].mean() * 100
+    prev = pd.DataFrame({i: df.groupby("app_name", observed=True)[f"issue_{i}"].mean() * 100 for i in ISSUES})
+    overall = float(df["is_low"].mean() * 100)
+    ranking = {}
+    for d in DOMAINS:
+        rows = []
+        for a in sorted(domain_apps(d), key=lambda x: -low[x]):
+            top2 = prev.loc[a].sort_values(ascending=False).head(2)
+            rows.append({"app": a, "pct_low_star": round(float(low[a]), 2),
+                         "top_issues": [{"issue": ISSUE_LABELS[i], "pct_of_reviews": round(float(v), 2)} for i, v in top2.items()]})
+        ranking[d] = rows
+    summary["within_domain_ranking"] = ranking
+
+    # does the feed-gap window change the picture? (share-based metrics are distorted there, see chart 13)
+    low_ng = df[~df["in_gap"]].groupby("app_name", observed=True)["is_low"].mean() * 100
+    shift = float((low - low_ng).abs().max())
+    swaps = []
+    for d in DOMAINS:
+        order = sorted(domain_apps(d), key=lambda x: -low[x])
+        order_ng = sorted(domain_apps(d), key=lambda x: -low_ng[x])
+        swaps += [f"{a} and {b}" for a, b in zip(order, order[1:]) if order_ng.index(a) > order_ng.index(b)]
+    summary["within_domain_ranking_gap_check"] = {"max_shift_points": round(shift, 2), "order_swaps_without_gap": swaps}
+    swap_note = (", and only " + " / ".join(swaps) + " swap order (a near-tie)") if swaps else " and changes no ranking"
+
+    sizes = [len(ranking[d]) for d in DOMAINS]
+    fig, axes = plt.subplots(len(DOMAINS), 1, figsize=(13, 7.8), sharex=True,
+                             gridspec_kw={"height_ratios": sizes, "hspace": 0.55})
+    xmax = float(np.ceil(low.max() / 10) * 10) + 4
+    for ax, d in zip(axes, DOMAINS):
+        rows = ranking[d]
+        y = np.arange(len(rows))
+        vals = [r["pct_low_star"] for r in rows]
+        ax.barh(y, vals, height=0.62, color=DOMAIN_COLORS[d])
+        ax.axvline(overall, color=MUTED, lw=1, ls="--")
+        ax.set_yticks(y, [r["app"] + (" (worst)" if k == 0 else " (best)" if k == len(rows) - 1 else "") for k, r in enumerate(rows)])
+        ax.invert_yaxis()
+        ax.set_xlim(0, xmax)
+        ax.grid(axis="y", visible=False)
+        ax.set_title(d, loc="left", fontsize=10.5, fontweight="bold", color=INK, pad=4)
+        for yi, r in zip(y, rows):
+            ax.text(r["pct_low_star"] + 0.6, yi, f"{r['pct_low_star']:.1f}%", va="center", fontsize=8.5, color=INK2,
+                    bbox={"facecolor": SURFACE, "edgecolor": "none", "pad": 1.2})
+            ax.text(1.015, yi, "  ·  ".join(f"{t['issue']} {t['pct_of_reviews']:.1f}%" for t in r["top_issues"]),
+                    transform=ax.get_yaxis_transform(), va="center", fontsize=8.5, color=INK)
+        ax.text(1.015, -0.75, "Top two issues (% of the app's reviews)", transform=ax.get_yaxis_transform(),
+                va="center", fontsize=8, color=MUTED, style="italic")
+    axes[-1].set_xlabel(f"% of the app's reviews rated 1–2★   (dashed line = all 11 apps, {overall:.1f}%)")
+    fig.subplots_adjust(right=0.66, left=0.14, top=0.82, bottom=0.09)   # explicit margins: tight_layout cannot fit the right-hand annotation column
+
+    gaps = "; ".join(f"{d.split(' ')[0]}: {ranking[d][0]['app']} {ranking[d][0]['pct_low_star']:.0f}% vs "
+                     f"{ranking[d][-1]['app']} {ranking[d][-1]['pct_low_star']:.0f}%" for d in DOMAINS)
+    save(fig, "eda_14_within_domain",
+         f"Apps in the same domain differ widely: {gaps}",
+         f"Apps ranked within each domain by % of reviews rated 1–2★; beside each bar are the app's two most frequent issue tags "
+         f"(% of its reviews). Excluding the 21 Apr – 5 May feed gap moves no app by more than {shift:.1f} points{swap_note}.")
+
+
+def chart_15_complaint_attribution(df, summary):
+    """What are 1-2 star reviews about? Service (delivery, order, returns, support, pricing) vs app (crash, login, UI/update)."""
+    app_cols = ["issue_crash_bugs_stability", "issue_account_login_otp", "issue_ui_ux_update"]
+    svc_cols = ["issue_delivery_delay", "issue_order_quality_fulfillment", "issue_cancellation_return",
+                "issue_customer_support", "issue_pricing_charges_fraud"]
+    low = df[df["is_low"] == 1]
+    has_app = low[app_cols].max(axis=1) == 1
+    has_svc = low[svc_cols].max(axis=1) == 1
+    has_pay = low["issue_payment_refund"] == 1
+    cat = np.select([has_svc & ~has_app, has_svc & has_app, has_app & ~has_svc, has_pay],
+                    ["Service issue only", "Service and app issue", "App issue only", "Payment & Refund only"], "No issue tag")
+    low = low.assign(cat=cat)
+    order = ["Service issue only", "Service and app issue", "App issue only", "Payment & Refund only", "No issue tag"]
+    colors = {"Service issue only": "#eb6834", "Service and app issue": "#1baf7a", "App issue only": BLUE,
+              "Payment & Refund only": "#eda100", "No issue tag": "#c9c8c3"}
+    share = pd.crosstab(low["app_name"], low["cat"], normalize="index").reindex(columns=order, fill_value=0).reindex(APPS) * 100
+    overall = low["cat"].value_counts(normalize=True).reindex(order, fill_value=0) * 100
+    tagged = low[low["cat"] != "No issue tag"]
+    any_svc = float(has_svc.sum() / max(len(tagged), 1) * 100)
+    any_app = float(has_app.sum() / max(len(tagged), 1) * 100)
+    summary["complaint_attribution"] = {
+        "definition": {"service_tags": svc_cols, "app_tags": app_cols,
+                       "note": "Payment & Refund can be an app, bank or gateway problem, so it is a separate group. Keyword tags, not human labels."},
+        "low_star_reviews": int(len(low)),
+        "overall_pct": {k: round(float(v), 1) for k, v in overall.items()},
+        "among_tagged_low_star_pct_with_service_tag": round(any_svc, 1),
+        "among_tagged_low_star_pct_with_app_tag": round(any_app, 1),
+        "by_app_pct": json.loads(share.round(1).to_json(orient="index")),
+    }
+    rows = ["All apps"] + APPS
+    data = pd.concat([overall.to_frame("All apps").T, share]).loc[rows]
+    fig, ax = plt.subplots(figsize=(12, 6.6))
+    y = np.arange(len(rows))[::-1]
+    left = np.zeros(len(rows))
+    for c in order:
+        vals = data[c].values
+        ax.barh(y, vals, left=left, height=0.66, color=colors[c], label=c)
+        for yi, l, v in zip(y, left, vals):
+            if v >= 4:
+                ax.text(l + v / 2, yi, f"{v:.0f}", ha="center", va="center", fontsize=8, color=text_on(colors[c]))
+        left += vals
+    ax.set_yticks(y, rows)
+    ax.get_yticklabels()[0].set_fontweight("bold")
+    ax.set_xlim(0, 100)
+    ax.set_xlabel("% of the app's 1–2★ reviews")
+    ax.grid(axis="y", visible=False)
+    # thin rules between domains (rows are All apps, then the apps in domain order)
+    k = 1
+    for d in DOMAINS[:-1]:
+        k += len(domain_apps(d))
+        ax.axhline(y[k] + 0.5, color=INK, lw=1)
+    ax.axhline(y[1] + 0.5, color=INK, lw=1)
+    ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.1), fontsize=9)
+    save(fig, "eda_15_complaint_attribution",
+         f"Among 1–2★ reviews that name an issue, {any_svc:.0f}% name a service problem and {any_app:.0f}% an app problem",
+         "What each app's 1–2★ reviews are about, from the keyword tags. Service = delivery, order quality, cancellation/return, support, pricing; "
+         "app = crash, login/OTP, UI/update. Payment & Refund can be the app, a bank or a gateway, so it is shown separately. "
+         f"{overall['No issue tag']:.0f}% of 1–2★ reviews carry no tag, so every share here is a lower bound.")
 
 
 def export_monthly_trend(df, months):
@@ -993,11 +1052,12 @@ def main():
     chart_09_taxonomy_gap(df, summary)
     print("[C] time, versions, domains")
     chart_10_weekly_trend(df, weeks, summary)
-    chart_11_july_check(df, months, summary)
-    vt = chart_12_app_versions(df, summary)
-    chart_13_version_issue_mix(df, vt, summary)
-    chart_14_domains(df, summary)
-    chart_15_april_gap(df, summary)
+    midyear_check(df, months, summary)
+    chart_11_app_versions(df, summary)
+    chart_12_domains(df, summary)
+    chart_13_april_gap(df, summary)
+    chart_14_within_domain(df, summary)
+    chart_15_complaint_attribution(df, summary)
     export_monthly_trend(df, months)
     statistical_tests(df, summary)
 

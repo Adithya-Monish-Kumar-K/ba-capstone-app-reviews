@@ -1422,246 +1422,6 @@
     "better_than_average_count": 17,
     "caveat": "Reviews are attributed to the reviewer's installed version, not necessarily the version that caused the problem."
   },
-  "version_issue_signals": [
-    {
-      "app_name": "Zomato",
-      "app_version": "18.7.3",
-      "issue": "delivery_delay",
-      "version_pct": 24.3,
-      "app_baseline_pct": 3.2
-    },
-    {
-      "app_name": "Zomato",
-      "app_version": "18.7.3",
-      "issue": "order_quality_fulfillment",
-      "version_pct": 10.8,
-      "app_baseline_pct": 1.0
-    },
-    {
-      "app_name": "Zomato",
-      "app_version": "18.7.3",
-      "issue": "customer_support",
-      "version_pct": 16.2,
-      "app_baseline_pct": 4.6
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.74",
-      "issue": "crash_bugs_stability",
-      "version_pct": 3.5,
-      "app_baseline_pct": 0.4
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.74",
-      "issue": "payment_refund",
-      "version_pct": 5.3,
-      "app_baseline_pct": 0.9
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.74",
-      "issue": "customer_support",
-      "version_pct": 12.3,
-      "app_baseline_pct": 3.2
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.63",
-      "issue": "delivery_delay",
-      "version_pct": 13.3,
-      "app_baseline_pct": 2.4
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.63",
-      "issue": "customer_support",
-      "version_pct": 16.7,
-      "app_baseline_pct": 3.2
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.83",
-      "issue": "order_quality_fulfillment",
-      "version_pct": 4.0,
-      "app_baseline_pct": 0.6
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.83",
-      "issue": "customer_support",
-      "version_pct": 12.0,
-      "app_baseline_pct": 3.2
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.52",
-      "issue": "payment_refund",
-      "version_pct": 4.4,
-      "app_baseline_pct": 0.9
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.29",
-      "issue": "payment_refund",
-      "version_pct": 5.4,
-      "app_baseline_pct": 0.9
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.29",
-      "issue": "cancellation_return",
-      "version_pct": 10.8,
-      "app_baseline_pct": 3.0
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.29",
-      "issue": "customer_support",
-      "version_pct": 14.9,
-      "app_baseline_pct": 3.2
-    },
-    {
-      "app_name": "Flipkart",
-      "app_version": "7.29",
-      "issue": "pricing_charges_fraud",
-      "version_pct": 9.5,
-      "app_baseline_pct": 1.3
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.13.2.300",
-      "issue": "payment_refund",
-      "version_pct": 11.0,
-      "app_baseline_pct": 7.2
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.13.2.300",
-      "issue": "delivery_delay",
-      "version_pct": 12.8,
-      "app_baseline_pct": 8.8
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.13.2.300",
-      "issue": "cancellation_return",
-      "version_pct": 17.2,
-      "app_baseline_pct": 12.3
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.13.2.300",
-      "issue": "customer_support",
-      "version_pct": 24.7,
-      "app_baseline_pct": 16.5
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.13.0.300",
-      "issue": "payment_refund",
-      "version_pct": 9.4,
-      "app_baseline_pct": 7.2
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.13.0.300",
-      "issue": "delivery_delay",
-      "version_pct": 11.4,
-      "app_baseline_pct": 8.8
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.15.0.300",
-      "issue": "payment_refund",
-      "version_pct": 9.7,
-      "app_baseline_pct": 7.2
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.15.0.300",
-      "issue": "delivery_delay",
-      "version_pct": 12.6,
-      "app_baseline_pct": 8.8
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.15.0.300",
-      "issue": "cancellation_return",
-      "version_pct": 15.0,
-      "app_baseline_pct": 12.3
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.15.0.300",
-      "issue": "customer_support",
-      "version_pct": 23.3,
-      "app_baseline_pct": 16.5
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.16.2.300",
-      "issue": "customer_support",
-      "version_pct": 20.5,
-      "app_baseline_pct": 16.5
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.17.0.300",
-      "issue": "payment_refund",
-      "version_pct": 11.5,
-      "app_baseline_pct": 7.2
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.17.0.300",
-      "issue": "cancellation_return",
-      "version_pct": 15.7,
-      "app_baseline_pct": 12.3
-    },
-    {
-      "app_name": "Amazon",
-      "app_version": "32.17.0.300",
-      "issue": "customer_support",
-      "version_pct": 23.4,
-      "app_baseline_pct": 16.5
-    },
-    {
-      "app_name": "Paytm",
-      "app_version": "10.30.0",
-      "issue": "payment_refund",
-      "version_pct": 5.6,
-      "app_baseline_pct": 0.6
-    },
-    {
-      "app_name": "Paytm",
-      "app_version": "10.84.5",
-      "issue": "crash_bugs_stability",
-      "version_pct": 5.7,
-      "app_baseline_pct": 2.2
-    },
-    {
-      "app_name": "Google Pay",
-      "app_version": "331.1.2 (arm64-v8a_release_flutter)",
-      "issue": "crash_bugs_stability",
-      "version_pct": 9.1,
-      "app_baseline_pct": 2.3
-    }
-  ],
-  "version_issue_summary": {
-    "versions_shown": 15,
-    "elevated_signals": 32,
-    "elevated_by_issue": {
-      "customer_support": 9,
-      "payment_refund": 8,
-      "delivery_delay": 5,
-      "cancellation_return": 4,
-      "crash_bugs_stability": 3,
-      "order_quality_fulfillment": 2,
-      "pricing_charges_fraud": 1
-    },
-    "versions_with_no_specific_signal": 1
-  },
   "domain_comparison": {
     "issue_prevalence_pct": {
       "Food & Grocery": {
@@ -1901,6 +1661,280 @@
     "rule": "affected = positive reviews/day in the gap < 60% of the before/after average AND fallen to less than 0.6x the relative level of negative reviews/day",
     "reviews_in_gap": 61077
   },
+  "within_domain_ranking": {
+    "Food & Grocery": [
+      {
+        "app": "Swiggy",
+        "pct_low_star": 35.03,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 9.86
+          },
+          {
+            "issue": "Delivery Delay",
+            "pct_of_reviews": 6.1
+          }
+        ]
+      },
+      {
+        "app": "Domino's",
+        "pct_low_star": 23.6,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 3.92
+          },
+          {
+            "issue": "Delivery Delay",
+            "pct_of_reviews": 3.25
+          }
+        ]
+      },
+      {
+        "app": "Blinkit",
+        "pct_low_star": 19.03,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 3.0
+          },
+          {
+            "issue": "Delivery Delay",
+            "pct_of_reviews": 2.94
+          }
+        ]
+      },
+      {
+        "app": "Zomato",
+        "pct_low_star": 18.8,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 4.51
+          },
+          {
+            "issue": "Delivery Delay",
+            "pct_of_reviews": 3.23
+          }
+        ]
+      }
+    ],
+    "Shopping": [
+      {
+        "app": "Amazon",
+        "pct_low_star": 54.38,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 16.79
+          },
+          {
+            "issue": "Cancellation & Return",
+            "pct_of_reviews": 12.53
+          }
+        ]
+      },
+      {
+        "app": "Flipkart",
+        "pct_low_star": 18.31,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 3.42
+          },
+          {
+            "issue": "Cancellation & Return",
+            "pct_of_reviews": 3.17
+          }
+        ]
+      },
+      {
+        "app": "Meesho",
+        "pct_low_star": 17.57,
+        "top_issues": [
+          {
+            "issue": "Cancellation & Return",
+            "pct_of_reviews": 5.5
+          },
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 3.8
+          }
+        ]
+      },
+      {
+        "app": "Myntra",
+        "pct_low_star": 10.26,
+        "top_issues": [
+          {
+            "issue": "Cancellation & Return",
+            "pct_of_reviews": 4.95
+          },
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 3.68
+          }
+        ]
+      }
+    ],
+    "Payments": [
+      {
+        "app": "Google Pay",
+        "pct_low_star": 23.16,
+        "top_issues": [
+          {
+            "issue": "Crash & Stability",
+            "pct_of_reviews": 2.7
+          },
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 1.59
+          }
+        ]
+      },
+      {
+        "app": "Paytm",
+        "pct_low_star": 14.64,
+        "top_issues": [
+          {
+            "issue": "Crash & Stability",
+            "pct_of_reviews": 2.16
+          },
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 1.83
+          }
+        ]
+      },
+      {
+        "app": "PhonePe",
+        "pct_low_star": 9.81,
+        "top_issues": [
+          {
+            "issue": "Customer Support",
+            "pct_of_reviews": 0.95
+          },
+          {
+            "issue": "Pricing & Fraud",
+            "pct_of_reviews": 0.61
+          }
+        ]
+      }
+    ]
+  },
+  "within_domain_ranking_gap_check": {
+    "max_shift_points": 1.59,
+    "order_swaps_without_gap": [
+      "Blinkit and Zomato"
+    ]
+  },
+  "complaint_attribution": {
+    "definition": {
+      "service_tags": [
+        "issue_delivery_delay",
+        "issue_order_quality_fulfillment",
+        "issue_cancellation_return",
+        "issue_customer_support",
+        "issue_pricing_charges_fraud"
+      ],
+      "app_tags": [
+        "issue_crash_bugs_stability",
+        "issue_account_login_otp",
+        "issue_ui_ux_update"
+      ],
+      "note": "Payment & Refund can be an app, bank or gateway problem, so it is a separate group. Keyword tags, not human labels."
+    },
+    "low_star_reviews": 221581,
+    "overall_pct": {
+      "Service issue only": 40.5,
+      "Service and app issue": 1.3,
+      "App issue only": 2.0,
+      "Payment & Refund only": 1.9,
+      "No issue tag": 54.3
+    },
+    "among_tagged_low_star_pct_with_service_tag": 91.3,
+    "among_tagged_low_star_pct_with_app_tag": 7.2,
+    "by_app_pct": {
+      "Swiggy": {
+        "Service issue only": 50.4,
+        "Service and app issue": 1.3,
+        "App issue only": 1.1,
+        "Payment & Refund only": 2.3,
+        "No issue tag": 44.8
+      },
+      "Zomato": {
+        "Service issue only": 43.1,
+        "Service and app issue": 0.7,
+        "App issue only": 0.6,
+        "Payment & Refund only": 2.1,
+        "No issue tag": 53.4
+      },
+      "Blinkit": {
+        "Service issue only": 37.0,
+        "Service and app issue": 0.5,
+        "App issue only": 0.7,
+        "Payment & Refund only": 2.3,
+        "No issue tag": 59.5
+      },
+      "Domino's": {
+        "Service issue only": 32.4,
+        "Service and app issue": 1.1,
+        "App issue only": 1.3,
+        "Payment & Refund only": 1.5,
+        "No issue tag": 63.7
+      },
+      "Myntra": {
+        "Service issue only": 61.5,
+        "Service and app issue": 1.7,
+        "App issue only": 1.5,
+        "Payment & Refund only": 1.8,
+        "No issue tag": 33.5
+      },
+      "Flipkart": {
+        "Service issue only": 39.0,
+        "Service and app issue": 1.2,
+        "App issue only": 1.8,
+        "Payment & Refund only": 1.0,
+        "No issue tag": 57.1
+      },
+      "Amazon": {
+        "Service issue only": 52.6,
+        "Service and app issue": 2.3,
+        "App issue only": 3.4,
+        "Payment & Refund only": 2.8,
+        "No issue tag": 38.9
+      },
+      "Meesho": {
+        "Service issue only": 46.0,
+        "Service and app issue": 2.8,
+        "App issue only": 1.9,
+        "Payment & Refund only": 2.2,
+        "No issue tag": 47.2
+      },
+      "Paytm": {
+        "Service issue only": 16.6,
+        "Service and app issue": 2.1,
+        "App issue only": 13.1,
+        "Payment & Refund only": 1.6,
+        "No issue tag": 66.6
+      },
+      "PhonePe": {
+        "Service issue only": 13.4,
+        "Service and app issue": 1.0,
+        "App issue only": 4.6,
+        "Payment & Refund only": 1.8,
+        "No issue tag": 79.2
+      },
+      "Google Pay": {
+        "Service issue only": 11.3,
+        "Service and app issue": 0.7,
+        "App issue only": 10.0,
+        "Payment & Refund only": 2.7,
+        "No issue tag": 75.3
+      }
+    }
+  },
   "statistical_tests": {
     "rating_vs_app_chi2": {
       "chi2": 65055.1,
@@ -1994,7 +2028,7 @@
     {
       "file": "data/charts/eda/eda_01_coverage.png",
       "title": "10 of 11 apps have reviews on all 173 days from 1 Apr 2026; volume ranges 117/day (Google Pay) to 1,539/day (Flipkart); Zomato 172/173 days",
-      "subtitle": "1,137,987 reviews in total. Complete weeks only (06 Apr \u2013 20 Sep). Grey band = 21 Apr\u201305 May feed gap (chart 15). The time window is identical for every app, so apps and weeks compare directly."
+      "subtitle": "1,137,987 reviews in total. Complete weeks only (06 Apr \u2013 20 Sep). Grey band = 21 Apr\u201305 May feed gap (chart 13). The time window is identical for every app, so apps and weeks compare directly."
     },
     {
       "file": "data/charts/eda/eda_02_ratings_vs_public.png",
@@ -2039,32 +2073,32 @@
     {
       "file": "data/charts/eda/eda_10_weekly_trend.png",
       "title": "From May\u2013Jun to Aug\u2013Sep, Amazon worsened most (+9.6 pp 1\u20132\u2605) and Google Pay improved most (-5.5 pp); 7 of 11 apps move by less than 2.5 pp",
-      "subtitle": "Complete weeks; grey band = 21 Apr\u201305 May feed gap, excluded from the comparison (chart 15). Differences between apps (Cram\u00e9r's V = 0.12) are far larger than any app's movement over time."
+      "subtitle": "Complete weeks; grey band = 21 Apr\u201305 May feed gap, excluded from the comparison (chart 13). Differences between apps (Cram\u00e9r's V = 0.12) are far larger than any app's movement over time."
     },
     {
-      "file": "data/charts/eda/eda_11_july_check.png",
-      "title": "No July 2026 shift in the full review stream: 0 of 11 apps jump \u22651.5\u00d7 in volume, 0 get shorter reviews",
-      "subtitle": "Does the review mix change partway through the window? Full months, vertical rule = 1 Jul, gap days excluded. Length-adjusted rating change Jul\u2013Sep vs Apr\u2013Jun: -0.19 to +0.13\u2605."
-    },
-    {
-      "file": "data/charts/eda/eda_12_app_versions.png",
+      "file": "data/charts/eda/eda_11_app_versions.png",
       "title": "49 of 544 app versions rate clearly worse than their app's average (\u22650.25\u2605 below, z \u2264 \u22123)",
       "subtitle": "Eight most-reviewed versions per app, ordered by median review date. Red = flagged worse, dark blue = flagged better, grey = not flagged. Versions need \u226530 reviews; 21 Apr\u201305 May gap days excluded. Full table: data/eda/version_metrics.csv."
     },
     {
-      "file": "data/charts/eda/eda_13_version_issue_mix.png",
-      "title": "In the worst-rated versions, Customer Support is the issue most often elevated (9 of 32 signals)",
-      "subtitle": "Issue rate in each of the 15 most significantly worse versions minus its app's overall rate (pp). Blank = not significant (|diff| < 3 SE or < 2 pp). 1 of 15 shows no specific issue: a general drop rather than one failure type."
-    },
-    {
-      "file": "data/charts/eda/eda_14_domain_comparison.png",
+      "file": "data/charts/eda/eda_12_domain_comparison.png",
       "title": "Food & Grocery reviews are the most negative (22% 1\u20132\u2605 vs 13% for Payments); Delivery Delay is the most domain-specific issue",
       "subtitle": "Top issue: Food & Grocery \u2013 Customer Support; Shopping \u2013 Cancellation & Return; Payments \u2013 Crash & Stability. Delivery Delay: 3.5% in Food & Grocery vs 0.1% in Payments. Bars sorted by the highest domain."
     },
     {
-      "file": "data/charts/eda/eda_15_april_gap.png",
+      "file": "data/charts/eda/eda_13_april_gap.png",
       "title": "21 Apr\u20135 May: in 5 of 11 apps positive reviews fall ~84% while negative reviews fall far less \u2014 a feed gap, not an incident",
       "subtitle": "Affected: Swiggy, Blinkit, Domino's, Flipkart, Amazon. Short positive reviews ('good', 'nice') are what disappear, so median length jumps. Shares such as '% rated 1\u20132\u2605' are inflated in this window; counts of negative reviews per day are far less affected. The gap is kept in the dataset and flagged; trend, version and July analyses exclude it."
+    },
+    {
+      "file": "data/charts/eda/eda_14_within_domain.png",
+      "title": "Apps in the same domain differ widely: Food: Swiggy 35% vs Zomato 19%; Shopping: Amazon 54% vs Myntra 10%; Payments: Google Pay 23% vs PhonePe 10%",
+      "subtitle": "Apps ranked within each domain by % of reviews rated 1\u20132\u2605; beside each bar are the app's two most frequent issue tags (% of its reviews). Excluding the 21 Apr \u2013 5 May feed gap moves no app by more than 1.6 points, and only Blinkit and Zomato swap order (a near-tie)."
+    },
+    {
+      "file": "data/charts/eda/eda_15_complaint_attribution.png",
+      "title": "Among 1\u20132\u2605 reviews that name an issue, 91% name a service problem and 7% an app problem",
+      "subtitle": "What each app's 1\u20132\u2605 reviews are about, from the keyword tags. Service = delivery, order quality, cancellation/return, support, pricing; app = crash, login/OTP, UI/update. Payment & Refund can be the app, a bank or a gateway, so it is shown separately. 54% of 1\u20132\u2605 reviews carry no tag, so every share here is a lower bound."
     }
   ]
 }

@@ -1,7 +1,7 @@
 # Exploratory Data Analysis — Findings & Method
 
 **Capstone Project — Stage 4: Exploratory Data Analysis**
-*Owners: Person 3 and Person 2 · Input: `data/tagged/*.csv.gz` (1,137,987 reviews × 29 columns, 11 apps) · Code: `scripts/05_eda.py`*
+*Owners: Akshay KS and Regella Krishna Saketh · Input: `data/tagged/*.csv.gz` (1,137,987 reviews × 29 columns, 11 apps) · Code: `scripts/05_eda.py`*
 
 Outputs: 15 charts in `data/charts/eda/`, all quoted numbers in `data/eda_summary.json`, and three tables (`data/eda/monthly_trend.csv`, `data/eda/weekly_trend.csv`, `data/eda/version_metrics.csv`).
 
@@ -11,13 +11,15 @@ Outputs: 15 charts in `data/charts/eda/`, all quoted numbers in `data/eda_summar
 
 1. **Recent reviews are short and mostly positive.** 67% are 5★ and 17% are 1★. The median review is 2 words, and 66% have 3 words or fewer ([chart 02](data/charts/eda/eda_02_ratings_vs_public.png), [chart 03](data/charts/eda/eda_03_length_and_upvotes.png)).
 2. **Amazon and Swiggy are the clear outliers.** 54% of Amazon reviews and 35% of Swiggy reviews are 1–2★, against 10–24% for every other app. PhonePe (9.8%) and Myntra (10.3%) are the mildest. Written reviews sit 0.0–1.4★ below each app's public rating; Amazon has the biggest gap (2.74 vs 4.18★).
-3. **A late-April feed gap, not an incident.** From 21 April to 5 May 2026, positive reviews fall 59–90% for Swiggy, Blinkit, Domino's, Flipkart and Amazon, while negative reviews fall only 3–37% ([chart 15](data/charts/eda/eda_15_april_gap.png)). Swiggy's weekly "% rated 1–2★" jumps from ~33% to 87% mainly because short positive reviews ("good", "nice") are missing. **Shares are fragile; counts of negative reviews per day are far less affected.** The window is flagged and excluded from trend, version and July analyses.
-4. **No mid-year shift.** Comparing July–September with April–June, no app gets ≥1.5× more reviews per day, and median length is unchanged in 10 of 11 apps ([chart 11](data/charts/eda/eda_11_july_check.png)). A time-based train/test split is therefore safe.
+3. **A late-April feed gap, not an incident.** From 21 April to 5 May 2026, positive reviews fall 59–90% for Swiggy, Blinkit, Domino's, Flipkart and Amazon, while negative reviews fall only 3–37% ([chart 13](data/charts/eda/eda_13_april_gap.png)). Swiggy's weekly "% rated 1–2★" jumps from ~33% to 87% mainly because short positive reviews ("good", "nice") are missing. **Shares are fragile; counts of negative reviews per day are far less affected.** The window is flagged and excluded from trend, version and July analyses.
+4. **No mid-year shift.** Comparing July–September with April–June, no app gets ≥1.5× more reviews per day, and median length is unchanged in 10 of 11 apps (`july_check` in `data/eda_summary.json`; no chart, because the answer is "no shift"). A time-based train/test split is therefore safe.
 5. **Customer Support is both the most common and the most damaging issue.** It appears in 4.1% of all reviews, and those reviews average 1.23★ ([chart 05](data/charts/eda/eda_05_issue_priority.png)). Only 10% of reviews carry any issue tag, because most reviews are too short to name a problem.
-6. **Each domain has its own fingerprint.** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping. In Payments, Crash & Stability and Customer Support are tied (1.30% and 1.29%), and delivery problems are almost absent. Delivery Delay is the most domain-specific issue (3.5% of Food & Grocery reviews vs 0.07% of Payments) ([charts 06, 14](data/charts/eda/eda_14_domain_comparison.png)). Food & Grocery is the most negative domain (22% 1–2★), Payments the mildest (13%).
+6. **Each domain has its own fingerprint.** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping. In Payments, Crash & Stability and Customer Support are tied (1.30% and 1.29%), and delivery problems are almost absent. Delivery Delay is the most domain-specific issue (3.5% of Food & Grocery reviews vs 0.07% of Payments) ([charts 06, 12](data/charts/eda/eda_12_domain_comparison.png)). Food & Grocery is the most negative domain (22% 1–2★), Payments the mildest (13%).
 7. **Ratings are stable over time; app differences dominate.** Between May–Jun and Aug–Sep, 7 of 11 apps move by less than 2.5 pp of 1–2★ share. Exceptions: Amazon worsens by 9.6 pp, Zomato by 4.4 pp and Flipkart by 2.6 pp; Google Pay improves by 5.5 pp ([chart 10](data/charts/eda/eda_10_weekly_trend.png)).
 8. **The tagger misses most short complaints, and many 1–2★ reviews are mis-ratings.** 54% of 1–2★ reviews get no tag. Their median length is 5 words, against 28 for tagged ones. The most distinctive untagged terms are praise ("nice product", "mast", "super", "gud"), which means users giving 1★ by mistake ([chart 09](data/charts/eda/eda_09_taxonomy_gap.png)).
-9. **"Bad release" signals exist but are concentrated.** 49 of 544 versions are clearly worse than their app's mean (≥0.25★ below and z ≤ −3); 15 of them are Flipkart builds. Every Amazon version released since mid-July (five versions, 32.13 to 32.17) is flagged, matching its downward trend. In the 15 worst versions, the most often elevated issue is Customer Support (9 signals), followed by Payment & Refund (8) ([charts 12–13](data/charts/eda/eda_12_app_versions.png)).
+9. **"Bad release" signals exist but are concentrated.** 49 of 544 versions are clearly worse than their app's mean (≥0.25★ below and z ≤ −3); 15 of them are Flipkart builds. Every Amazon version released since mid-July (five versions, 32.13 to 32.17) is flagged, matching its downward trend ([chart 11](data/charts/eda/eda_11_app_versions.png)). Treat this as a shortlist: a review is attributed to the reviewer's installed version, not the release that caused the complaint.
+10. **Inside each domain, apps differ widely, and the weak spot differs too.** Food & Grocery: Swiggy 35.0% rated 1–2★ against Zomato 18.8%, Blinkit 19.0% and Domino's 23.6%. Shopping: Amazon 54.4% against Flipkart 18.3%, Meesho 17.6% and Myntra 10.3%. Payments: Google Pay 23.2% against Paytm 14.6% and PhonePe 9.8%. The two most frequent issues beside each bar show where each app should start ([chart 14](data/charts/eda/eda_14_within_domain.png)).
+11. **Most complaints that name an issue are about the service, not the app.** Among 1–2★ reviews that carry a tag, 91% name a service problem (delivery, order quality, cancellation/return, support, pricing) and 7% an app problem (crash, login/OTP, UI/update). App problems are most visible at the payment apps: app-only tags make up 13% of Paytm's, 10% of Google Pay's and 5% of PhonePe's 1–2★ reviews, against 1–3% at every food and shopping app ([chart 15](data/charts/eda/eda_15_complaint_attribution.png)). 54% of 1–2★ reviews carry no tag, so these shares are lower bounds.
 
 ---
 
@@ -84,7 +86,7 @@ No rows were removed by the EDA.
 
 ---
 
-## 5. Issue analysis (charts 05–09, 14)
+## 5. Issue analysis (charts 05–09, 12, 14, 15)
 
 | Issue | % of reviews | Reviews | Mean ★ with issue | % rated 1–2★ | Effect vs rest (rank-biserial) |
 |---|---:|---:|---:|---:|---:|
@@ -102,7 +104,37 @@ All nine differ significantly in rating from untagged reviews (p < 0.001). UI/UX
 
 **By app (chart 06).** Amazon has the heaviest issue load in every category except Crash & Stability (Customer Support 16.8%, Cancellation & Return 12.5%, Delivery Delay 8.9%). Swiggy is second (Customer Support 9.9%, Delivery Delay 6.1%). Crash & Stability is highest at Google Pay (2.7%), Paytm (2.2%) and Amazon (2.0%); PhonePe is low (0.5%). Delivery Delay and Order Quality are close to zero at the payment apps. Strongest app effects (Cramér's V): Customer Support 0.146, Cancellation & Return 0.133, Delivery Delay 0.103.
 
-**By domain (chart 14).** Shopping's top issue is Cancellation & Return (4.6%, just ahead of Customer Support at 4.4%). Food & Grocery is led by Customer Support (4.6%). In Payments, Crash & Stability (1.30%) and Customer Support (1.29%) are tied. Delivery Delay is about 50× more common in Food & Grocery (3.53%) than in Payments (0.07%).
+**By domain (chart 12).** Shopping's top issue is Cancellation & Return (4.6%, just ahead of Customer Support at 4.4%). Food & Grocery is led by Customer Support (4.6%). In Payments, Crash & Stability (1.30%) and Customer Support (1.29%) are tied. Delivery Delay is about 50× more common in Food & Grocery (3.53%) than in Payments (0.07%).
+
+**Within each domain (chart 14).** Apps are ranked from the most to the least negative written reviews, with each app's two most frequent issue tags (% of its reviews).
+
+| Domain | App | % rated 1–2★ | Top two issues |
+|---|---|---:|---|
+| Food & Grocery | Swiggy (worst) | 35.0 | Customer Support 9.9, Delivery Delay 6.1 |
+| Food & Grocery | Domino's | 23.6 | Customer Support 3.9, Delivery Delay 3.2 |
+| Food & Grocery | Blinkit | 19.0 | Customer Support 3.0, Delivery Delay 2.9 |
+| Food & Grocery | Zomato (best) | 18.8 | Customer Support 4.5, Delivery Delay 3.2 |
+| Shopping | Amazon (worst) | 54.4 | Customer Support 16.8, Cancellation & Return 12.5 |
+| Shopping | Flipkart | 18.3 | Customer Support 3.4, Cancellation & Return 3.2 |
+| Shopping | Meesho | 17.6 | Cancellation & Return 5.5, Customer Support 3.8 |
+| Shopping | Myntra (best) | 10.3 | Cancellation & Return 5.0, Customer Support 3.7 |
+| Payments | Google Pay (worst) | 23.2 | Crash & Stability 2.7, Customer Support 1.6 |
+| Payments | Paytm | 14.6 | Crash & Stability 2.2, Customer Support 1.8 |
+| Payments | PhonePe (best) | 9.8 | Customer Support 0.9, Pricing & Fraud 0.6 |
+
+The spread is widest in Shopping (Amazon 54.4% against Myntra 10.3%). In Food & Grocery, Blinkit and Zomato sit near 19% and Domino's at 23.6%, while Swiggy stands out with about twice Zomato's Customer Support and Delivery Delay rates. In Payments, the two weaker apps lead with Crash & Stability, the only domain where app stability is the top issue; PhonePe has the lowest share of 1–2★ reviews of all 11 apps. Blinkit and Zomato are a near-tie: excluding the 21 Apr – 5 May feed gap moves every app by at most 1.6 points, and Blinkit and Zomato are the only pair that swap order (`within_domain_ranking_gap_check` in `data/eda_summary.json`). These are descriptive comparisons of written reviews, not proof of cause.
+
+**What the complaints are about (chart 15).** Each 1–2★ review is placed in one group by its tags. Service = delivery, order quality, cancellation/return, support or pricing; app = crash, login/OTP or UI/update; Payment & Refund is shown separately because it can be the app, a bank or a gateway.
+
+| 1–2★ reviews | Share |
+|---|---:|
+| Service issue only | 40.5% |
+| Service and app issue | 1.3% |
+| App issue only | 2.0% |
+| Payment & Refund only | 1.9% |
+| No issue tag | 54.3% |
+
+Among the tagged reviews, 91% name a service issue and 7% an app issue. This is why the classifier finds dissatisfied users rather than software failures: most low-rated reviews are about orders, returns, refunds and support. Amazon (53% service-only), Myntra (61%) and Swiggy (50%) are the most service-heavy; the payment apps are the exception, with 10–13% app-only at Google Pay and Paytm. The tags are keyword rules, so these are lower bounds and not a human judgement.
 
 **Co-occurrence (chart 07).** Crash + UI/UX co-occur 26× more than chance (n = 281), i.e. post-update breakage. Payment & Refund travels with Cancellation & Return (13.3×, n = 7,666) and Order Quality (13.1×, n = 2,236): a wrong or cancelled order becomes a refund complaint.
 
@@ -110,9 +142,9 @@ All nine differ significantly in rating from untagged reviews (p < 0.001). UI/UX
 
 ---
 
-## 6. Trends, data gaps & versions (charts 10–13, 15)
+## 6. Trends, data gaps & versions (charts 10, 11, 13)
 
-### 6.1 The 21 April – 5 May feed gap (chart 15)
+### 6.1 The 21 April – 5 May feed gap (chart 13)
 
 | App | Positive/day before → gap → after | Negative/day before → gap → after |
 |---|---|---|
@@ -131,21 +163,21 @@ Before = 8–20 Apr, after = 6–18 May. An app is "affected" when positive revi
 
 Change in % rated 1–2★ from May–Jun to Aug–Sep (gap excluded; Aug–Sep runs to 20 Sep): Amazon +9.6 pp, Zomato +4.4, Flipkart +2.6, Myntra +2.0, Swiggy +1.1, Meesho +0.4, Blinkit +0.4, PhonePe −0.1, Paytm −0.3, Domino's −1.1, Google Pay −5.5. Amazon's mean rating falls 0.37★ over the same period. The most volatile apps week to week are Amazon (SD 0.21★) and Google Pay (0.18★); the most stable is Blinkit (0.03★). Differences between apps (Cramér's V = 0.12) are far larger than any app's movement.
 
-### 6.3 The July 2026 check (chart 11)
+### 6.3 The July 2026 check (statistics only)
 
 This check asks whether the review mix changes partway through the window, which would make a time-based test unreliable. Reviews per day in July–September (to 20 Sep) are 0.62–1.02× the April–June level (gap days excluded): no app rises by more than 2% (Flipkart), and Zomato's volume actually falls by about 38%. Median length is unchanged in 10 of 11 apps; Amazon's goes up by 2 words. Length-adjusted rating changes are small (−0.19 Zomato to +0.13 Google Pay). **There is no common July shift.**
 
-### 6.4 App versions (charts 12–13)
+### 6.4 App versions (chart 11)
 
 544 versions have ≥30 reviews (gap days excluded). 49 are clearly worse than their app's mean and 17 clearly better. Worse versions by app: Flipkart 15, Zomato 7, Swiggy 5, Amazon 5, PhonePe 5, Google Pay 4, Paytm 3, Blinkit 2, Meesho 2, Myntra 1. Amazon stands out: every version first seen since 15 July (32.13.0 to 32.17.0, five versions) rates 2.28–2.48★ against the app mean of 2.75★, consistent with Amazon's falling trend.
 
-For the 15 most significantly worse versions, chart 13 compares each issue's rate with the app's overall rate (significant cells only: |diff| > 3 SE and ≥ 2 pp). Elevated signals: Customer Support 9, Payment & Refund 8, Delivery Delay 5, Cancellation & Return 4, Crash & Stability 3, Order Quality 2, Pricing & Fraud 1. One version shows no specific issue. Some versions do show crash increases. Version is still confounded with time, and a review is attributed to the reviewer's installed version, not the release that caused the complaint. Treat `data/eda/version_metrics.csv` as a shortlist, not proof.
+Version is still confounded with time, and a review is attributed to the reviewer's installed version, not the release that caused the complaint. Treat `data/eda/version_metrics.csv` as a shortlist, not proof.
 
 ---
 
 ## 7. Implications for other stages
 
-**Person 4 — Predictive modelling**
+**Predictive modelling (Harshini Vennela and Kanishka D)**
 * `is_problematic` (score ≤ 2) has a **19.5% base rate**. The classes are imbalanced: a model that never flags anything scores 80.5% accuracy. Report precision, recall, F1 and PR-AUC.
 * Most reviews are 1–3 words, so text features carry little for them. Sentiment and length matter most. `issue_count` is partly a length proxy (ρ = 0.46).
 * There is no shift partway through the window, so a time-based test split is safe. The April gap affects only the label mix in two weeks.
@@ -177,6 +209,8 @@ With n ≈ 1.1 million every p-value is tiny. Read the **effect sizes** (V, ρ, 
 * The cause of the late-April gap cannot be established from this dataset; we only measure its effect.
 * One snapshot. Reviews edited or deleted before collection are not visible.
 * Review time has no stored timezone.
+* The language filter keeps romanised Hindi (Hinglish): it judges letters, not language. VADER does not understand Hinglish, so those reviews score near neutral.
+* `primary_issue` takes the category with the most keyword hits; a tie goes to the first category in the taxonomy (Crash & Stability), so it is only a convenience column. All analysis uses the nine 0/1 issue flags.
 * Tags are rule-based. Most reviews are too short to tag, and some categories have polarity blind spots.
 * `app_version` is the reviewer's installed version and is missing for 13.4% of rows.
 
