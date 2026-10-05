@@ -2,7 +2,7 @@
 
 **Capstone Project — Stage 5: Predictive Modeling**
 
-*Owners: Person 4 and Person 5 · Input: `data/engineered_features.npz`, `data/target.npy`, `data/model_row_index.csv.gz` (all built by `scripts/05_feature_engineering.py`) · Code: `scripts/06_model_training.py` to `scripts/12_normalized_confusion_matrices.py`*
+*Owners: Harshini Vennela and Kanishka D · Input: `data/engineered_features.npz`, `data/target.npy`, `data/model_row_index.csv.gz` (all built by `scripts/05_feature_engineering.py`) · Code: `scripts/06_model_training.py` to `scripts/12_normalized_confusion_matrices.py`*
 
 Outputs: trained Logistic Regression and Random Forest models (`models/`), evaluation metrics, test-set predictions, per-app and out-of-time results, and the charts in `figures/`.
 
@@ -205,7 +205,7 @@ The charts use the real feature names (saved in `data/feature_names.json`). Logi
 
 ![Top TF-IDF terms](figures/top_tfidf_terms.png)
 
-The terms with the largest SVD loadings are a mix of praise ("very fast", "the best", "fast service", "fast delivery", "good delivery") and complaint phrases ("very bad", "not good", "worst app"). Because stop words are kept, negated phrases such as "not good" now appear among them, along with very common words ("to", "my", "the"). The text components separate these vocabularies.
+The terms with the largest SVD loadings are a mix of praise ("very fast", "the best", "fast service", "fast delivery", "good delivery") and complaint phrases ("very bad", "not good", "worst app"). Because stop words are kept, negated phrases such as "not good" appear among them. Terms made only of stop words ("to", "my", "the") also get large loadings, so the chart hides them and shows the top 20 informative terms; they remain in the model. The text components separate the praise and complaint vocabularies.
 
 ---
 
@@ -222,6 +222,7 @@ The terms with the largest SVD loadings are a mix of praise ("very fast", "the b
 - The target comes from the star rating, so the model predicts "low rating", not a confirmed failure. Mis-ratings (1★ with "nice product") are counted as problems.
 - TF-IDF, SVD and the scaler are fitted on all rows before the split. They do not use the target, but a stricter setup would fit them on training rows only.
 - The settings check covers two parameters on one validation split; the TF-IDF settings and the number of SVD components were not searched. There is no cross-validation, but the bootstrap intervals on 227,598 test reviews are narrow (±0.003 PR-AUC).
+- `thumbs_up` is only known after a review has been live for a while, so a brand-new review has 0. Its weight is small (−0.01 in Logistic Regression), but a live triage system should drop it.
 - During the 21 Apr – 5 May feed gap, positive reviews are under-represented for five apps. This changes the label mix for those two weeks only.
 
 ---
@@ -234,6 +235,7 @@ The terms with the largest SVD loadings are a mix of praise ("very fast", "the b
 | `scripts/06_model_training.py` | Training, test metrics, baseline, per-group and out-of-time results |
 | `scripts/07`–`12` | Charts, feature importance, AUC summary, error summary, normalized confusion matrices |
 | `scripts/13_model_robustness_checks.py` | Bootstrap confidence intervals, feature-group ablation, settings check (§8) |
+| `scripts/14_predict_review.py` | Classifies new review text with the saved models (issue tags, VADER, TF-IDF → SVD, scaler, both classifiers) |
 | `data/model_bootstrap_ci.csv`, `data/model_ablation.csv`, `data/model_tuning.csv` | Robustness check results |
 | `data/model_results.csv`, `data/baseline_results.csv`, `data/model_results_by_group.csv`, `data/model_results_out_of_time.csv` | Metric tables |
 | `data/model_predictions.csv.gz` | Test-set predictions with app and domain |
