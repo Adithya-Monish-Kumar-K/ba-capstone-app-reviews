@@ -1,0 +1,12 @@
+# Python 3.13 or newer (developed on 3.13; the notebook was executed on 3.14).
+# Install:  pip install -r requirements.txt
+pandas>=3.0
+numpy>=2.4
+scipy>=1.18
+scikit-learn==1.9.0        # pinned: models/*.pkl were saved with this version
+matplotlib>=3.11
+seaborn>=0.13
+joblib>=1.5
+nltk>=3.8                  # VADER sentiment; then run: python -c "import nltk; nltk.download('vader_lexicon')"
+google-play-scraper>=1.2   # only needed to re-collect reviews (scripts/01_scrape_reviews.py)
+# To run notebooks/Review_1_Analysis.ipynb also install: ipython ipykernel jupyterlab
