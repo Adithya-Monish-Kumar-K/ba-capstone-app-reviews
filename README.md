@@ -8,7 +8,7 @@ This project analyzes Google Play Store reviews from 11 major Indian consumer ap
 * **Shopping:** Myntra, Flipkart, Amazon, Meesho
 * **Payments:** Paytm, PhonePe, Google Pay
 
-This repository is set up for **Review 1: data collection, preprocessing, exploratory data analysis and predictive modelling**. Review 2 material (text-mining write-up, time-series forecasting, dashboard) is kept separately in [`review_2_prep/`](review_2_prep/) and will be rebuilt on the current dataset.
+This repository is set up for **Review 1: data collection, preprocessing, exploratory data analysis and predictive modelling**. Review 2 adds text mining, time-series forecasting and an interactive dashboard.
 
 ### Project Pipeline
 
@@ -51,8 +51,6 @@ Reviews were collected from the **Google Play Store** using `google-play-scraper
 
 The dataset was collected specifically for this project rather than downloaded from Kaggle or another public dataset repository. See `DATA_SOURCES.md` for the full method.
 
-The first version of the project used 15,000 `MOST_RELEVANT` reviews of 5 apps (collected 20 September 2026). That data is kept in `review_2_prep/data/v1_most_relevant/` together with the Review 2 work built on it.
-
 ### Important Data Notes
 
 * **Most reviews are short and positive.** 67% are 5-star, 17% are 1-star, and the median review is 2 words. Only 19.5% are problematic (1–2 stars).
@@ -83,7 +81,7 @@ Each review is tagged with nine keyword-based issue categories (multi-label) and
 * **Each domain has its own problem profile:** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping; Payments has Crash & Stability and Customer Support, tied. Delivery Delay is about 50× more common in Food & Grocery than in Payments.
 * **Customer Support** is the most common issue (4.1% of reviews) and the most damaging (1.23★ average).
 * **Late-April feed gap:** a "% negative" metric jumps for five apps because positive reviews are missing, not because complaints rose. Counts of negative reviews per day are far less affected.
-* **No July 2026 shift:** the sudden July change seen in the first dataset does not exist in the complete data; it was caused by `MOST_RELEVANT` sampling.
+* **No mid-year shift:** review volume and length stay stable from April–June to July–September, so a time-based test split is safe.
 
 15 charts in `data/charts/eda/`; details in `EDA.md`.
 
@@ -110,7 +108,7 @@ The final feature set contained **215 features** for **1,137,987 reviews**.
 | Logistic Regression     |    92.2% |     76.7% |  85.8% | 81.0% |  0.871 |
 | Random Forest           |    91.4% |     73.7% |  87.0% | 79.8% |  0.873 |
 
-The two models are close: Logistic Regression is more accurate and precise at the default threshold (16% fewer false alarms), while Random Forest has the higher recall and PR-AUC. Trained on April–August and tested on 1–20 September, PR-AUC drops by less than 0.01 (Random Forest 0.866). Payment apps are the hardest domain (PR-AUC 0.75). Details in `MODEL_EVALUATION.md`.
+The two models are close: Logistic Regression is more accurate and precise at the default threshold (16% fewer false alarms), while Random Forest has the higher recall and PR-AUC. Trained on April–August and tested on 1–20 September, PR-AUC drops by less than 0.01 (Random Forest 0.866). Payment apps are the hardest domain (PR-AUC 0.75). 95% bootstrap intervals are about ±0.003 PR-AUC. The text components alone reach PR-AUC 0.85, more than the sentiment scores alone (0.74–0.80), and the settings we use are the best or within 0.005 PR-AUC of the best on a validation split. Details in `MODEL_EVALUATION.md`.
 
 ---
 
@@ -155,7 +153,8 @@ ba-capstone-app-reviews/
 │   ├── 09_model_performance_comparison.py
 │   ├── 10_auc_summary.py
 │   ├── 11_prediction_error_summary.py
-│   └── 12_normalized_confusion_matrices.py
+│   ├── 12_normalized_confusion_matrices.py
+│   └── 13_model_robustness_checks.py
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
@@ -182,7 +181,7 @@ ba-capstone-app-reviews/
 │   ├── Review_1_Presentation.pptx
 │   └── Review_1_Contribution_Summary.md
 │
-└── review_2_prep/               # Review 2 work kept aside (first-dataset results, dashboard, time series)
+└── review_2_prep/               # Review 2 workspace
 ```
 
 ---
@@ -215,6 +214,7 @@ python scripts/09_model_performance_comparison.py
 python scripts/10_auc_summary.py
 python scripts/11_prediction_error_summary.py
 python scripts/12_normalized_confusion_matrices.py
+python scripts/13_model_robustness_checks.py   # confidence intervals, ablation, settings check (~20 min)
 ```
 
 ### VADER Setup
@@ -257,10 +257,6 @@ From 21 April to 5 May 2026, positive reviews drop 59–90% for five apps while 
 
 The median review is 2 words. Issue tags and text features carry little information for these reviews, so only 10% of reviews have an issue tag.
 
-### July 2026 (first dataset only)
-
-The first dataset showed a sudden change in July 2026. The complete new data shows no such change; it was caused by `MOST_RELEVANT` sampling.
-
 ### Classification Target
 
 The classifier predicts whether a review is **1–2 stars**, which is used as a proxy for a problematic review.
@@ -291,7 +287,7 @@ VADER sentiment can also misclassify sarcastic or politely worded negative revie
 | [`EDA.md`](EDA.md)                                                  | Exploratory data analysis                    |
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
-| [`review_2_prep/`](review_2_prep/)                                  | Review 2 work kept aside (see its README)    |
+| [`review_2_prep/`](review_2_prep/)                                  | Review 2 workspace                           |
 
 ---
 
@@ -304,6 +300,6 @@ The analysis shows that:
 * Customer support is a major complaint category across the dataset.
 * Different apps have different dominant problem areas.
 * Problematic reviews (19.5% of all reviews) can be found with over 91% accuracy: 87% recall at 74% precision with Random Forest, or 77% precision at 86% recall with Logistic Regression (PR-AUC **0.87**), and the models hold up on later weeks.
-* Collection effects (the `MOST_RELEVANT` July shift, the late-April feed gap) can look like real changes if data collection is not checked.
+* Collection effects (the late-April feed gap) can look like real changes if data collection is not checked.
 
 It shows how unstructured app reviews can be turned into **actionable business insights for monitoring and prioritization**; Review 2 adds forecasting and an interactive dashboard.

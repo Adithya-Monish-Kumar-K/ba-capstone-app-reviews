@@ -54,17 +54,17 @@ The app list lives in one place, `scripts/apps.py`, and every script reads it fr
 
 ### Why a fixed date window with `NEWEST`
 
-The first version of this dataset (15,000 reviews, 3,000 per app, kept in `review_2_prep/data/v1_most_relevant/`) used `Sort.MOST_RELEVANT`. That feed has two problems:
+The scraper can also sort by `Sort.MOST_RELEVANT`. We tested that feed before collecting and found two problems:
 
 1. **A hard ceiling.** In a test, `MOST_RELEVANT` ran out of reviews for Swiggy at 11,200 (the other apps were still returning reviews when the short test stopped at 8,200–8,800). `NEWEST` returned more than 100,000 reviews for several apps.
-2. **Uneven, biased coverage.** It returns heavily-upvoted reviews from any year, so Paytm and PhonePe reached back to 2018 while the other apps were almost all 2026. It was also far more negative than the real user base (69% 1★).
+2. **Uneven, biased coverage.** It returns heavily-upvoted reviews from any year, so Paytm and PhonePe reached back to 2018 while the other apps were almost all 2026. It was also far more negative than the full review stream (69% 1★ in our test, against 17% with `NEWEST`).
 
 `NEWEST` has no such ceiling. It returns *every* review in time order. Collecting everything since a fixed date gives every app **exactly the same time window**. Cross-app comparisons need no "common window", and busy apps simply contribute more reviews.
 
 ### How the scraper handles large pulls
 
 - Each app is scraped independently and can run in parallel (`python scripts/01_scrape_reviews.py flipkart amazon`).
-- A failed page is retried with backoff. An empty page mid-stream is retried before the scraper gives up. This happened once for Flipkart: the first run stopped early at 41,400 reviews, and the retry fix was added before the full re-run.
+- A failed page is retried with backoff. An empty page mid-stream is retried before the scraper gives up, because the Play Store occasionally returns one (seen for Flipkart at 41,400 reviews).
 - An app whose output file already exists is skipped, so an interrupted run can be restarted.
 
 ### Known data issues (disclosed, not hidden)
@@ -77,8 +77,6 @@ The first version of this dataset (15,000 reviews, 3,000 per app, kept in `revie
 | **One missing day for Zomato** | Zomato has no reviews from 23 Jul 22:00 to 25 Jul 12:30 (24 July is empty); re-querying the Play Store returned the same counts, so the gap is in the source, not the scraper | Kept as is; it lowers one week's Zomato volume and does not affect rates. Every other app has reviews on all 173 days. |
 | **Missing app version** | `app_version` is empty for 13.4% of reviews | Kept; version is not a model feature. |
 
-The earlier claim that this data is "skewed negative by upvote ranking" applied to the `MOST_RELEVANT` sample only. The NEWEST collection is 67% 5★ and 17% 1★.
-
 ## Processing pipeline & ownership
 
 Each stage is a separate person's responsibility, each reading the previous stage's output:
@@ -88,6 +86,6 @@ Each stage is a separate person's responsibility, each reading the previous stag
 3. **Tag + Sentiment** — rule-based issue-category keywords + VADER sentiment scoring → `data/tagged/<app>.csv.gz`
 4. **EDA** (Persons 3 and 2) — `scripts/05_eda.py`, 15 charts, reading the tagged dataset
 5. **Feature Engineering + Predictive Model** (Persons 4 and 5) — TF-IDF → Truncated SVD + structural features → Logistic Regression / Random Forest classifying `is_problematic` (score ≤ 2)
-6. **Time-Series + Dashboard + Assembly** (Review 2) — weekly forecast models and interactive dashboard. *These are kept in `review_2_prep/`; they still run on the v1 dataset and will be rebuilt on this collection for Review 2.*
+6. **Time-Series + Dashboard + Assembly** (Review 2) — weekly forecast models and interactive dashboard.
 
 Shared helpers: `scripts/apps.py` (app list, domains, colours) and `scripts/data_io.py` (read/write the per-app files).

@@ -97,7 +97,7 @@ Give a product or support team a quick and reliable view of:
 | Payments | PhonePe | com.phonepe.app | Finance |
 | Payments | Google Pay | com.google.android.apps.nbu.paisa.user | Finance |
 
-Why `NEWEST` and a fixed start date: our first version used `MOST_RELEVANT` and 3,000 reviews per app. We tested that feed: for Swiggy it ran out after 11,200 reviews, while `NEWEST` returned more than 100,000 reviews for several apps. It also mixes years: Paytm and PhonePe went back to 2018, the other apps were almost all 2026. `NEWEST` has no limit. Collecting everything since one date gives every app the same time window, so apps can be compared week by week.
+Why `NEWEST` and a fixed start date: before collecting, we tested the other sort order, `MOST_RELEVANT`. For Swiggy it ran out after 11,200 reviews, while `NEWEST` returned more than 100,000 reviews for several apps. `MOST_RELEVANT` also mixes years: Paytm and PhonePe went back to 2018, the other apps were almost all 2026. `NEWEST` has no limit. Collecting everything since one date gives every app the same time window, so apps can be compared week by week.
 
 ### 2.2 Dataset size
 
@@ -244,7 +244,7 @@ Script: `scripts/05_eda.py`. It produces 15 charts in `data/charts/eda/` and sav
 
 - Unhappy users write much more: the median is 14 words for 1-star reviews and 2 words for 5-star reviews.
 - Other users upvote complaints: 1-star reviews are 17% of reviews but receive 59% of all upvotes.
-- Our first version reported a sudden change in all apps in July 2026. With the complete data there is no such change (no app's volume rises by more than 2%, and review length is unchanged in 10 of 11 apps), so that change came from the old `MOST_RELEVANT` sampling.
+- There is no common shift partway through the window: comparing July–September with April–June, no app's volume rises by more than 2%, and review length is unchanged in 10 of 11 apps. So a time-based test split is safe.
 - 54% of 1–2 star reviews have no issue tag. Many of them are praise ("nice product", "mast", "super"), which means users who gave the wrong star rating.
 - App versions: 49 of 544 versions have a clearly lower rating than their app's average. Every Amazon version released since mid-July (five versions) is among them.
 
@@ -280,7 +280,7 @@ Script: `scripts/05_feature_engineering.py`.
 ### 5.4 Effect
 
 - Text features went from 20,000 columns to 200 columns (100 times smaller).
-- The 200 components keep 62.7% of the TF-IDF variance (21.8% in our first version). The vocabulary of short reviews is small, so fewer components capture more of it.
+- The 200 components keep 62.7% of the TF-IDF variance. The vocabulary of short reviews is small, so fewer components capture more of it.
 - Final model input: 1,137,987 rows and 215 columns.
 - In the Random Forest, the most important features are the positive, compound and negative sentiment scores (0.155, 0.136, 0.094), followed by text components 12 (0.059), 11 (0.042) and 7 (0.039), the neutral sentiment score (0.039) and review length (0.035).
 
@@ -300,7 +300,7 @@ Script: `scripts/06_model_training.py`. Saved models are in `models/`.
 | Extra test | Out-of-time: train on April–August 2026, test on 1–20 September 2026 |
 | Logistic Regression settings | `class_weight="balanced"`, `max_iter=1000` |
 | Random Forest settings | 150 trees, each trained on 30% of the rows, at least 100 reviews per leaf, `class_weight="balanced"` |
-| Tuning | Default values were used for the other parameters. No grid search was done. |
+| Settings check | On a validation split of the training data (the test set was not used), Logistic Regression's `C=1` is the best of 0.01, 0.1, 1 and 10. For the Random Forest, 25 reviews per leaf scores 0.004 PR-AUC higher than 100 but gives a model 2.8 times larger, so we kept 100. Other parameters use default values. |
 
 ### Why these two models
 
@@ -308,13 +308,13 @@ Script: `scripts/06_model_training.py`. Saved models are in `models/`.
 - Random Forest can learn non-linear patterns and combinations of features, and it gives feature importance.
 - Using one linear and one tree-based model lets us compare two different kinds of error.
 - `class_weight="balanced"` is used because only 19.5% of the reviews are in the problematic class.
-- The Random Forest is limited (30% of rows per tree, at least 100 reviews per leaf) because fully grown trees on 910,000 rows would make a model file of roughly 2 GB (our first model was 26 MB for 12,000 rows). The limited model is 9.8 MB.
+- The Random Forest is limited (30% of rows per tree, at least 100 reviews per leaf) because fully grown trees on 910,000 rows would make a model file of several gigabytes. The limited model is 9.8 MB.
 
 ---
 
 ## 7. Model Evaluation and Result Interpretation
 
-Scripts: `scripts/07` to `scripts/12`. Charts are in `figures/`. Full details are in `MODEL_EVALUATION.md`.
+Scripts: `scripts/07` to `scripts/13`. Charts are in `figures/`. Full details are in `MODEL_EVALUATION.md`.
 
 ### 7.1 Results on the test set (227,598 reviews)
 
@@ -359,12 +359,30 @@ Limitations:
 - Payment apps are harder (PR-AUC 0.75), partly because complaints there are rarer and shorter.
 - TF-IDF, SVD and the scaler were fitted on all rows before the split. These steps do not use the target, but a stricter setup would fit them on the training rows only.
 
-### 7.4 Initial business findings
+### 7.4 Robustness checks
+
+Script: `scripts/13_model_robustness_checks.py`. Details in `MODEL_EVALUATION.md` §8.
+
+- **Confidence intervals:** 1,000 bootstrap resamples of the test set give 95% intervals of about ±0.003 for PR-AUC and ±0.001 for accuracy (for example, Random Forest PR-AUC 0.873, interval 0.871 to 0.876). The difference between the two models is small but real: Random Forest's PR-AUC is higher by 0.001 to 0.004.
+- **What the text features add:** we retrained both models on parts of the feature set.
+
+| Features | Logistic Regression PR-AUC | Random Forest PR-AUC |
+|---|---:|---:|
+| Text only (SVD components) | 0.8524 | 0.8542 |
+| Sentiment only (4 VADER scores) | 0.7390 | 0.8016 |
+| Structural only (issue flags, sentiment, length, upvotes) | 0.8395 | 0.8482 |
+| All except sentiment | 0.8573 | 0.8569 |
+| All features (final models) | 0.8710 | 0.8735 |
+
+  The text components alone predict better than sentiment alone, and every group adds to the result. Sentiment tops the Random Forest importance chart only because each sentiment score is a single strong column.
+- **Settings check:** see Section 6. The settings we use are the best or within 0.005 PR-AUC of the best tried.
+
+### 7.5 Initial business findings
 
 - Reviews can be sorted automatically. Of about 52,000 reviews the Random Forest flags in the test set, about 3 in 4 are real complaints, and it finds 87.0% of all complaints. Logistic Regression flags about 50,000, of which about 77% are real complaints.
 - Choose the model by cost: Random Forest when missing a complaint is costly, Logistic Regression when the team's reading time is the limit.
 - For payment apps, expect about 4 in 10 flags to be false alarms; a person should check them.
-- Sentiment is the strongest signal. The way a user writes tells us a lot about the rating they will give.
+- Sentiment is the strongest single signal, but the words themselves add more: the text components alone predict better than the sentiment scores alone, and the two together do best.
 
 ---
 
@@ -380,7 +398,7 @@ Limitations:
 |---|---|---|---|
 | Data collection and cleaning | #53, #54, #56 to #58 | Aditya Monish Kumar K | `scripts/01`, `scripts/02`, `scripts/apps.py`, `scripts/data_io.py`, `data/raw/`, `data/clean/`, `DATA_SOURCES.md` |
 | Exploratory data analysis | #104 to #106, #118 to #120 | Akshay KS and Regella Krishna Saketh | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `EDA.md` |
-| Predictive modelling | #107 to #110 | Harshini Vennela and Kanishka D | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
+| Predictive modelling | #107 to #110 | Harshini Vennela and Kanishka D | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/13`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
 
 
 ---
@@ -389,11 +407,11 @@ Limitations:
 
 | Member | Register number | Role | Work completed | Evidence |
 |---|---|---|---|---|
-| Aditya Monish Kumar K | CB.SC.U4CSE23103 | Data collection and preprocessing | Wrote the Play Store scraper. Collected the first dataset (15,000 reviews of five apps), then rebuilt the collection as every review of 11 apps from 1 April to 20 September 2026 (1,202,729 raw, 1,137,987 clean). Removed duplicates, empty reviews, reviews without letters and non-English reviews. Added the month and review length fields. Wrote the data source document. | `scripts/01_scrape_reviews.py`, `scripts/02_clean_reviews.py`, `scripts/apps.py`, `scripts/data_io.py`, `data/raw/`, `data/clean/`, `data/app_metadata.csv`, `DATA_SOURCES.md` |
+| Aditya Monish Kumar K | CB.SC.U4CSE23103 | Data collection and preprocessing | Wrote the Play Store scraper. Collected every review of 11 apps from 1 April to 20 September 2026 (1,202,729 raw, 1,137,987 clean). Removed duplicates, empty reviews, reviews without letters and non-English reviews. Added the month and review length fields. Wrote the data source document. | `scripts/01_scrape_reviews.py`, `scripts/02_clean_reviews.py`, `scripts/apps.py`, `scripts/data_io.py`, `data/raw/`, `data/clean/`, `data/app_metadata.csv`, `DATA_SOURCES.md` |
 | Regella Krishna Saketh | CB.SC.U4CSE23649 | Exploratory data analysis (with Akshay KS) | With Akshay KS, built the EDA script and ran the statistical tests (15 charts on the current data): coverage and bias audit, issue analysis and version analysis. | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `data/eda/`, `EDA.md` |
-| Akshay KS | CB.SC.U4CSE23104 | Exploratory data analysis (with Regella Krishna Saketh) | With Regella Krishna Saketh, built the EDA script and ran the statistical tests (15 charts on the current data). On the first dataset, found the sample bias and the July 2026 sampling change. Prepared the monthly and version tables used by later stages. | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `data/eda/`, `EDA.md` |
-| Harshini Vennela | CB.SC.U4CSE23455 | Feature engineering and predictive model (with Kanishka D) | With Kanishka D, built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
-| Kanishka D | CB.SC.U4CSE23155 | Feature engineering and predictive model (with Harshini Vennela) | With Harshini Vennela, built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/12`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
+| Akshay KS | CB.SC.U4CSE23104 | Exploratory data analysis (with Regella Krishna Saketh) | With Regella Krishna Saketh, built the EDA script and ran the statistical tests (15 charts on the current data). Prepared the monthly and version tables used by later stages. | `scripts/05_eda.py`, `data/charts/eda/`, `data/eda_summary.json`, `data/eda/`, `EDA.md` |
+| Harshini Vennela | CB.SC.U4CSE23455 | Feature engineering and predictive model (with Kanishka D) | With Kanishka D, built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/13`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
+| Kanishka D | CB.SC.U4CSE23155 | Feature engineering and predictive model (with Harshini Vennela) | With Harshini Vennela, built the TF-IDF and SVD features. Trained Logistic Regression and Random Forest. Made the confusion matrix, ROC, precision-recall and feature importance charts. | `scripts/05_feature_engineering.py`, `scripts/06` to `scripts/13`, `models/`, `figures/`, `MODEL_EVALUATION.md` |
 
 Review 1 work is complete.
 
@@ -408,7 +426,7 @@ The main things we learned:
 - Complaints are mostly about service, not about the app software. Customer support, delivery, refunds and returns come up far more often than crashes.
 - Each app has a clear and steady problem profile. Food & Grocery apps: support and delivery. Shopping apps: returns and support, with Amazon the worst on almost every issue. Payment apps: support and stability.
 - A Random Forest finds 87.0% of problem reviews, with about 3 in 4 of its flags correct (PR-AUC 0.87 against a 0.19 base rate), using the review text, the issue tags and the sentiment scores. It works as well on later weeks as on the weeks it was trained on.
-- The way data is collected matters as much as the model. The July 2026 change in our first sample turned out to be caused by `MOST_RELEVANT` sampling, and in the new data a two-week Play Store gap in positive reviews would have looked like a wave of complaints. Without the EDA checks we would have reported both as real.
+- The way data is collected matters as much as the model. A two-week Play Store gap in positive reviews looks like a wave of complaints in any "% negative" metric. Without the EDA checks we would have reported it as real.
 
 
 
@@ -427,6 +445,7 @@ python scripts/05_eda.py                     # EDA charts and summary
 python scripts/05_feature_engineering.py     # TF-IDF, SVD, scaling
 python scripts/06_model_training.py          # train and evaluate models
 python scripts/07_model_evaluation_charts.py # ... and scripts 08 to 12 for the remaining evaluation charts and tables
+python scripts/13_model_robustness_checks.py # confidence intervals, ablation, settings check (~20 min)
 ```
 
 

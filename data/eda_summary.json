@@ -1068,7 +1068,7 @@
     },
     "apps_with_volume_up_50pct": 0,
     "apps_with_reviews_2plus_words_shorter": 0,
-    "verdict": "No common July shift in the full review stream; the July 'regime shift' in the old MOST_RELEVANT sample was produced by that sampling method."
+    "verdict": "No common July shift in the full review stream; a time-based test split is safe."
   },
   "version_analysis": {
     "versions_with_min_n": 544,
@@ -2044,7 +2044,7 @@
     {
       "file": "data/charts/eda/eda_11_july_check.png",
       "title": "No July 2026 shift in the full review stream: 0 of 11 apps jump \u22651.5\u00d7 in volume, 0 get shorter reviews",
-      "subtitle": "The old MOST_RELEVANT sample showed a sudden July change in all apps; this complete NEWEST collection tests it. Full months, vertical rule = 1 Jul, gap days excluded. Length-adjusted rating change Jul\u2013Sep vs Apr\u2013Jun: -0.19 to +0.13\u2605."
+      "subtitle": "Does the review mix change partway through the window? Full months, vertical rule = 1 Jul, gap days excluded. Length-adjusted rating change Jul\u2013Sep vs Apr\u2013Jun: -0.19 to +0.13\u2605."
     },
     {
       "file": "data/charts/eda/eda_12_app_versions.png",

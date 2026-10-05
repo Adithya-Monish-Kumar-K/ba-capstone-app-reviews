@@ -1,0 +1,9 @@
+model,parameter,value,current_setting,accuracy,precision,recall,f1_score,roc_auc,pr_auc,tree_nodes,size_vs_current
+logistic_regression,C,0.01,False,0.8984,0.6904,0.8673,0.7688,0.9368,0.8607,,
+logistic_regression,C,0.1,False,0.9199,0.7597,0.8609,0.8071,0.9401,0.8699,,
+logistic_regression,C,1.0,True,0.9221,0.7685,0.8584,0.811,0.9407,0.872,,
+logistic_regression,C,10.0,False,0.9224,0.7699,0.8574,0.8113,0.9407,0.8719,,
+random_forest,min_samples_leaf,25.0,False,0.9194,0.7538,0.8704,0.8079,0.9437,0.8786,658194.0,2.8
+random_forest,min_samples_leaf,50.0,False,0.9165,0.744,0.8706,0.8023,0.9426,0.8769,402968.0,1.72
+random_forest,min_samples_leaf,100.0,True,0.913,0.7325,0.8714,0.7959,0.9414,0.8742,234698.0,1.0
+random_forest,min_samples_leaf,200.0,False,0.9081,0.7173,0.8715,0.7869,0.9395,0.8701,130678.0,0.56

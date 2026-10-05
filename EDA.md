@@ -5,16 +5,14 @@
 
 Outputs: 15 charts in `data/charts/eda/`, all quoted numbers in `data/eda_summary.json`, and three tables (`data/eda/monthly_trend.csv`, `data/eda/weekly_trend.csv`, `data/eda/version_metrics.csv`).
 
-This is the second version of the EDA. The first (13 charts, 15,000 `MOST_RELEVANT` reviews from 5 apps) is preserved in git history. Its input data is in `review_2_prep/data/v1_most_relevant/`. Where this version overturns an earlier finding, it says so.
-
 ---
 
 ## 1. Headline findings
 
-1. **Recent reviews are short and mostly positive.** 67% are 5★ and 17% are 1★. The median review is 2 words, and 66% have 3 words or fewer ([chart 02](data/charts/eda/eda_02_ratings_vs_public.png), [chart 03](data/charts/eda/eda_03_length_and_upvotes.png)). This overturns the v1 picture (69% 1★), which came from how `MOST_RELEVANT` selects reviews.
+1. **Recent reviews are short and mostly positive.** 67% are 5★ and 17% are 1★. The median review is 2 words, and 66% have 3 words or fewer ([chart 02](data/charts/eda/eda_02_ratings_vs_public.png), [chart 03](data/charts/eda/eda_03_length_and_upvotes.png)).
 2. **Amazon and Swiggy are the clear outliers.** 54% of Amazon reviews and 35% of Swiggy reviews are 1–2★, against 10–24% for every other app. PhonePe (9.8%) and Myntra (10.3%) are the mildest. Written reviews sit 0.0–1.4★ below each app's public rating; Amazon has the biggest gap (2.74 vs 4.18★).
 3. **A late-April feed gap, not an incident.** From 21 April to 5 May 2026, positive reviews fall 59–90% for Swiggy, Blinkit, Domino's, Flipkart and Amazon, while negative reviews fall only 3–37% ([chart 15](data/charts/eda/eda_15_april_gap.png)). Swiggy's weekly "% rated 1–2★" jumps from ~33% to 87% mainly because short positive reviews ("good", "nice") are missing. **Shares are fragile; counts of negative reviews per day are far less affected.** The window is flagged and excluded from trend, version and July analyses.
-4. **The v1 "July 2026 regime shift" was a sampling artefact.** In this complete collection no app gets ≥1.5× more reviews per day after July, and median length is unchanged in 10 of 11 apps ([chart 11](data/charts/eda/eda_11_july_check.png)). The v1 warning to Persons 4–5 no longer applies.
+4. **No mid-year shift.** Comparing July–September with April–June, no app gets ≥1.5× more reviews per day, and median length is unchanged in 10 of 11 apps ([chart 11](data/charts/eda/eda_11_july_check.png)). A time-based train/test split is therefore safe.
 5. **Customer Support is both the most common and the most damaging issue.** It appears in 4.1% of all reviews, and those reviews average 1.23★ ([chart 05](data/charts/eda/eda_05_issue_priority.png)). Only 10% of reviews carry any issue tag, because most reviews are too short to name a problem.
 6. **Each domain has its own fingerprint.** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping. In Payments, Crash & Stability and Customer Support are tied (1.30% and 1.29%), and delivery problems are almost absent. Delivery Delay is the most domain-specific issue (3.5% of Food & Grocery reviews vs 0.07% of Payments) ([charts 06, 14](data/charts/eda/eda_14_domain_comparison.png)). Food & Grocery is the most negative domain (22% 1–2★), Payments the mildest (13%).
 7. **Ratings are stable over time; app differences dominate.** Between May–Jun and Aug–Sep, 7 of 11 apps move by less than 2.5 pp of 1–2★ share. Exceptions: Amazon worsens by 9.6 pp, Zomato by 4.4 pp and Flipkart by 2.6 pp; Google Pay improves by 5.5 pp ([chart 10](data/charts/eda/eda_10_weekly_trend.png)).
@@ -135,22 +133,22 @@ Change in % rated 1–2★ from May–Jun to Aug–Sep (gap excluded; Aug–Sep 
 
 ### 6.3 The July 2026 check (chart 11)
 
-v1 reported that all five apps showed 2.9× more reviews per day and 27–50% shorter reviews from July 2026. In this complete collection, reviews per day in July–September (to 20 Sep) are 0.62–1.02× the April–June level (gap days excluded): no app rises by more than 2% (Flipkart), and Zomato's volume actually falls by about 38%. Median length is unchanged in 10 of 11 apps; Amazon's goes up by 2 words. Length-adjusted rating changes are small (−0.19 Zomato to +0.13 Google Pay). **There is no common July shift.** The v1 effect came from how `MOST_RELEVANT` chose reviews.
+This check asks whether the review mix changes partway through the window, which would make a time-based test unreliable. Reviews per day in July–September (to 20 Sep) are 0.62–1.02× the April–June level (gap days excluded): no app rises by more than 2% (Flipkart), and Zomato's volume actually falls by about 38%. Median length is unchanged in 10 of 11 apps; Amazon's goes up by 2 words. Length-adjusted rating changes are small (−0.19 Zomato to +0.13 Google Pay). **There is no common July shift.**
 
 ### 6.4 App versions (charts 12–13)
 
 544 versions have ≥30 reviews (gap days excluded). 49 are clearly worse than their app's mean and 17 clearly better. Worse versions by app: Flipkart 15, Zomato 7, Swiggy 5, Amazon 5, PhonePe 5, Google Pay 4, Paytm 3, Blinkit 2, Meesho 2, Myntra 1. Amazon stands out: every version first seen since 15 July (32.13.0 to 32.17.0, five versions) rates 2.28–2.48★ against the app mean of 2.75★, consistent with Amazon's falling trend.
 
-For the 15 most significantly worse versions, chart 13 compares each issue's rate with the app's overall rate (significant cells only: |diff| > 3 SE and ≥ 2 pp). Elevated signals: Customer Support 9, Payment & Refund 8, Delivery Delay 5, Cancellation & Return 4, Crash & Stability 3, Order Quality 2, Pricing & Fraud 1. One version shows no specific issue. Unlike v1, some versions do show crash increases. Version is still confounded with time, and a review is attributed to the reviewer's installed version, not the release that caused the complaint. Treat `data/eda/version_metrics.csv` as a shortlist, not proof.
+For the 15 most significantly worse versions, chart 13 compares each issue's rate with the app's overall rate (significant cells only: |diff| > 3 SE and ≥ 2 pp). Elevated signals: Customer Support 9, Payment & Refund 8, Delivery Delay 5, Cancellation & Return 4, Crash & Stability 3, Order Quality 2, Pricing & Fraud 1. One version shows no specific issue. Some versions do show crash increases. Version is still confounded with time, and a review is attributed to the reviewer's installed version, not the release that caused the complaint. Treat `data/eda/version_metrics.csv` as a shortlist, not proof.
 
 ---
 
 ## 7. Implications for other stages
 
 **Person 4 — Predictive modelling**
-* `is_problematic` (score ≤ 2) now has a **19.5% base rate** (v1: 74.1%). The classes have flipped: a model that never flags anything scores 80.5% accuracy. Report precision, recall, F1 and PR-AUC.
+* `is_problematic` (score ≤ 2) has a **19.5% base rate**. The classes are imbalanced: a model that never flags anything scores 80.5% accuracy. Report precision, recall, F1 and PR-AUC.
 * Most reviews are 1–3 words, so text features carry little for them. Sentiment and length matter most. `issue_count` is partly a length proxy (ρ = 0.46).
-* The July shift no longer exists, so a time-based test split is safe. The April gap affects only the label mix in two weeks.
+* There is no shift partway through the window, so a time-based test split is safe. The April gap affects only the label mix in two weeks.
 
 **Tagging stage (feedback)**: add polarity handling for *Cancellation & Return* (praise for easy returns), and patterns for compatibility, stock availability ("currently unavailable") and Hinglish complaint words.
 

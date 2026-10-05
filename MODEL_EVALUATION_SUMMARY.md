@@ -19,6 +19,8 @@ The evaluation uses accuracy, precision, recall, F1-score, ROC-AUC, and PR-AUC o
 
 Out-of-time check (train April–August 2026, test 1–20 September): Random Forest PR-AUC 0.8660, Logistic Regression 0.8617. Per-domain and per-app results are in `data/model_results_by_group.csv`; see `MODEL_EVALUATION.md` §7.
 
+Robustness checks (`MODEL_EVALUATION.md` §8): 95% bootstrap intervals are about ±0.003 for PR-AUC and ±0.001 for accuracy. In a feature-group ablation the 200 text components alone reach PR-AUC 0.852 (Logistic Regression) and 0.854 (Random Forest), against 0.739 and 0.802 for the 4 sentiment scores alone. On a validation split of the training data, `C=1` is the best Logistic Regression setting of four tried, and the Random Forest's 100-review leaves are within 0.005 PR-AUC of the best setting tried.
+
 ## Evaluation Artifacts
 
 The following evaluation outputs are included in the project:
@@ -33,6 +35,7 @@ The following evaluation outputs are included in the project:
 - `data/auc_summary.csv`
 - `data/model_results.csv`, `data/baseline_results.csv`
 - `data/model_results_by_group.csv`, `data/model_results_out_of_time.csv`
+- `data/model_bootstrap_ci.csv`, `data/model_ablation.csv`, `data/model_tuning.csv`
 
 ## Interpretation
 

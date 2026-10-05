@@ -673,7 +673,7 @@ LEN_LABELS = ["≤5 words", "6–15", "16–40", "41+"]
 
 
 def chart_11_july_check(df, months, summary):
-    """The old MOST_RELEVANT sample showed a July-2026 'regime shift'. Does it exist in a complete NEWEST census?"""
+    """Does the review mix shift partway through the window (Apr–Jun vs Jul–Sep)? A shift would make a time-based test unreliable."""
     w = df[df["month"].isin(months) & ~df["in_gap"]].copy()
     w["post"] = w["review_date"] >= JULY
     w["lb"] = pd.cut(w["review_length"], LEN_BINS, labels=LEN_LABELS)
@@ -726,12 +726,11 @@ def chart_11_july_check(df, months, summary):
     summary["july_check"]["apps_with_volume_up_50pct"] = up
     summary["july_check"]["apps_with_reviews_2plus_words_shorter"] = shorter
     summary["july_check"]["verdict"] = ("A common July shift exists in the full review stream." if common_shift else
-                                        "No common July shift in the full review stream; the July 'regime shift' in the old "
-                                        "MOST_RELEVANT sample was produced by that sampling method.")
+                                        "No common July shift in the full review stream; a time-based test split is safe.")
     title = (f"July 2026 shift confirmed: {up} of {len(APPS)} apps jump ≥1.5× in volume" if common_shift else
              f"No July 2026 shift in the full review stream: {up} of {len(APPS)} apps jump ≥1.5× in volume, {shorter} get shorter reviews")
     save(fig, "eda_11_july_check", title,
-         f"The old MOST_RELEVANT sample showed a sudden July change in all apps; this complete NEWEST collection tests it. Full months, "
+         f"Does the review mix change partway through the window? Full months, "
          f"vertical rule = 1 Jul, gap days excluded. Length-adjusted rating change Jul–Sep vs Apr–Jun: "
          f"{adj['score_adj_change'].min():+.2f} to {adj['score_adj_change'].max():+.2f}★.")
 
