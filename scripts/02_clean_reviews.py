@@ -1,5 +1,5 @@
 """
-Stage 2: Cleaning (Person 1)
+Stage 2: Cleaning (Aditya Monish Kumar K)
 
 Per app: drop duplicate review IDs, empty/very short reviews (< 3 characters), reviews with no letters
 at all (emoji- or punctuation-only) and non-English reviews (fewer than 85% of the letters are basic

@@ -1,5 +1,5 @@
 """
-Stage 1: Play Store review collection (Person 1)
+Stage 1: Play Store review collection (Aditya Monish Kumar K)
 
 Collects EVERY English-language India review posted from START_DATE to END_DATE (inclusive) for each app,
 using Sort.NEWEST and paginating backwards in time until a whole page is older than START_DATE.

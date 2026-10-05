@@ -35,7 +35,7 @@ Our project asks three questions:
 Two terms are used throughout:
 
 - **Problem review:** a review rated 1 or 2 stars (`is_problematic = 1`). The star rating is the user's own judgement, so the classifier finds dissatisfied users. The 9 issue tags (Section 2.3) name the failure when the review text mentions one. Most reviews are very short (median 2 words), so many problem reviews say only "bad" or "worst app" and name no specific failure. Some are mis-ratings: the most common text among untagged 1–2 star reviews is "good" (8,342 reviews).
-- **Update impact:** how ratings and complaints change between app versions. In Review 1 we compare each version with its app's average (Section 4, charts 12 and 13).
+- **Update impact:** how ratings and complaints change between app versions. In Review 1 we compare each version with its app's average (Section 4, chart 11).
 
 ### 1.2 Existing methods
 
@@ -229,11 +229,15 @@ Script: `scripts/05_eda.py`. It produces 15 charts in `data/charts/eda/` and sav
 - Amazon has the highest rate of almost every issue: Customer Support 17%, Cancellation & Return 13%, Delivery Delay 9%.
 - Crash & Stability is highest at Google Pay (2.7%), Paytm (2.2%) and Amazon (2.0%).
 - Only 10% of reviews carry any issue tag, because most reviews are too short to name a problem.
+- Inside each domain the apps differ widely (chart below): Swiggy 35% against Zomato 19% in Food & Grocery, Amazon 54% against Myntra 10% in Shopping, Google Pay 23% against PhonePe 10% in Payments. Support and delivery lead the food apps, support and returns the shopping apps, and Crash & Stability the two weaker payment apps. These are comparisons of written reviews, not proof of cause.
+- Most complaints that name an issue are about the service, not the app: among tagged 1–2★ reviews, 91% name a service problem and 7% an app problem. At the payment apps app-only tags are more common (13% of Paytm's and 10% of Google Pay's 1–2★ reviews). 54% of 1–2★ reviews carry no tag, so these are lower bounds.
 - Business meaning: one common fix will not work. Each company should fix its own top problem first.
+
+![Within-domain ranking of apps](data/charts/eda/eda_14_within_domain.png)
 
 ### Finding 3: The data has a gap in late April, and it is not because users got angrier
 
-![The late-April feed gap](data/charts/eda/eda_15_april_gap.png)
+![The late-April feed gap](data/charts/eda/eda_13_april_gap.png)
 
 - From 21 April to 5 May 2026, positive reviews fall by 59% to 90% for Swiggy, Blinkit, Domino's, Flipkart and Amazon, while negative reviews per day fall only 3% to 37%. Negative reviews did not rise, so users did not get angrier.
 - Mainly because the short "good" and "nice" reviews are missing, Swiggy's weekly share of 1–2 star reviews jumps from about 33% to 87% for one week and then returns to normal.
@@ -435,7 +439,8 @@ The main things we learned:
 ## 11. How to Reproduce
 
 ```bash
-pip install google-play-scraper pandas numpy scipy scikit-learn nltk matplotlib seaborn joblib
+pip install -r requirements.txt
+python -c "import nltk; nltk.download('vader_lexicon')"
 
 python scripts/01_scrape_reviews.py          # collect reviews (~1 hour; e.g. `... flipkart amazon` scrapes a subset in parallel)
 python scripts/02_clean_reviews.py           # clean

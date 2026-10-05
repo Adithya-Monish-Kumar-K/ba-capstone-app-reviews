@@ -73,7 +73,7 @@ The scraper can also sort by `Sort.MOST_RELEVANT`. We tested that feed before co
 |---|---|---|
 | **Short reviews dominate** | Median review is 2 words; 66% have 3 words or fewer ("good", "nice app") | Kept: they are real reviews and still carry a rating. Issue tags and text features naturally cover the longer reviews. |
 | **Written reviews are harsher than the public rating** | Sample means sit 0.0–1.4★ below each app's Play Store rating, which also counts ratings without a written review | Compare apps and weeks with each other; never quote absolute satisfaction. |
-| **21 Apr – 5 May 2026 feed gap** | For Swiggy, Blinkit, Domino's, Flipkart and Amazon, *positive* reviews drop by 59–90% while negative reviews drop only 3–37% (EDA chart 15). Negative reviews did not rise, so this is not a wave of complaints, and a scraper failure would remove all reviews alike, so the cause is on the Play Store side. | Rows kept and flagged; trend, version and July analyses exclude the window. |
+| **21 Apr – 5 May 2026 feed gap** | For Swiggy, Blinkit, Domino's, Flipkart and Amazon, *positive* reviews drop by 59–90% while negative reviews drop only 3–37% (EDA chart 13). Negative reviews did not rise, so this is not a wave of complaints, and a scraper failure would remove all reviews alike, so the cause is on the Play Store side. | Rows kept and flagged; trend, version and July analyses exclude the window. |
 | **One missing day for Zomato** | Zomato has no reviews from 23 Jul 22:00 to 25 Jul 12:30 (24 July is empty); re-querying the Play Store returned the same counts, so the gap is in the source, not the scraper | Kept as is; it lowers one week's Zomato volume and does not affect rates. Every other app has reviews on all 173 days. |
 | **Missing app version** | `app_version` is empty for 13.4% of reviews | Kept; version is not a model feature. |
 
@@ -81,11 +81,11 @@ The scraper can also sort by `Sort.MOST_RELEVANT`. We tested that feed before co
 
 Each stage is a separate person's responsibility, each reading the previous stage's output:
 
-1. **Scrape** (Person 1) — `scripts/01_scrape_reviews.py` → `data/raw/<app>.csv.gz`, `data/app_metadata.csv`
-2. **Clean** (Person 1) — dedupe; drop empty/very short reviews (< 3 characters), reviews with no letters at all (emoji or punctuation only) and non-English reviews (fewer than 85% of the letters are basic Latin a–z); derive `month`/`review_length` → `scripts/02_clean_reviews.py` → `data/clean/<app>.csv.gz` (1,137,987 rows). Language is judged on letters only, so an English review with emojis such as "good 👍" is kept. (An earlier version counted all characters, so emojis pushed about 76,000 English reviews below the 85% threshold; that was fixed before this analysis.)
+1. **Scrape** (Aditya Monish Kumar K) — `scripts/01_scrape_reviews.py` → `data/raw/<app>.csv.gz`, `data/app_metadata.csv`
+2. **Clean** (Aditya Monish Kumar K) — dedupe; drop empty/very short reviews (< 3 characters), reviews with no letters at all (emoji or punctuation only) and non-English reviews (fewer than 85% of the letters are basic Latin a–z); derive `month`/`review_length` → `scripts/02_clean_reviews.py` → `data/clean/<app>.csv.gz` (1,137,987 rows). Language is judged on letters only, so an English review with emojis such as "good 👍" is kept. (An earlier version counted all characters, so emojis pushed about 76,000 English reviews below the 85% threshold; that was fixed before this analysis.)
 3. **Tag + Sentiment** — rule-based issue-category keywords + VADER sentiment scoring → `data/tagged/<app>.csv.gz`
-4. **EDA** (Persons 3 and 2) — `scripts/05_eda.py`, 15 charts, reading the tagged dataset
-5. **Feature Engineering + Predictive Model** (Persons 4 and 5) — TF-IDF → Truncated SVD + structural features → Logistic Regression / Random Forest classifying `is_problematic` (score ≤ 2)
+4. **EDA** (Akshay KS and Regella Krishna Saketh) — `scripts/05_eda.py`, 15 charts, reading the tagged dataset
+5. **Feature Engineering + Predictive Model** (Harshini Vennela and Kanishka D) — TF-IDF → Truncated SVD + structural features → Logistic Regression / Random Forest classifying `is_problematic` (score ≤ 2)
 6. **Time-Series + Dashboard + Assembly** (Review 2) — weekly forecast models and interactive dashboard.
 
 Shared helpers: `scripts/apps.py` (app list, domains, colours) and `scripts/data_io.py` (read/write the per-app files).

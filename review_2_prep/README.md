@@ -1,6 +1,6 @@
 # Review 2 prep
 
-Review 2 material moved out of the Review 1 files. Everything here was built on the **first dataset** (15,000 `MOST_RELEVANT` reviews of 5 apps) and must be redone on the current dataset (1,218,358 reviews of 11 apps, in `../data/tagged/`) before Review 2.
+Review 2 material moved out of the Review 1 files. Everything here was built on the **first dataset** (15,000 `MOST_RELEVANT` reviews of 5 apps) and must be redone on the current dataset (1,137,987 reviews of 11 apps, in `../data/tagged/`) before Review 2.
 
 | Item | What it is |
 |---|---|

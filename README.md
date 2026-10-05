@@ -17,7 +17,7 @@ This repository is set up for **Review 1: data collection, preprocessing, explor
 The goal is to identify major user-reported problems, detect reviews that are likely to be problematic, measure how app versions affect ratings and complaints, monitor complaint patterns over time, and provide business-oriented insights.
 
 * **Problem review** = a review rated 1–2 stars; the 9 issue tags name the failure when the text mentions one.
-* **Update impact** = how ratings and complaints change between app versions: version-level comparison in Review 1 (EDA charts 12–13), before/after each release in Review 2.
+* **Update impact** = how ratings and complaints change between app versions: version-level comparison in Review 1 (EDA chart 11), before/after each release in Review 2.
 
 ---
 
@@ -79,6 +79,8 @@ Each review is tagged with nine keyword-based issue categories (multi-label) and
 
 * **Amazon and Swiggy stand out:** 54% and 35% of their reviews are 1–2 stars, against 10–24% for the other apps. PhonePe (9.8%) and Myntra (10.3%) are the mildest.
 * **Each domain has its own problem profile:** Customer Support leads Food & Grocery; Cancellation & Return leads Shopping; Payments has Crash & Stability and Customer Support, tied. Delivery Delay is about 50× more common in Food & Grocery than in Payments.
+* **Apps in the same domain differ widely** (EDA chart 14): Swiggy 35% vs Zomato 19% in Food & Grocery, Amazon 54% vs Myntra 10% in Shopping, Google Pay 23% vs PhonePe 10% in Payments. Support and delivery lead the food apps, support and returns the shopping apps, and crashes the two weaker payment apps.
+* **Most complaints that name an issue are about the service, not the app:** 91% of tagged 1–2★ reviews name a service problem and 7% an app problem (EDA chart 15). The payment apps are the exception (10–13% app-only at Google Pay and Paytm).
 * **Customer Support** is the most common issue (4.1% of reviews) and the most damaging (1.23★ average).
 * **Late-April feed gap:** a "% negative" metric jumps for five apps because positive reviews are missing, not because complaints rose. Counts of negative reviews per day are far less affected.
 * **No mid-year shift:** review volume and length stay stable from April–June to July–September, so a time-based test split is safe.
@@ -137,6 +139,7 @@ ba-capstone-app-reviews/
 ├── EDA.md
 ├── MODEL_EVALUATION.md
 ├── MODEL_EVALUATION_SUMMARY.md
+├── requirements.txt
 │
 ├── scripts/
 │   ├── apps.py                  # the 11 apps, domains and colours (single source of truth)
@@ -154,7 +157,8 @@ ba-capstone-app-reviews/
 │   ├── 10_auc_summary.py
 │   ├── 11_prediction_error_summary.py
 │   ├── 12_normalized_confusion_matrices.py
-│   └── 13_model_robustness_checks.py
+│   ├── 13_model_robustness_checks.py
+│   └── 14_predict_review.py     # classify new review text with the saved models
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
@@ -190,6 +194,15 @@ ba-capstone-app-reviews/
 
 After activating the virtual environment and installing the required packages, the main analysis scripts can be run in sequence.
 
+### Setup
+
+```bash
+pip install -r requirements.txt
+python -c "import nltk; nltk.download('vader_lexicon')"
+```
+
+`data/engineered_features.npz`, `data/target.npy` and `data/model_row_index.csv.gz` are not stored in git (about 570 MB). Scripts 06–13 read them, so run `scripts/05_feature_engineering.py` first.
+
 ### Issue Tagging and Sentiment
 
 ```bash
@@ -216,6 +229,14 @@ python scripts/11_prediction_error_summary.py
 python scripts/12_normalized_confusion_matrices.py
 python scripts/13_model_robustness_checks.py   # confidence intervals, ablation, settings check (~20 min)
 ```
+
+### Classify a New Review
+
+```bash
+python scripts/14_predict_review.py "Refund not received, customer care never replies"
+```
+
+It prints the issue tags, the sentiment scores and each model's probability that the review is problematic (rated 1–2★).
 
 ### VADER Setup
 
@@ -271,7 +292,15 @@ VADER sentiment can also misclassify sarcastic or politely worded negative revie
 
 ### Upvote Distribution
 
-`thumbs_up` is extremely heavy-tailed. It should therefore be interpreted carefully and transformed appropriately when used for modelling.
+`thumbs_up` is extremely heavy-tailed. It should therefore be interpreted carefully and transformed appropriately when used for modelling. It is also unknown for a brand-new review (0), so a live triage system should not rely on it; its weight in the models is small.
+
+### Language Filter and Hinglish
+
+The cleaning step keeps a review when at least 85% of its letters are Latin (a–z). Hindi written in Roman letters (Hinglish) therefore stays in the data, and VADER, an English lexicon, scores it near neutral.
+
+### Issue Tag Details
+
+`primary_issue` is the category with the most keyword hits; a tie goes to the first category in the taxonomy (Crash & Stability). It is only a convenience column: all analysis uses the nine 0/1 issue flags.
 
 ---
 
