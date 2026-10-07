@@ -158,15 +158,19 @@ ba-capstone-app-reviews/
 │   ├── 11_prediction_error_summary.py
 │   ├── 12_normalized_confusion_matrices.py
 │   ├── 13_model_robustness_checks.py
-│   └── 14_predict_review.py     # classify new review text with the saved models
+│   ├── 14_predict_review.py     # classify new review text with the saved models
+│   ├── 15_time_series_data.py   # Review 2: daily/weekly series, release events, STL, ADF, ACF/PACF
+│   └── 16_text_preprocessing.py # Review 2: cleaned complaint/praise corpora, document-term matrices
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
 │   ├── clean/<app>.csv.gz       # cleaned
 │   ├── tagged/<app>.csv.gz      # + issue tags and VADER sentiment (input to EDA and modelling)
 │   ├── app_metadata.csv
-│   ├── charts/                  # sentiment charts (01–04) and eda/ (15 EDA charts)
-│   └── eda/                     # monthly, weekly and version tables
+│   ├── charts/                  # sentiment charts (01–04), eda/, timeseries/ and textmining/
+│   ├── eda/                     # monthly, weekly and version tables
+│   ├── timeseries/              # Review 2: daily/weekly series, release events, patterns
+│   └── textmining/              # Review 2: cleaned corpus and document-term matrices
 │
 ├── models/
 │   ├── logistic_regression.pkl
@@ -177,6 +181,11 @@ ba-capstone-app-reviews/
 │
 ├── figures/
 │   └── model evaluation charts
+│
+├── dashboard/                   # Review 2 Streamlit dashboard (see dashboard/README.md)
+│   ├── app.py
+│   ├── common.py
+│   └── pages/
 │
 ├── notebooks/
 │   └── Review_1_Analysis.ipynb
@@ -237,6 +246,16 @@ python scripts/14_predict_review.py "Refund not received, customer care never re
 ```
 
 It prints the issue tags, the sentiment scores and each model's probability that the review is problematic (rated 1–2★).
+
+### Review 2: Time Series, Text Mining and Dashboard
+
+```bash
+python scripts/15_time_series_data.py      # time-series data preparation (~10 s)
+python scripts/16_text_preprocessing.py    # text-mining data preparation (~3 min; downloads NLTK WordNet once)
+streamlit run dashboard/app.py             # interactive dashboard
+```
+
+Method details: `TIME_SERIES.md` and `TEXT_MINING.md`. Dashboard structure and how to add a page: `dashboard/README.md`.
 
 ### VADER Setup
 
@@ -316,6 +335,9 @@ The cleaning step keeps a review when at least 85% of its letters are Latin (a�
 | [`EDA.md`](EDA.md)                                                  | Exploratory data analysis                    |
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
+| [`TIME_SERIES.md`](TIME_SERIES.md)                                  | Review 2 Method 2: time-series analysis      |
+| [`TEXT_MINING.md`](TEXT_MINING.md)                                  | Review 2 Method 1: text mining               |
+| [`dashboard/README.md`](dashboard/README.md)                        | Review 2 interactive dashboard               |
 | [`review_2_prep/`](review_2_prep/)                                  | Review 2 workspace                           |
 
 ---
