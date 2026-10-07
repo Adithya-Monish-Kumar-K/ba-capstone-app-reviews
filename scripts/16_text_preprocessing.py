@@ -50,6 +50,7 @@ DOMAIN_SLUG = {"Food & Grocery": "food_grocery", "Shopping": "shopping", "Paymen
 MIN_TOKENS = 3            # a review needs at least 3 content words (after cleaning) to carry a topic
 MIN_DF, MAX_DF = 10, 0.5  # a term must appear in >= 10 reviews and in at most half of them
 NGRAMS = (1, 2)           # words and two-word phrases ("not deliver", "customer care")
+GZIP = {"method": "gzip", "mtime": 0}   # no timestamp in the gzip header, so re-runs give identical files
 
 NEGATIONS = {"not", "no", "never", "nor", "none", "nothing", "nobody", "cannot", "without"}
 CONTRACTIONS = [
@@ -147,7 +148,7 @@ def build_dtms(kept):
             sparse.save_npz(DTM_DIR / f"{name}.npz", X)
             vocab = vec.get_feature_names_out().tolist()
             (DTM_DIR / f"{name}_vocab.json").write_text(json.dumps(vocab))
-            d[["review_id", "app_name"]].to_csv(DTM_DIR / f"{name}_rows.csv.gz", index=False, compression="gzip")
+            d[["review_id", "app_name"]].to_csv(DTM_DIR / f"{name}_rows.csv.gz", index=False, compression=GZIP)
             df_counts = np.asarray((X > 0).sum(axis=0)).ravel()
             top = np.argsort(-df_counts)[:20]
             info[name] = {"group": group, "domain": dom, "reviews": int(X.shape[0]), "terms": int(X.shape[1]),
@@ -199,7 +200,7 @@ def main():
     kept = kept.sort_values(["group", "domain", "app_name", "review_date"]).reset_index(drop=True)
     out_cols = ["review_id", "app_name", "domain", "score", "review_date", "sentiment_compound", "group",
                 "n_tokens", "clean_text"]
-    kept[out_cols].to_csv(OUT_DIR / "corpus.csv.gz", index=False, compression="gzip", date_format="%Y-%m-%d %H:%M:%S")
+    kept[out_cols].to_csv(OUT_DIR / "corpus.csv.gz", index=False, compression=GZIP, date_format="%Y-%m-%d %H:%M:%S")
     print(f"  kept {len(kept):,} reviews -> data/textmining/corpus.csv.gz")
 
     print("Document-term matrices per domain...")
