@@ -1,0 +1,260 @@
+{
+  "window": [
+    "2026-04-01",
+    "2026-09-20"
+  ],
+  "days": 173,
+  "reviews": 1137987,
+  "neg_reviews": 221581,
+  "series_modelled": "daily count of 1-2 star reviews per app",
+  "feed_gap": {
+    "window": [
+      "2026-04-21",
+      "2026-05-05"
+    ],
+    "apps": [
+      "Swiggy",
+      "Blinkit",
+      "Domino's",
+      "Flipkart",
+      "Amazon"
+    ],
+    "app_days_flagged": 75
+  },
+  "source_gap": {
+    "Zomato": {
+      "from": "2026-07-23 22:00:00",
+      "to": "2026-07-25 12:30:00",
+      "days": [
+        "2026-07-23",
+        "2026-07-24",
+        "2026-07-25"
+      ]
+    }
+  },
+  "release_events": {
+    "versions": 2507,
+    "with_30_plus_reviews": 558,
+    "new_releases_for_update_impact": 224,
+    "per_app": {
+      "Swiggy": 22,
+      "Zomato": 38,
+      "Blinkit": 22,
+      "Domino's": 17,
+      "Myntra": 20,
+      "Flipkart": 14,
+      "Amazon": 13,
+      "Meesho": 23,
+      "Paytm": 19,
+      "PhonePe": 12,
+      "Google Pay": 24
+    }
+  },
+  "patterns": {
+    "Swiggy": {
+      "mean_neg_per_day": 151.4,
+      "trend_strength": 0.106,
+      "seasonal_strength": 0.254,
+      "trend_change_pct": -16.2,
+      "peak_weekday": "Sun",
+      "low_weekday": "Mon",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Zomato": {
+      "mean_neg_per_day": 164.59,
+      "trend_strength": 0.472,
+      "seasonal_strength": 0.555,
+      "trend_change_pct": -11.1,
+      "peak_weekday": "Sun",
+      "low_weekday": "Tue",
+      "suggested_d": 1,
+      "suggested_D": 0
+    },
+    "Blinkit": {
+      "mean_neg_per_day": 251.33,
+      "trend_strength": 0.493,
+      "seasonal_strength": 0.408,
+      "trend_change_pct": 13.1,
+      "peak_weekday": "Sun",
+      "low_weekday": "Tue",
+      "suggested_d": 1,
+      "suggested_D": 0
+    },
+    "Domino's": {
+      "mean_neg_per_day": 59.53,
+      "trend_strength": 0.135,
+      "seasonal_strength": 0.259,
+      "trend_change_pct": -18.2,
+      "peak_weekday": "Sun",
+      "low_weekday": "Mon",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Myntra": {
+      "mean_neg_per_day": 50.6,
+      "trend_strength": 0.601,
+      "seasonal_strength": 0.2,
+      "trend_change_pct": 21.5,
+      "peak_weekday": "Thu",
+      "low_weekday": "Fri",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Flipkart": {
+      "mean_neg_per_day": 281.86,
+      "trend_strength": 0.814,
+      "seasonal_strength": 0.251,
+      "trend_change_pct": 5.4,
+      "peak_weekday": "Sun",
+      "low_weekday": "Fri",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Amazon": {
+      "mean_neg_per_day": 102.95,
+      "trend_strength": 0.485,
+      "seasonal_strength": 0.207,
+      "trend_change_pct": 14.0,
+      "peak_weekday": "Sat",
+      "low_weekday": "Fri",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Meesho": {
+      "mean_neg_per_day": 104.29,
+      "trend_strength": 0.235,
+      "seasonal_strength": 0.242,
+      "trend_change_pct": 2.2,
+      "peak_weekday": "Sun",
+      "low_weekday": "Fri",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Paytm": {
+      "mean_neg_per_day": 37.8,
+      "trend_strength": 0.674,
+      "seasonal_strength": 0.0,
+      "trend_change_pct": 60.1,
+      "peak_weekday": "Sat",
+      "low_weekday": "Sun",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "PhonePe": {
+      "mean_neg_per_day": 50.23,
+      "trend_strength": 0.394,
+      "seasonal_strength": 0.102,
+      "trend_change_pct": 3.0,
+      "peak_weekday": "Fri",
+      "low_weekday": "Sun",
+      "suggested_d": 0,
+      "suggested_D": 0
+    },
+    "Google Pay": {
+      "mean_neg_per_day": 27.2,
+      "trend_strength": 0.072,
+      "seasonal_strength": 0.027,
+      "trend_change_pct": -19.8,
+      "peak_weekday": "Mon",
+      "low_weekday": "Sat",
+      "suggested_d": 0,
+      "suggested_D": 0
+    }
+  },
+  "stationarity": {
+    "level_stationary_apps": [
+      "Swiggy",
+      "Domino's",
+      "Myntra",
+      "Flipkart",
+      "Amazon",
+      "Meesho",
+      "Paytm",
+      "PhonePe",
+      "Google Pay"
+    ],
+    "level_nonstationary_apps": [
+      "Zomato",
+      "Blinkit"
+    ],
+    "rule": "ADF with AIC lag selection; stationary if p < 0.05. suggested_d = 1 if the level is not stationary; suggested_D = 1 if STL seasonal strength >= 0.64."
+  },
+  "charts": [
+    {
+      "file": "data/charts/timeseries/ts_01_daily_negative_reviews.png",
+      "title": "Daily 1\u20132\u2605 reviews per app: weekly ripples, short spikes and level shifts",
+      "subtitle": "Thin line = daily count; thick line = 7-day centred mean. Grey band = 21 Apr \u2013 5 May feed gap (positive reviews missing for Swiggy, Blinkit, Domino's, Flipkart and Amazon; negative counts are far less affected)."
+    },
+    {
+      "file": "data/charts/timeseries/ts_02_stl_trend.png",
+      "title": "Trend of daily 1\u20132\u2605 reviews (STL decomposition, weekly period)",
+      "subtitle": "Each app's trend component indexed to its own average, so apps of different sizes compare directly. Robust STL with a 7-day period; the dashed line is the app's average level."
+    },
+    {
+      "file": "data/charts/timeseries/ts_03_weekday_effect.png",
+      "title": "Weekday effect on 1\u20132\u2605 reviews per app",
+      "subtitle": "Each day's count against its centred 7-day mean, averaged by weekday (feed-gap and source-gap days left out). Red = more complaints than usual on that weekday, blue = fewer."
+    },
+    {
+      "file": "data/charts/timeseries/ts_04_release_events.png",
+      "title": "Release events: the first day each app version appears in the reviews",
+      "subtitle": "One dot per new version: at least 30 reviews, first seen after 1 Apr, and numbered higher than every earlier version (old builds that some users still run are left out). The number at the right is the count of release events per app."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/swiggy.png",
+      "title": "Swiggy: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.001, after weekly difference 0.001."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/zomato.png",
+      "title": "Zomato: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.066, after weekly difference 0.002."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/blinkit.png",
+      "title": "Blinkit: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.094, after weekly difference 0.025."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/dominos.png",
+      "title": "Domino's: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.000, after weekly difference 0.000."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/myntra.png",
+      "title": "Myntra: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.041, after weekly difference 0.000."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/flipkart.png",
+      "title": "Flipkart: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.022, after weekly difference 0.000."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/amazon.png",
+      "title": "Amazon: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.004, after weekly difference 0.000."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/meesho.png",
+      "title": "Meesho: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.000, after weekly difference 0.000."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/paytm.png",
+      "title": "Paytm: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.019, after weekly difference 0.006."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/phonepe.png",
+      "title": "PhonePe: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.000, after weekly difference 0.011."
+    },
+    {
+      "file": "data/charts/timeseries/acf_pacf/googlepay.png",
+      "title": "Google Pay: autocorrelation of daily 1\u20132\u2605 reviews",
+      "subtitle": "Shaded band = 95% limits (\u00b11.96/\u221an); vertical lines at weekly lags. ADF p-value: level 0.000, after weekly difference 0.000."
+    }
+  ]
+}
