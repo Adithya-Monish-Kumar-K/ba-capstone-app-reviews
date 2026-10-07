@@ -1,0 +1,705 @@
+{
+  "input_reviews_1_2_and_4_5_star": 1092961,
+  "rules": {
+    "min_tokens": 3,
+    "min_df": 10,
+    "max_df": 0.5,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "negations_kept": [
+      "cannot",
+      "never",
+      "no",
+      "nobody",
+      "none",
+      "nor",
+      "not",
+      "nothing",
+      "without"
+    ],
+    "brand_words_removed": [
+      "amazon",
+      "amazonpay",
+      "blinkit",
+      "domino",
+      "dominos",
+      "flipkart",
+      "googlepay",
+      "gpay",
+      "grofers",
+      "instamart",
+      "meesho",
+      "myntra",
+      "paytm",
+      "phonepe",
+      "phonpe",
+      "swiggy",
+      "zepto",
+      "zomato"
+    ],
+    "brand_phrases_removed": [
+      "google pay",
+      "phone pe",
+      "amazon pay",
+      "g pay"
+    ],
+    "hinglish_negations_to_not": [
+      "mat",
+      "nahee",
+      "nahi",
+      "nahiin",
+      "nahin",
+      "nai",
+      "nhi"
+    ],
+    "hinglish_stop_words": 70,
+    "lemmatiser": "WordNet (verb, then noun)"
+  },
+  "selection": {
+    "complaint": {
+      "reviews": 221581,
+      "kept": 167357,
+      "dropped_too_short": 54224,
+      "kept_pct": 75.5
+    },
+    "praise": {
+      "reviews": 871380,
+      "kept": 166929,
+      "dropped_too_short": 704451,
+      "kept_pct": 19.2
+    }
+  },
+  "median_tokens_kept": {
+    "complaint": 11.0,
+    "praise": 4.0
+  },
+  "kept_by_app": {
+    "complaint": {
+      "Swiggy": 21043,
+      "Zomato": 21090,
+      "Blinkit": 32791,
+      "Domino's": 7679,
+      "Myntra": 7785,
+      "Flipkart": 32650,
+      "Amazon": 15891,
+      "Meesho": 15087,
+      "Paytm": 4820,
+      "PhonePe": 5154,
+      "Google Pay": 3367
+    },
+    "praise": {
+      "Swiggy": 6073,
+      "Zomato": 18634,
+      "Blinkit": 45164,
+      "Domino's": 4776,
+      "Myntra": 27108,
+      "Flipkart": 22753,
+      "Amazon": 2813,
+      "Meesho": 22998,
+      "Paytm": 4717,
+      "PhonePe": 9496,
+      "Google Pay": 2397
+    }
+  },
+  "document_term_matrices": {
+    "complaint_food_grocery": {
+      "group": "complaint",
+      "domain": "Food & Grocery",
+      "reviews": 82603,
+      "terms": 17448,
+      "bigrams": 13193,
+      "nonzero_per_review": 19.33,
+      "top_terms_by_reviews": [
+        [
+          "not",
+          39839
+        ],
+        [
+          "order",
+          31755
+        ],
+        [
+          "delivery",
+          22428
+        ],
+        [
+          "customer",
+          17003
+        ],
+        [
+          "service",
+          15991
+        ],
+        [
+          "time",
+          13844
+        ],
+        [
+          "worst",
+          13648
+        ],
+        [
+          "no",
+          13439
+        ],
+        [
+          "deliver",
+          10880
+        ],
+        [
+          "food",
+          10529
+        ],
+        [
+          "experience",
+          10087
+        ],
+        [
+          "support",
+          10061
+        ],
+        [
+          "bad",
+          9820
+        ],
+        [
+          "get",
+          8336
+        ],
+        [
+          "refund",
+          8329
+        ],
+        [
+          "charge",
+          7856
+        ],
+        [
+          "take",
+          7305
+        ],
+        [
+          "item",
+          7298
+        ],
+        [
+          "cancel",
+          7241
+        ],
+        [
+          "give",
+          6523
+        ]
+      ]
+    },
+    "complaint_shopping": {
+      "group": "complaint",
+      "domain": "Shopping",
+      "reviews": 71413,
+      "terms": 18665,
+      "bigrams": 14446,
+      "nonzero_per_review": 23.36,
+      "top_terms_by_reviews": [
+        [
+          "order",
+          27103
+        ],
+        [
+          "delivery",
+          21567
+        ],
+        [
+          "customer",
+          18773
+        ],
+        [
+          "product",
+          17984
+        ],
+        [
+          "service",
+          16936
+        ],
+        [
+          "worst",
+          14374
+        ],
+        [
+          "time",
+          14113
+        ],
+        [
+          "deliver",
+          12410
+        ],
+        [
+          "no",
+          11760
+        ],
+        [
+          "experience",
+          11196
+        ],
+        [
+          "bad",
+          10284
+        ],
+        [
+          "cancel",
+          9827
+        ],
+        [
+          "day",
+          9753
+        ],
+        [
+          "return",
+          9172
+        ],
+        [
+          "get",
+          8886
+        ],
+        [
+          "support",
+          7950
+        ],
+        [
+          "use",
+          7181
+        ],
+        [
+          "refund",
+          7030
+        ],
+        [
+          "show",
+          7003
+        ],
+        [
+          "receive",
+          6780
+        ]
+      ]
+    },
+    "complaint_payments": {
+      "group": "complaint",
+      "domain": "Payments",
+      "reviews": 13341,
+      "terms": 2982,
+      "bigrams": 1543,
+      "nonzero_per_review": 12.83,
+      "top_terms_by_reviews": [
+        [
+          "use",
+          2027
+        ],
+        [
+          "payment",
+          1940
+        ],
+        [
+          "no",
+          1730
+        ],
+        [
+          "work",
+          1639
+        ],
+        [
+          "money",
+          1478
+        ],
+        [
+          "account",
+          1468
+        ],
+        [
+          "show",
+          1453
+        ],
+        [
+          "customer",
+          1370
+        ],
+        [
+          "time",
+          1330
+        ],
+        [
+          "not work",
+          1238
+        ],
+        [
+          "worst",
+          1237
+        ],
+        [
+          "get",
+          1206
+        ],
+        [
+          "issue",
+          1174
+        ],
+        [
+          "pay",
+          1117
+        ],
+        [
+          "phone",
+          1073
+        ],
+        [
+          "support",
+          1067
+        ],
+        [
+          "service",
+          1004
+        ],
+        [
+          "bad",
+          995
+        ],
+        [
+          "upi",
+          988
+        ],
+        [
+          "open",
+          979
+        ]
+      ]
+    },
+    "praise_food_grocery": {
+      "group": "praise",
+      "domain": "Food & Grocery",
+      "reviews": 74647,
+      "terms": 6875,
+      "bigrams": 4453,
+      "nonzero_per_review": 8.08,
+      "top_terms_by_reviews": [
+        [
+          "good",
+          24557
+        ],
+        [
+          "delivery",
+          19891
+        ],
+        [
+          "service",
+          14720
+        ],
+        [
+          "fast",
+          10624
+        ],
+        [
+          "best",
+          9720
+        ],
+        [
+          "time",
+          8862
+        ],
+        [
+          "order",
+          8233
+        ],
+        [
+          "nice",
+          7395
+        ],
+        [
+          "food",
+          7199
+        ],
+        [
+          "not",
+          5814
+        ],
+        [
+          "fast delivery",
+          4928
+        ],
+        [
+          "thank",
+          4732
+        ],
+        [
+          "product",
+          4246
+        ],
+        [
+          "good service",
+          3900
+        ],
+        [
+          "experience",
+          3852
+        ],
+        [
+          "like",
+          3632
+        ],
+        [
+          "great",
+          3436
+        ],
+        [
+          "deliver",
+          3313
+        ],
+        [
+          "love",
+          3233
+        ],
+        [
+          "price",
+          3226
+        ]
+      ]
+    },
+    "praise_shopping": {
+      "group": "praise",
+      "domain": "Shopping",
+      "reviews": 75672,
+      "terms": 7097,
+      "bigrams": 4709,
+      "nonzero_per_review": 8.67,
+      "top_terms_by_reviews": [
+        [
+          "good",
+          25825
+        ],
+        [
+          "product",
+          22805
+        ],
+        [
+          "best",
+          15908
+        ],
+        [
+          "shop",
+          15292
+        ],
+        [
+          "quality",
+          12095
+        ],
+        [
+          "nice",
+          8958
+        ],
+        [
+          "delivery",
+          8528
+        ],
+        [
+          "price",
+          8525
+        ],
+        [
+          "online",
+          6008
+        ],
+        [
+          "experience",
+          5840
+        ],
+        [
+          "service",
+          5069
+        ],
+        [
+          "not",
+          4651
+        ],
+        [
+          "order",
+          4622
+        ],
+        [
+          "use",
+          4344
+        ],
+        [
+          "online shop",
+          4331
+        ],
+        [
+          "time",
+          4103
+        ],
+        [
+          "great",
+          3940
+        ],
+        [
+          "thank",
+          3919
+        ],
+        [
+          "love",
+          3912
+        ],
+        [
+          "easy",
+          3703
+        ]
+      ]
+    },
+    "praise_payments": {
+      "group": "praise",
+      "domain": "Payments",
+      "reviews": 16610,
+      "terms": 1763,
+      "bigrams": 814,
+      "nonzero_per_review": 6.36,
+      "top_terms_by_reviews": [
+        [
+          "good",
+          4289
+        ],
+        [
+          "payment",
+          3266
+        ],
+        [
+          "use",
+          2320
+        ],
+        [
+          "best",
+          2022
+        ],
+        [
+          "easy",
+          2012
+        ],
+        [
+          "not",
+          1990
+        ],
+        [
+          "nice",
+          1615
+        ],
+        [
+          "fast",
+          1507
+        ],
+        [
+          "upi",
+          1338
+        ],
+        [
+          "pay",
+          1258
+        ],
+        [
+          "transaction",
+          1156
+        ],
+        [
+          "money",
+          1140
+        ],
+        [
+          "work",
+          1077
+        ],
+        [
+          "service",
+          934
+        ],
+        [
+          "phone",
+          901
+        ],
+        [
+          "thank",
+          837
+        ],
+        [
+          "experience",
+          798
+        ],
+        [
+          "easy use",
+          758
+        ],
+        [
+          "secure",
+          705
+        ],
+        [
+          "time",
+          676
+        ]
+      ]
+    }
+  },
+  "cleaning_examples": [
+    {
+      "app_name": "Blinkit",
+      "content": "PLEASE STOP CHEATING US BY CHARGING DELIVERY CHARGES FOR ORDERS ABOVE 100. YOU PEOPLE ARE NUMBER 1 FRAUDS.",
+      "clean_text": "stop cheat charge delivery charge order people number fraud",
+      "kept": true
+    },
+    {
+      "app_name": "Zomato",
+      "content": "100 rupees extra charge 😡",
+      "clean_text": "rupee extra charge",
+      "kept": true
+    },
+    {
+      "app_name": "Paytm",
+      "content": "not open this apps",
+      "clean_text": "not open",
+      "kept": false
+    },
+    {
+      "app_name": "Flipkart",
+      "content": "good",
+      "clean_text": "good",
+      "kept": false
+    },
+    {
+      "app_name": "PhonePe",
+      "content": "mera phone open hua hai per Bank nahin open ho raha hai aur mera gold mein bhi Paisa hai aise mein to Tum mujhe loot loge khula kyon nahin",
+      "clean_text": "phone open bank not open gold paisa aise mujhe loot loge khula not",
+      "kept": true
+    },
+    {
+      "app_name": "Zomato",
+      "content": "delivery partners deny coming to the doorstep, instead call us to pickup the order at the building gate",
+      "clean_text": "delivery partner deny come doorstep instead call pickup order build gate",
+      "kept": true
+    },
+    {
+      "app_name": "Myntra",
+      "content": "delivery not satisfied",
+      "clean_text": "delivery not satisfy",
+      "kept": true
+    },
+    {
+      "app_name": "Blinkit",
+      "content": "return not good",
+      "clean_text": "return not good",
+      "kept": true
+    }
+  ],
+  "charts": [
+    {
+      "file": "data/charts/textmining/tm_01_top_terms.png",
+      "title": "Most frequent terms after cleaning: complaints name the service, praise is generic",
+      "subtitle": "Share of reviews containing each term after lowercasing, removing stop words (negations kept), app names, emojis and digits, and lemmatising. Complaint corpora: 1–2★ reviews with at least 3 content words."
+    }
+  ]
+}
