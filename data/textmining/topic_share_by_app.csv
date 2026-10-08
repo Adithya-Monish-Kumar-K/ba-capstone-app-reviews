@@ -1,0 +1,64 @@
+app_name,domain,topic_label,reviews,share_pct
+Swiggy,Food & Grocery,Order Cancellation & Refund,7856,37.33
+Swiggy,Food & Grocery,Customer Support & Bot Loop,4850,23.05
+Swiggy,Food & Grocery,Delivery Delays & Rider Tracking,4089,19.43
+Swiggy,Food & Grocery,Poor Food Quality & Stale Items,1861,8.84
+Swiggy,Food & Grocery,Excessive Delivery & Handling Charges,1751,8.32
+Swiggy,Food & Grocery,COD & Payment Option Failures,636,3.02
+Zomato,Food & Grocery,Order Cancellation & Refund,6891,32.67
+Zomato,Food & Grocery,Customer Support & Bot Loop,4902,23.24
+Zomato,Food & Grocery,Delivery Delays & Rider Tracking,3724,17.66
+Zomato,Food & Grocery,Excessive Delivery & Handling Charges,2385,11.31
+Zomato,Food & Grocery,Poor Food Quality & Stale Items,2100,9.96
+Zomato,Food & Grocery,COD & Payment Option Failures,1088,5.16
+Blinkit,Food & Grocery,Order Cancellation & Refund,10774,32.86
+Blinkit,Food & Grocery,Delivery Delays & Rider Tracking,5723,17.45
+Blinkit,Food & Grocery,Poor Food Quality & Stale Items,5124,15.63
+Blinkit,Food & Grocery,Customer Support & Bot Loop,4794,14.62
+Blinkit,Food & Grocery,Excessive Delivery & Handling Charges,4235,12.92
+Blinkit,Food & Grocery,COD & Payment Option Failures,2141,6.53
+Domino's,Food & Grocery,Order Cancellation & Refund,3135,40.83
+Domino's,Food & Grocery,Poor Food Quality & Stale Items,1327,17.28
+Domino's,Food & Grocery,Delivery Delays & Rider Tracking,1320,17.19
+Domino's,Food & Grocery,Customer Support & Bot Loop,1094,14.25
+Domino's,Food & Grocery,COD & Payment Option Failures,444,5.78
+Domino's,Food & Grocery,Excessive Delivery & Handling Charges,359,4.68
+Myntra,Shopping,Return Rejection & Defective Products,2056,26.41
+Myntra,Shopping,Order Cancellation & Rescheduling,1785,22.93
+Myntra,Shopping,Customer Service & Escalation Failure,1573,20.21
+Myntra,Shopping,Courier Delays & Delivery Agent Issues,955,12.27
+Myntra,Shopping,Extreme Dissatisfaction & Scam Allegations,832,10.69
+Myntra,Shopping,Poor Shopping Experience & Fabric Quality,584,7.5
+Flipkart,Shopping,Return Rejection & Defective Products,8142,24.94
+Flipkart,Shopping,Order Cancellation & Rescheduling,7346,22.5
+Flipkart,Shopping,Customer Service & Escalation Failure,5492,16.82
+Flipkart,Shopping,Courier Delays & Delivery Agent Issues,5428,16.62
+Flipkart,Shopping,Extreme Dissatisfaction & Scam Allegations,3266,10.0
+Flipkart,Shopping,Poor Shopping Experience & Fabric Quality,2976,9.11
+Amazon,Shopping,Customer Service & Escalation Failure,3752,23.61
+Amazon,Shopping,Return Rejection & Defective Products,3669,23.09
+Amazon,Shopping,Order Cancellation & Rescheduling,3134,19.72
+Amazon,Shopping,Courier Delays & Delivery Agent Issues,2608,16.41
+Amazon,Shopping,Extreme Dissatisfaction & Scam Allegations,1609,10.13
+Amazon,Shopping,Poor Shopping Experience & Fabric Quality,1119,7.04
+Meesho,Shopping,Return Rejection & Defective Products,4289,28.43
+Meesho,Shopping,Order Cancellation & Rescheduling,3559,23.59
+Meesho,Shopping,Customer Service & Escalation Failure,2304,15.27
+Meesho,Shopping,Courier Delays & Delivery Agent Issues,2156,14.29
+Meesho,Shopping,Poor Shopping Experience & Fabric Quality,1513,10.03
+Meesho,Shopping,Extreme Dissatisfaction & Scam Allegations,1266,8.39
+Paytm,Payments,Failed Transfers & Debited Amounts,2145,44.5
+Paytm,Payments,Customer Support Unresponsiveness,975,20.23
+Paytm,Payments,Device Environment & Security Scan Errors,945,19.61
+Paytm,Payments,App Crashes & Update Regressions,444,9.21
+Paytm,Payments,Account Blocking & AutoPay Issues,311,6.45
+PhonePe,Payments,Failed Transfers & Debited Amounts,2766,53.67
+PhonePe,Payments,Customer Support Unresponsiveness,1035,20.08
+PhonePe,Payments,Account Blocking & AutoPay Issues,788,15.29
+PhonePe,Payments,App Crashes & Update Regressions,359,6.97
+PhonePe,Payments,Device Environment & Security Scan Errors,206,4.0
+Google Pay,Payments,Failed Transfers & Debited Amounts,1998,59.34
+Google Pay,Payments,App Crashes & Update Regressions,464,13.78
+Google Pay,Payments,Customer Support Unresponsiveness,394,11.7
+Google Pay,Payments,Account Blocking & AutoPay Issues,280,8.32
+Google Pay,Payments,Device Environment & Security Scan Errors,231,6.86

@@ -1,0 +1,76 @@
+{
+  "status": "completed",
+  "stage": "Review 2, Stage 2 (Issue #136)",
+  "coherence_summary": [
+    {
+      "domain": "Food & Grocery",
+      "k": 6,
+      "is_chosen": true,
+      "mean_umass": -2.2859,
+      "mean_npmi": 0.1949
+    },
+    {
+      "domain": "Shopping",
+      "k": 6,
+      "is_chosen": true,
+      "mean_umass": -2.5537,
+      "mean_npmi": 0.1673
+    },
+    {
+      "domain": "Payments",
+      "k": 5,
+      "is_chosen": true,
+      "mean_umass": -2.402,
+      "mean_npmi": 0.2016
+    }
+  ],
+  "untagged_review_stats": {
+    "untagged_count": 71929,
+    "total_complaint_reviews": 167357,
+    "untagged_pct": 42.98,
+    "top_untagged_topics": [
+      {
+        "dominant_topic_label": "Order Cancellation & Refund",
+        "untagged_reviews": 13073
+      },
+      {
+        "dominant_topic_label": "Return Rejection & Defective Products",
+        "untagged_reviews": 8275
+      },
+      {
+        "dominant_topic_label": "Poor Food Quality & Stale Items",
+        "untagged_reviews": 6089
+      },
+      {
+        "dominant_topic_label": "Delivery Delays & Rider Tracking",
+        "untagged_reviews": 5854
+      },
+      {
+        "dominant_topic_label": "Order Cancellation & Rescheduling",
+        "untagged_reviews": 5625
+      }
+    ]
+  },
+  "charts": [
+    {
+      "file": "data\\charts\\textmining\\tm_06_coherence_evaluation.png",
+      "title": "Topic Model Coherence Evaluation Across Candidate K Values (NPMI)",
+      "subtitle": "Evaluation of normalized pointwise mutual information (NPMI) across K ∈ [3, 10] per domain. Red markers denote the chosen model sizes."
+    },
+    {
+      "file": "data\\charts\\textmining\\tm_07_topic_vs_keyword_tags.png",
+      "title": "Comparison Between Unsupervised NMF Topics and Rule-Based Keyword Tags",
+      "subtitle": "Percentage of reviews in each topic matching rule-based issue categories. Notice the high 'Untagged' share captured by NMF."
+    },
+    {
+      "file": "data\\charts\\textmining\\tm_08_untagged_topics_breakdown.png",
+      "title": "Untagged 1–2★ Reviews Uncovered by Topic Modelling",
+      "subtitle": "71,929 complaint reviews (43.0% of kept complaints) triggered zero rule-based tags. NMF rescues these reviews into concrete failure modes."
+    },
+    {
+      "file": "data\\charts\\textmining\\tm_09_topic_trends_over_time.png",
+      "title": "Complaint Topic Share Dynamics Over Time (Apr – Sep 2026)",
+      "subtitle": "Monthly percentage share of complaint topics per domain, tracking structural shifts in user dissatisfaction."
+    }
+  ]
+}

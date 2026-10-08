@@ -1,0 +1,103 @@
+domain,month,topic_label,reviews,share_pct
+Food & Grocery,2026-04,Order Cancellation & Refund,4694,34.09
+Food & Grocery,2026-04,Delivery Delays & Rider Tracking,2664,19.35
+Food & Grocery,2026-04,Customer Support & Bot Loop,2495,18.12
+Food & Grocery,2026-04,Poor Food Quality & Stale Items,1713,12.44
+Food & Grocery,2026-04,Excessive Delivery & Handling Charges,1483,10.77
+Food & Grocery,2026-04,COD & Payment Option Failures,721,5.24
+Food & Grocery,2026-05,Order Cancellation & Refund,5754,34.54
+Food & Grocery,2026-05,Customer Support & Bot Loop,3171,19.04
+Food & Grocery,2026-05,Delivery Delays & Rider Tracking,3059,18.36
+Food & Grocery,2026-05,Poor Food Quality & Stale Items,2020,12.13
+Food & Grocery,2026-05,Excessive Delivery & Handling Charges,1696,10.18
+Food & Grocery,2026-05,COD & Payment Option Failures,957,5.75
+Food & Grocery,2026-06,Order Cancellation & Refund,4937,34.26
+Food & Grocery,2026-06,Customer Support & Bot Loop,2762,19.16
+Food & Grocery,2026-06,Delivery Delays & Rider Tracking,2569,17.83
+Food & Grocery,2026-06,Poor Food Quality & Stale Items,1804,12.52
+Food & Grocery,2026-06,Excessive Delivery & Handling Charges,1579,10.96
+Food & Grocery,2026-06,COD & Payment Option Failures,761,5.28
+Food & Grocery,2026-07,Order Cancellation & Refund,4946,35.57
+Food & Grocery,2026-07,Customer Support & Bot Loop,2607,18.75
+Food & Grocery,2026-07,Delivery Delays & Rider Tracking,2445,17.58
+Food & Grocery,2026-07,Poor Food Quality & Stale Items,1796,12.92
+Food & Grocery,2026-07,Excessive Delivery & Handling Charges,1425,10.25
+Food & Grocery,2026-07,COD & Payment Option Failures,687,4.94
+Food & Grocery,2026-08,Order Cancellation & Refund,5112,34.51
+Food & Grocery,2026-08,Customer Support & Bot Loop,2833,19.13
+Food & Grocery,2026-08,Delivery Delays & Rider Tracking,2536,17.12
+Food & Grocery,2026-08,Poor Food Quality & Stale Items,1949,13.16
+Food & Grocery,2026-08,Excessive Delivery & Handling Charges,1615,10.9
+Food & Grocery,2026-08,COD & Payment Option Failures,766,5.17
+Food & Grocery,2026-09,Order Cancellation & Refund,3213,35.51
+Food & Grocery,2026-09,Customer Support & Bot Loop,1772,19.59
+Food & Grocery,2026-09,Delivery Delays & Rider Tracking,1583,17.5
+Food & Grocery,2026-09,Poor Food Quality & Stale Items,1130,12.49
+Food & Grocery,2026-09,Excessive Delivery & Handling Charges,932,10.3
+Food & Grocery,2026-09,COD & Payment Option Failures,417,4.61
+Payments,2026-04,Failed Transfers & Debited Amounts,1275,54.32
+Payments,2026-04,Customer Support Unresponsiveness,414,17.64
+Payments,2026-04,App Crashes & Update Regressions,239,10.18
+Payments,2026-04,Account Blocking & AutoPay Issues,236,10.06
+Payments,2026-04,Device Environment & Security Scan Errors,183,7.8
+Payments,2026-05,Failed Transfers & Debited Amounts,1319,47.6
+Payments,2026-05,Customer Support Unresponsiveness,470,16.96
+Payments,2026-05,Device Environment & Security Scan Errors,349,12.59
+Payments,2026-05,App Crashes & Update Regressions,347,12.52
+Payments,2026-05,Account Blocking & AutoPay Issues,286,10.32
+Payments,2026-06,Failed Transfers & Debited Amounts,1282,54.67
+Payments,2026-06,Customer Support Unresponsiveness,421,17.95
+Payments,2026-06,Account Blocking & AutoPay Issues,261,11.13
+Payments,2026-06,Device Environment & Security Scan Errors,218,9.3
+Payments,2026-06,App Crashes & Update Regressions,163,6.95
+Payments,2026-07,Failed Transfers & Debited Amounts,1129,54.41
+Payments,2026-07,Customer Support Unresponsiveness,379,18.27
+Payments,2026-07,Device Environment & Security Scan Errors,207,9.98
+Payments,2026-07,Account Blocking & AutoPay Issues,203,9.78
+Payments,2026-07,App Crashes & Update Regressions,157,7.57
+Payments,2026-08,Failed Transfers & Debited Amounts,975,51.45
+Payments,2026-08,Customer Support Unresponsiveness,347,18.31
+Payments,2026-08,Account Blocking & AutoPay Issues,216,11.4
+Payments,2026-08,Device Environment & Security Scan Errors,211,11.13
+Payments,2026-08,App Crashes & Update Regressions,146,7.7
+Payments,2026-09,Failed Transfers & Debited Amounts,929,48.69
+Payments,2026-09,Customer Support Unresponsiveness,373,19.55
+Payments,2026-09,App Crashes & Update Regressions,215,11.27
+Payments,2026-09,Device Environment & Security Scan Errors,214,11.22
+Payments,2026-09,Account Blocking & AutoPay Issues,177,9.28
+Shopping,2026-04,Return Rejection & Defective Products,2821,26.01
+Shopping,2026-04,Order Cancellation & Rescheduling,2270,20.93
+Shopping,2026-04,Customer Service & Escalation Failure,1980,18.26
+Shopping,2026-04,Courier Delays & Delivery Agent Issues,1707,15.74
+Shopping,2026-04,Extreme Dissatisfaction & Scam Allegations,1084,9.99
+Shopping,2026-04,Poor Shopping Experience & Fabric Quality,984,9.07
+Shopping,2026-05,Return Rejection & Defective Products,3136,25.34
+Shopping,2026-05,Order Cancellation & Rescheduling,2704,21.85
+Shopping,2026-05,Customer Service & Escalation Failure,2343,18.93
+Shopping,2026-05,Courier Delays & Delivery Agent Issues,1908,15.42
+Shopping,2026-05,Extreme Dissatisfaction & Scam Allegations,1169,9.45
+Shopping,2026-05,Poor Shopping Experience & Fabric Quality,1116,9.02
+Shopping,2026-06,Return Rejection & Defective Products,3108,25.43
+Shopping,2026-06,Order Cancellation & Rescheduling,2694,22.04
+Shopping,2026-06,Customer Service & Escalation Failure,2280,18.66
+Shopping,2026-06,Courier Delays & Delivery Agent Issues,1856,15.19
+Shopping,2026-06,Extreme Dissatisfaction & Scam Allegations,1258,10.29
+Shopping,2026-06,Poor Shopping Experience & Fabric Quality,1025,8.39
+Shopping,2026-07,Return Rejection & Defective Products,3356,25.41
+Shopping,2026-07,Order Cancellation & Rescheduling,2996,22.69
+Shopping,2026-07,Customer Service & Escalation Failure,2306,17.46
+Shopping,2026-07,Courier Delays & Delivery Agent Issues,2088,15.81
+Shopping,2026-07,Extreme Dissatisfaction & Scam Allegations,1314,9.95
+Shopping,2026-07,Poor Shopping Experience & Fabric Quality,1146,8.68
+Shopping,2026-08,Return Rejection & Defective Products,3476,23.93
+Shopping,2026-08,Order Cancellation & Rescheduling,3389,23.34
+Shopping,2026-08,Customer Service & Escalation Failure,2666,18.36
+Shopping,2026-08,Courier Delays & Delivery Agent Issues,2389,16.45
+Shopping,2026-08,Extreme Dissatisfaction & Scam Allegations,1389,9.56
+Shopping,2026-08,Poor Shopping Experience & Fabric Quality,1214,8.36
+Shopping,2026-09,Return Rejection & Defective Products,2259,27.41
+Shopping,2026-09,Order Cancellation & Rescheduling,1771,21.49
+Shopping,2026-09,Customer Service & Escalation Failure,1546,18.76
+Shopping,2026-09,Courier Delays & Delivery Agent Issues,1199,14.55
+Shopping,2026-09,Extreme Dissatisfaction & Scam Allegations,759,9.21
+Shopping,2026-09,Poor Shopping Experience & Fabric Quality,707,8.58
