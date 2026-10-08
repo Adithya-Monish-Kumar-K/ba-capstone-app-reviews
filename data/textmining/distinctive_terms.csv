@@ -1,0 +1,166 @@
+domain,app_name,term,is_bigram,z_score,app_count,domain_count
+Food & Grocery,Swiggy,food,False,35.568,6388,14297
+Food & Grocery,Swiggy,cancellation,False,30.199,1413,2271
+Food & Grocery,Swiggy,cancel,False,27.213,3929,8864
+Food & Grocery,Swiggy,cancellation fee,True,24.308,607,724
+Food & Grocery,Swiggy,hour,False,21.308,2353,5281
+Food & Grocery,Swiggy,order food,True,20.642,1171,2276
+Food & Grocery,Swiggy,fee,False,18.373,1458,3155
+Food & Grocery,Swiggy,cancel order,True,17.782,1780,4055
+Food & Grocery,Swiggy,food delivery,True,16.873,794,1549
+Food & Grocery,Swiggy,wait,False,16.557,1607,3687
+Food & Grocery,Swiggy,restaurant,False,15.943,2132,5182
+Food & Grocery,Swiggy,assign,False,15.825,496,873
+Food & Grocery,Swiggy,gst,False,14.624,384,653
+Food & Grocery,Swiggy,worst,False,14.127,5790,16101
+Food & Grocery,Swiggy,customer,False,13.957,7716,21947
+Food & Grocery,Zomato,food,False,50.782,6697,14297
+Food & Grocery,Zomato,restaurant,False,43.543,2907,5182
+Food & Grocery,Zomato,support,False,29.918,4903,12400
+Food & Grocery,Zomato,gold,False,20.673,451,492
+Food & Grocery,Zomato,platform fee,True,19.865,456,710
+Food & Grocery,Zomato,delay,False,18.538,1714,4250
+Food & Grocery,Zomato,platform,False,17.98,1017,2275
+Food & Grocery,Zomato,order food,True,17.568,1008,2276
+Food & Grocery,Zomato,customer,False,16.23,7094,21947
+Food & Grocery,Zomato,biryani,False,15.997,342,573
+Food & Grocery,Zomato,customer support,True,15.795,2131,5792
+Food & Grocery,Zomato,hotel,False,14.747,287,478
+Food & Grocery,Zomato,food delivery,True,14.485,686,1549
+Food & Grocery,Zomato,food not,True,13.457,450,944
+Food & Grocery,Zomato,cash delivery,True,12.418,651,1559
+Food & Grocery,Blinkit,product,False,78.57,6754,7843
+Food & Grocery,Blinkit,return,False,45.886,2381,3032
+Food & Grocery,Blinkit,item,False,41.736,4990,9372
+Food & Grocery,Blinkit,charge,False,31.219,4928,10499
+Food & Grocery,Blinkit,damage,False,29.754,1054,1401
+Food & Grocery,Blinkit,handle,False,28.289,1175,1756
+Food & Grocery,Blinkit,expire,False,26.963,862,1142
+Food & Grocery,Blinkit,buy,False,26.237,1180,1881
+Food & Grocery,Blinkit,replacement,False,26.167,776,988
+Food & Grocery,Blinkit,bag,False,25.73,727,881
+Food & Grocery,Blinkit,surge,False,24.212,647,750
+Food & Grocery,Blinkit,product not,True,23.447,604,707
+Food & Grocery,Blinkit,handle charge,True,23.148,643,706
+Food & Grocery,Blinkit,packet,False,22.205,541,653
+Food & Grocery,Blinkit,cream,False,21.74,551,720
+Food & Grocery,Domino's,pizza,False,84.462,2575,3257
+Food & Grocery,Domino's,store,False,48.57,920,1910
+Food & Grocery,Domino's,order pizza,True,33.248,372,543
+Food & Grocery,Domino's,outlet,False,29.236,289,457
+Food & Grocery,Domino's,cheese,False,28.563,287,376
+Food & Grocery,Domino's,taste,False,26.878,313,728
+Food & Grocery,Domino's,staff,False,25.66,292,695
+Food & Grocery,Domino's,branch,False,23.11,185,248
+Food & Grocery,Domino's,pizza not,True,22.587,193,237
+Food & Grocery,Domino's,number,False,20.15,367,1445
+Food & Grocery,Domino's,cold,False,20.04,357,1393
+Food & Grocery,Domino's,hour,False,18.582,879,5281
+Food & Grocery,Domino's,manager,False,17.752,124,259
+Food & Grocery,Domino's,garlic,False,17.287,102,141
+Food & Grocery,Domino's,order,False,16.907,5575,49446
+Shopping,Myntra,exchange,False,34.638,843,2093
+Shopping,Myntra,tag,False,23.984,251,331
+Shopping,Myntra,size,False,20.557,345,940
+Shopping,Myntra,shirt,False,19.212,204,421
+Shopping,Myntra,brand,False,17.937,274,765
+Shopping,Myntra,wrong product,True,16.63,320,1047
+Shopping,Myntra,jean,False,15.292,107,179
+Shopping,Myntra,dress,False,14.707,146,352
+Shopping,Myntra,clothe,False,14.209,128,295
+Shopping,Myntra,wrong,False,13.944,630,2968
+Shopping,Myntra,shoe,False,12.666,177,566
+Shopping,Myntra,deactivate,False,12.343,71,122
+Shopping,Myntra,coupon,False,11.952,99,243
+Shopping,Myntra,order shirt,True,11.435,63,113
+Shopping,Myntra,credit,False,11.153,187,685
+Shopping,Flipkart,minute,False,27.904,1402,1743
+Shopping,Flipkart,fee,False,27.345,1666,2255
+Shopping,Flipkart,delay,False,24.389,3504,5916
+Shopping,Flipkart,reschedule,False,22.287,915,1150
+Shopping,Flipkart,location,False,19.797,1180,1740
+Shopping,Flipkart,charge,False,19.323,1631,2610
+Shopping,Flipkart,date,False,19.321,3060,5425
+Shopping,Flipkart,installation,False,18.396,597,640
+Shopping,Flipkart,delivery date,True,17.361,1474,2409
+Shopping,Flipkart,grocery,False,17.125,483,564
+Shopping,Flipkart,platform,False,16.678,2059,3598
+Shopping,Flipkart,handle,False,16.427,611,831
+Shopping,Flipkart,deliverable,False,16.307,436,506
+Shopping,Flipkart,platform fee,True,15.868,655,929
+Shopping,Flipkart,ac,False,15.137,375,418
+Shopping,Amazon,prime,False,25.737,1323,1348
+Shopping,Amazon,membership,False,21.957,380,526
+Shopping,Amazon,device,False,20.845,359,523
+Shopping,Amazon,refund,False,20.007,2926,9020
+Shopping,Amazon,customer service,True,19.832,1790,5050
+Shopping,Amazon,mark,False,19.065,610,1299
+Shopping,Amazon,upi,False,18.003,497,1022
+Shopping,Amazon,member,False,17.786,340,593
+Shopping,Amazon,contact,False,16.545,1375,3957
+Shopping,Amazon,android,False,16.32,202,257
+Shopping,Amazon,customer,False,16.249,6926,24923
+Shopping,Amazon,version,False,16.101,202,275
+Shopping,Amazon,delivery agent,True,15.925,939,2529
+Shopping,Amazon,agent,False,15.268,1413,4214
+Shopping,Amazon,fresh,False,14.817,167,216
+Shopping,Meesho,account,False,21.925,1107,2959
+Shopping,Meesho,messho,False,20.619,328,368
+Shopping,Meesho,verification,False,20.331,304,465
+Shopping,Meesho,paisa,False,19.411,493,1069
+Shopping,Meesho,block,False,19.211,563,1302
+Shopping,Meesho,na,False,19.21,648,1581
+Shopping,Meesho,pay later,True,19.199,246,324
+Shopping,Meesho,pickup,False,18.709,709,1818
+Shopping,Meesho,otp,False,18.196,502,1158
+Shopping,Meesho,bekar,False,17.973,573,1403
+Shopping,Meesho,mesho,False,17.807,228,264
+Shopping,Meesho,return,False,16.991,3595,13549
+Shopping,Meesho,diya,False,16.135,487,1215
+Shopping,Meesho,din,False,15.585,469,1183
+Shopping,Meesho,verification fail,True,15.414,206,224
+Payments,Paytm,device,False,21.151,637,742
+Payments,Paytm,error,False,16.194,434,565
+Payments,Paytm,correct,False,15.284,335,376
+Payments,Paytm,cashback,False,12.611,584,972
+Payments,Paytm,book,False,12.097,209,237
+Payments,Paytm,not correct,True,12.0,318,326
+Payments,Paytm,login,False,11.264,267,382
+Payments,Paytm,detect,False,10.482,174,186
+Payments,Paytm,show,False,10.075,858,1652
+Payments,Paytm,coin,False,9.713,136,152
+Payments,Paytm,ticket,False,9.49,312,512
+Payments,Paytm,warn,False,9.354,126,141
+Payments,Paytm,bus,False,9.114,146,153
+Payments,Paytm,access,False,8.693,141,193
+Payments,Paytm,environment,False,8.337,417,417
+Payments,PhonePe,charge,False,17.801,462,616
+Payments,PhonePe,phone pay,True,17.292,395,435
+Payments,PhonePe,phone,False,16.362,775,1318
+Payments,PhonePe,wallet,False,16.354,370,478
+Payments,PhonePe,pay,False,14.873,757,1341
+Payments,PhonePe,fee,False,12.255,232,318
+Payments,PhonePe,account,False,11.671,956,1942
+Payments,PhonePe,block,False,11.421,321,521
+Payments,PhonePe,delete,False,10.25,254,410
+Payments,PhonePe,phonepay,False,9.52,118,145
+Payments,PhonePe,extra,False,9.301,144,204
+Payments,PhonePe,account block,True,9.189,107,126
+Payments,PhonePe,bad,False,8.497,540,1106
+Payments,PhonePe,unblock,False,8.169,87,107
+Payments,PhonePe,platform,False,8.065,183,308
+Payments,Google Pay,reward,False,16.939,306,521
+Payments,Google Pay,google,False,13.218,154,231
+Payments,Google Pay,money,False,11.284,675,1933
+Payments,Google Pay,pocket,False,9.642,86,94
+Payments,Google Pay,bug,False,9.474,106,190
+Payments,Google Pay,recharge,False,7.909,260,706
+Payments,Google Pay,not work,True,7.705,432,1307
+Payments,Google Pay,pocket money,True,7.64,61,65
+Payments,Google Pay,transaction,False,7.56,304,869
+Payments,Google Pay,work,False,7.372,578,1852
+Payments,Google Pay,coupon,False,6.759,76,158
+Payments,Google Pay,debit,False,6.628,108,256
+Payments,Google Pay,camera,False,6.608,39,59
+Payments,Google Pay,suspend,False,6.596,34,41
+Payments,Google Pay,payment,False,6.539,739,2511
