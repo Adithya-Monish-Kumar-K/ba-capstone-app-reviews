@@ -1,0 +1,1109 @@
+{
+  "status": "completed",
+  "stage": "Review 2, Stage 2 (Issue #134)",
+  "models_saved": [
+    "models\\textmining\\topic_pipeline_complaint_food_grocery.pkl",
+    "models\\textmining\\topic_pipeline_complaint_payments.pkl",
+    "models\\textmining\\topic_pipeline_complaint_shopping.pkl",
+    "models\\textmining\\topic_pipeline_praise_food_grocery.pkl",
+    "models\\textmining\\topic_pipeline_praise_payments.pkl",
+    "models\\textmining\\topic_pipeline_praise_shopping.pkl"
+  ],
+  "complaint_topics": {
+    "Food & Grocery": [
+      {
+        "id": 1,
+        "label": "Order Cancellation & Refund",
+        "top_terms": [
+          "order",
+          "not",
+          "cancel",
+          "deliver",
+          "refund",
+          "get",
+          "cancel order",
+          "food",
+          "order not",
+          "item"
+        ]
+      },
+      {
+        "id": 2,
+        "label": "Customer Support & Bot Loop",
+        "top_terms": [
+          "customer",
+          "worst",
+          "service",
+          "support",
+          "customer service",
+          "worst customer",
+          "customer support",
+          "no",
+          "care",
+          "customer care"
+        ]
+      },
+      {
+        "id": 3,
+        "label": "Excessive Delivery & Handling Charges",
+        "top_terms": [
+          "charge",
+          "high",
+          "delivery charge",
+          "charge high",
+          "extra",
+          "price",
+          "delivery",
+          "much",
+          "extra charge",
+          "handle"
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Poor Food Quality & Stale Items",
+        "top_terms": [
+          "bad",
+          "good",
+          "not good",
+          "not",
+          "service",
+          "bad experience",
+          "bad service",
+          "experience",
+          "quality",
+          "product"
+        ]
+      },
+      {
+        "id": 5,
+        "label": "Delivery Delays & Rider Tracking",
+        "top_terms": [
+          "delivery",
+          "time",
+          "late",
+          "partner",
+          "delivery partner",
+          "late delivery",
+          "delivery time",
+          "boy",
+          "delivery boy",
+          "always"
+        ]
+      },
+      {
+        "id": 6,
+        "label": "COD & Payment Option Failures",
+        "top_terms": [
+          "cash",
+          "cash delivery",
+          "available",
+          "not available",
+          "not",
+          "delivery not",
+          "delivery",
+          "option",
+          "cod",
+          "no cash"
+        ]
+      }
+    ],
+    "Shopping": [
+      {
+        "id": 1,
+        "label": "Return Rejection & Defective Products",
+        "top_terms": [
+          "product",
+          "return",
+          "refund",
+          "product not",
+          "buy",
+          "quality",
+          "good",
+          "wrong",
+          "money",
+          "use"
+        ]
+      },
+      {
+        "id": 2,
+        "label": "Customer Service & Escalation Failure",
+        "top_terms": [
+          "customer",
+          "support",
+          "service",
+          "care",
+          "customer care",
+          "customer service",
+          "customer support",
+          "no",
+          "worst customer",
+          "poor"
+        ]
+      },
+      {
+        "id": 3,
+        "label": "Courier Delays & Delivery Agent Issues",
+        "top_terms": [
+          "delivery",
+          "delivery service",
+          "delivery not",
+          "late",
+          "cash",
+          "cash delivery",
+          "time",
+          "worst delivery",
+          "delivery agent",
+          "agent"
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Poor Shopping Experience & Fabric Quality",
+        "top_terms": [
+          "bad",
+          "service",
+          "bad experience",
+          "bad service",
+          "experience",
+          "service bad",
+          "bad delivery",
+          "bad not",
+          "bad customer",
+          "bad bad"
+        ]
+      },
+      {
+        "id": 5,
+        "label": "Extreme Dissatisfaction & Scam Allegations",
+        "top_terms": [
+          "worst",
+          "ever",
+          "experience",
+          "worst experience",
+          "worst delivery",
+          "worst service",
+          "worst customer",
+          "service",
+          "worst ever",
+          "shop"
+        ]
+      },
+      {
+        "id": 6,
+        "label": "Order Cancellation & Rescheduling",
+        "top_terms": [
+          "order",
+          "cancel",
+          "deliver",
+          "time",
+          "day",
+          "not deliver",
+          "get",
+          "cancel order",
+          "order not",
+          "order cancel"
+        ]
+      }
+    ],
+    "Payments": [
+      {
+        "id": 1,
+        "label": "Failed Transfers & Debited Amounts",
+        "top_terms": [
+          "payment",
+          "use",
+          "money",
+          "account",
+          "cashback",
+          "time",
+          "get",
+          "upi",
+          "give",
+          "bank"
+        ]
+      },
+      {
+        "id": 2,
+        "label": "App Crashes & Update Regressions",
+        "top_terms": [
+          "work",
+          "not work",
+          "work properly",
+          "properly",
+          "update",
+          "work phone",
+          "work not",
+          "upi",
+          "upi cash",
+          "day"
+        ]
+      },
+      {
+        "id": 3,
+        "label": "Device Environment & Security Scan Errors",
+        "top_terms": [
+          "device",
+          "environment",
+          "environment not",
+          "device environment",
+          "correct",
+          "not correct",
+          "open",
+          "show",
+          "not open",
+          "error"
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Account Blocking & AutoPay Issues",
+        "top_terms": [
+          "phone",
+          "pay",
+          "phone pay",
+          "pay not",
+          "auto",
+          "auto pay",
+          "block",
+          "open",
+          "work phone",
+          "phone not"
+        ]
+      },
+      {
+        "id": 5,
+        "label": "Customer Support Unresponsiveness",
+        "top_terms": [
+          "customer",
+          "support",
+          "no",
+          "service",
+          "customer support",
+          "care",
+          "worst",
+          "customer care",
+          "customer service",
+          "no customer"
+        ]
+      }
+    ]
+  },
+  "praise_topics": {
+    "Food & Grocery": [
+      {
+        "id": 1,
+        "label": "Lightning Fast Delivery",
+        "top_terms": [
+          "fast",
+          "fast delivery",
+          "delivery",
+          "good fast",
+          "super",
+          "super fast",
+          "nice fast",
+          "delivery good"
+        ]
+      },
+      {
+        "id": 2,
+        "label": "Helpful Service & Fresh Quality",
+        "top_terms": [
+          "good",
+          "service",
+          "good service",
+          "service good",
+          "fast service",
+          "product",
+          "time",
+          "thank"
+        ]
+      },
+      {
+        "id": 3,
+        "label": "Tasty Food & Great Orders",
+        "top_terms": [
+          "food",
+          "food delivery",
+          "delivery",
+          "good food",
+          "best food",
+          "nice",
+          "time",
+          "order"
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Top-Tier Overall Experience",
+        "top_terms": [
+          "best",
+          "best service",
+          "best food",
+          "ever",
+          "service",
+          "best delivery",
+          "minute",
+          "best fast"
+        ]
+      }
+    ],
+    "Shopping": [
+      {
+        "id": 1,
+        "label": "Great Product & Prompt Service",
+        "top_terms": [
+          "good",
+          "good product",
+          "product",
+          "service",
+          "delivery",
+          "good service",
+          "product good",
+          "experience"
+        ]
+      },
+      {
+        "id": 2,
+        "label": "Trusted Online Shopping Platform",
+        "top_terms": [
+          "online",
+          "online shop",
+          "shop",
+          "best",
+          "best online",
+          "best shop",
+          "good online",
+          "platform"
+        ]
+      },
+      {
+        "id": 3,
+        "label": "High Fabric & Build Quality",
+        "top_terms": [
+          "quality",
+          "quality product",
+          "good quality",
+          "product",
+          "best",
+          "best quality",
+          "good",
+          "price"
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Pleasant Buying Experience",
+        "top_terms": [
+          "nice",
+          "nice product",
+          "product",
+          "nice good",
+          "product nice",
+          "nice shop",
+          "good nice",
+          "delivery"
+        ]
+      }
+    ],
+    "Payments": [
+      {
+        "id": 1,
+        "label": "Smooth & Reliable Experience",
+        "top_terms": [
+          "good",
+          "service",
+          "work",
+          "good service",
+          "nice",
+          "experience",
+          "good experience",
+          "good work"
+        ]
+      },
+      {
+        "id": 2,
+        "label": "Fast UPI & Digital Transactions",
+        "top_terms": [
+          "payment",
+          "best",
+          "upi",
+          "online",
+          "best upi",
+          "online payment",
+          "fast",
+          "upi payment"
+        ]
+      },
+      {
+        "id": 3,
+        "label": "Effortless & Intuitive UI",
+        "top_terms": [
+          "easy",
+          "use",
+          "easy use",
+          "good easy",
+          "nice",
+          "nice easy",
+          "fast",
+          "secure"
+        ]
+      },
+      {
+        "id": 4,
+        "label": "Trusted Cashless Convenience",
+        "top_terms": [
+          "pay",
+          "phone",
+          "phone pay",
+          "not",
+          "nice",
+          "thank",
+          "good phone",
+          "thank phone"
+        ]
+      }
+    ]
+  },
+  "sentiment_by_topic": [
+    {
+      "domain": "Food & Grocery",
+      "dominant_topic_id": 1,
+      "dominant_topic_label": "Order Cancellation & Refund",
+      "reviews": 28656,
+      "mean_sentiment": -0.2713,
+      "pct_strongly_neg": 36.16,
+      "pct_neg": 59.79
+    },
+    {
+      "domain": "Food & Grocery",
+      "dominant_topic_id": 2,
+      "dominant_topic_label": "Customer Support & Bot Loop",
+      "reviews": 15640,
+      "mean_sentiment": -0.4024,
+      "pct_strongly_neg": 55.58,
+      "pct_neg": 77.29
+    },
+    {
+      "domain": "Food & Grocery",
+      "dominant_topic_id": 3,
+      "dominant_topic_label": "Excessive Delivery & Handling Charges",
+      "reviews": 8730,
+      "mean_sentiment": -0.2135,
+      "pct_strongly_neg": 24.39,
+      "pct_neg": 57.56
+    },
+    {
+      "domain": "Food & Grocery",
+      "dominant_topic_id": 4,
+      "dominant_topic_label": "Poor Food Quality & Stale Items",
+      "reviews": 10412,
+      "mean_sentiment": -0.4375,
+      "pct_strongly_neg": 58.77,
+      "pct_neg": 79.28
+    },
+    {
+      "domain": "Food & Grocery",
+      "dominant_topic_id": 5,
+      "dominant_topic_label": "Delivery Delays & Rider Tracking",
+      "reviews": 14856,
+      "mean_sentiment": -0.2945,
+      "pct_strongly_neg": 39.06,
+      "pct_neg": 60.01
+    },
+    {
+      "domain": "Food & Grocery",
+      "dominant_topic_id": 6,
+      "dominant_topic_label": "COD & Payment Option Failures",
+      "reviews": 4309,
+      "mean_sentiment": -0.1164,
+      "pct_strongly_neg": 17.61,
+      "pct_neg": 39.57
+    },
+    {
+      "domain": "Payments",
+      "dominant_topic_id": 1,
+      "dominant_topic_label": "Failed Transfers & Debited Amounts",
+      "reviews": 6909,
+      "mean_sentiment": -0.154,
+      "pct_strongly_neg": 27.44,
+      "pct_neg": 50.24
+    },
+    {
+      "domain": "Payments",
+      "dominant_topic_id": 2,
+      "dominant_topic_label": "App Crashes & Update Regressions",
+      "reviews": 1267,
+      "mean_sentiment": -0.0863,
+      "pct_strongly_neg": 16.18,
+      "pct_neg": 36.23
+    },
+    {
+      "domain": "Payments",
+      "dominant_topic_id": 3,
+      "dominant_topic_label": "Device Environment & Security Scan Errors",
+      "reviews": 1382,
+      "mean_sentiment": -0.114,
+      "pct_strongly_neg": 18.02,
+      "pct_neg": 44.93
+    },
+    {
+      "domain": "Payments",
+      "dominant_topic_id": 4,
+      "dominant_topic_label": "Account Blocking & AutoPay Issues",
+      "reviews": 1379,
+      "mean_sentiment": -0.1305,
+      "pct_strongly_neg": 21.1,
+      "pct_neg": 53.73
+    },
+    {
+      "domain": "Payments",
+      "dominant_topic_id": 5,
+      "dominant_topic_label": "Customer Support Unresponsiveness",
+      "reviews": 2404,
+      "mean_sentiment": -0.225,
+      "pct_strongly_neg": 39.98,
+      "pct_neg": 63.48
+    },
+    {
+      "domain": "Shopping",
+      "dominant_topic_id": 1,
+      "dominant_topic_label": "Return Rejection & Defective Products",
+      "reviews": 18156,
+      "mean_sentiment": -0.2287,
+      "pct_strongly_neg": 33.05,
+      "pct_neg": 54.55
+    },
+    {
+      "domain": "Shopping",
+      "dominant_topic_id": 2,
+      "dominant_topic_label": "Customer Service & Escalation Failure",
+      "reviews": 13121,
+      "mean_sentiment": -0.2426,
+      "pct_strongly_neg": 41.19,
+      "pct_neg": 63.78
+    },
+    {
+      "domain": "Shopping",
+      "dominant_topic_id": 3,
+      "dominant_topic_label": "Courier Delays & Delivery Agent Issues",
+      "reviews": 11147,
+      "mean_sentiment": -0.2949,
+      "pct_strongly_neg": 40.54,
+      "pct_neg": 61.35
+    },
+    {
+      "domain": "Shopping",
+      "dominant_topic_id": 4,
+      "dominant_topic_label": "Poor Shopping Experience & Fabric Quality",
+      "reviews": 6192,
+      "mean_sentiment": -0.5948,
+      "pct_strongly_neg": 81.2,
+      "pct_neg": 91.91
+    },
+    {
+      "domain": "Shopping",
+      "dominant_topic_id": 5,
+      "dominant_topic_label": "Extreme Dissatisfaction & Scam Allegations",
+      "reviews": 6973,
+      "mean_sentiment": -0.6134,
+      "pct_strongly_neg": 79.56,
+      "pct_neg": 90.61
+    },
+    {
+      "domain": "Shopping",
+      "dominant_topic_id": 6,
+      "dominant_topic_label": "Order Cancellation & Rescheduling",
+      "reviews": 15824,
+      "mean_sentiment": -0.3101,
+      "pct_strongly_neg": 40.74,
+      "pct_neg": 65.61
+    }
+  ],
+  "top_distinctive_terms_by_app": {
+    "Swiggy": [
+      {
+        "term": "food",
+        "z_score": 35.568,
+        "app_count": 6388
+      },
+      {
+        "term": "cancellation",
+        "z_score": 30.199,
+        "app_count": 1413
+      },
+      {
+        "term": "cancel",
+        "z_score": 27.213,
+        "app_count": 3929
+      },
+      {
+        "term": "cancellation fee",
+        "z_score": 24.308,
+        "app_count": 607
+      },
+      {
+        "term": "hour",
+        "z_score": 21.308,
+        "app_count": 2353
+      },
+      {
+        "term": "order food",
+        "z_score": 20.642,
+        "app_count": 1171
+      },
+      {
+        "term": "fee",
+        "z_score": 18.373,
+        "app_count": 1458
+      },
+      {
+        "term": "cancel order",
+        "z_score": 17.782,
+        "app_count": 1780
+      }
+    ],
+    "Zomato": [
+      {
+        "term": "food",
+        "z_score": 50.782,
+        "app_count": 6697
+      },
+      {
+        "term": "restaurant",
+        "z_score": 43.543,
+        "app_count": 2907
+      },
+      {
+        "term": "support",
+        "z_score": 29.918,
+        "app_count": 4903
+      },
+      {
+        "term": "gold",
+        "z_score": 20.673,
+        "app_count": 451
+      },
+      {
+        "term": "platform fee",
+        "z_score": 19.865,
+        "app_count": 456
+      },
+      {
+        "term": "delay",
+        "z_score": 18.538,
+        "app_count": 1714
+      },
+      {
+        "term": "platform",
+        "z_score": 17.98,
+        "app_count": 1017
+      },
+      {
+        "term": "order food",
+        "z_score": 17.568,
+        "app_count": 1008
+      }
+    ],
+    "Blinkit": [
+      {
+        "term": "product",
+        "z_score": 78.57,
+        "app_count": 6754
+      },
+      {
+        "term": "return",
+        "z_score": 45.886,
+        "app_count": 2381
+      },
+      {
+        "term": "item",
+        "z_score": 41.736,
+        "app_count": 4990
+      },
+      {
+        "term": "charge",
+        "z_score": 31.219,
+        "app_count": 4928
+      },
+      {
+        "term": "damage",
+        "z_score": 29.754,
+        "app_count": 1054
+      },
+      {
+        "term": "handle",
+        "z_score": 28.289,
+        "app_count": 1175
+      },
+      {
+        "term": "expire",
+        "z_score": 26.963,
+        "app_count": 862
+      },
+      {
+        "term": "buy",
+        "z_score": 26.237,
+        "app_count": 1180
+      }
+    ],
+    "Domino's": [
+      {
+        "term": "pizza",
+        "z_score": 84.462,
+        "app_count": 2575
+      },
+      {
+        "term": "store",
+        "z_score": 48.57,
+        "app_count": 920
+      },
+      {
+        "term": "order pizza",
+        "z_score": 33.248,
+        "app_count": 372
+      },
+      {
+        "term": "outlet",
+        "z_score": 29.236,
+        "app_count": 289
+      },
+      {
+        "term": "cheese",
+        "z_score": 28.563,
+        "app_count": 287
+      },
+      {
+        "term": "taste",
+        "z_score": 26.878,
+        "app_count": 313
+      },
+      {
+        "term": "staff",
+        "z_score": 25.66,
+        "app_count": 292
+      },
+      {
+        "term": "branch",
+        "z_score": 23.11,
+        "app_count": 185
+      }
+    ],
+    "Myntra": [
+      {
+        "term": "exchange",
+        "z_score": 34.638,
+        "app_count": 843
+      },
+      {
+        "term": "tag",
+        "z_score": 23.984,
+        "app_count": 251
+      },
+      {
+        "term": "size",
+        "z_score": 20.557,
+        "app_count": 345
+      },
+      {
+        "term": "shirt",
+        "z_score": 19.212,
+        "app_count": 204
+      },
+      {
+        "term": "brand",
+        "z_score": 17.937,
+        "app_count": 274
+      },
+      {
+        "term": "wrong product",
+        "z_score": 16.63,
+        "app_count": 320
+      },
+      {
+        "term": "jean",
+        "z_score": 15.292,
+        "app_count": 107
+      },
+      {
+        "term": "dress",
+        "z_score": 14.707,
+        "app_count": 146
+      }
+    ],
+    "Flipkart": [
+      {
+        "term": "minute",
+        "z_score": 27.904,
+        "app_count": 1402
+      },
+      {
+        "term": "fee",
+        "z_score": 27.345,
+        "app_count": 1666
+      },
+      {
+        "term": "delay",
+        "z_score": 24.389,
+        "app_count": 3504
+      },
+      {
+        "term": "reschedule",
+        "z_score": 22.287,
+        "app_count": 915
+      },
+      {
+        "term": "location",
+        "z_score": 19.797,
+        "app_count": 1180
+      },
+      {
+        "term": "charge",
+        "z_score": 19.323,
+        "app_count": 1631
+      },
+      {
+        "term": "date",
+        "z_score": 19.321,
+        "app_count": 3060
+      },
+      {
+        "term": "installation",
+        "z_score": 18.396,
+        "app_count": 597
+      }
+    ],
+    "Amazon": [
+      {
+        "term": "prime",
+        "z_score": 25.737,
+        "app_count": 1323
+      },
+      {
+        "term": "membership",
+        "z_score": 21.957,
+        "app_count": 380
+      },
+      {
+        "term": "device",
+        "z_score": 20.845,
+        "app_count": 359
+      },
+      {
+        "term": "refund",
+        "z_score": 20.007,
+        "app_count": 2926
+      },
+      {
+        "term": "customer service",
+        "z_score": 19.832,
+        "app_count": 1790
+      },
+      {
+        "term": "mark",
+        "z_score": 19.065,
+        "app_count": 610
+      },
+      {
+        "term": "upi",
+        "z_score": 18.003,
+        "app_count": 497
+      },
+      {
+        "term": "member",
+        "z_score": 17.786,
+        "app_count": 340
+      }
+    ],
+    "Meesho": [
+      {
+        "term": "account",
+        "z_score": 21.925,
+        "app_count": 1107
+      },
+      {
+        "term": "messho",
+        "z_score": 20.619,
+        "app_count": 328
+      },
+      {
+        "term": "verification",
+        "z_score": 20.331,
+        "app_count": 304
+      },
+      {
+        "term": "paisa",
+        "z_score": 19.411,
+        "app_count": 493
+      },
+      {
+        "term": "block",
+        "z_score": 19.211,
+        "app_count": 563
+      },
+      {
+        "term": "na",
+        "z_score": 19.21,
+        "app_count": 648
+      },
+      {
+        "term": "pay later",
+        "z_score": 19.199,
+        "app_count": 246
+      },
+      {
+        "term": "pickup",
+        "z_score": 18.709,
+        "app_count": 709
+      }
+    ],
+    "Paytm": [
+      {
+        "term": "device",
+        "z_score": 21.151,
+        "app_count": 637
+      },
+      {
+        "term": "error",
+        "z_score": 16.194,
+        "app_count": 434
+      },
+      {
+        "term": "correct",
+        "z_score": 15.284,
+        "app_count": 335
+      },
+      {
+        "term": "cashback",
+        "z_score": 12.611,
+        "app_count": 584
+      },
+      {
+        "term": "book",
+        "z_score": 12.097,
+        "app_count": 209
+      },
+      {
+        "term": "not correct",
+        "z_score": 12.0,
+        "app_count": 318
+      },
+      {
+        "term": "login",
+        "z_score": 11.264,
+        "app_count": 267
+      },
+      {
+        "term": "detect",
+        "z_score": 10.482,
+        "app_count": 174
+      }
+    ],
+    "PhonePe": [
+      {
+        "term": "charge",
+        "z_score": 17.801,
+        "app_count": 462
+      },
+      {
+        "term": "phone pay",
+        "z_score": 17.292,
+        "app_count": 395
+      },
+      {
+        "term": "phone",
+        "z_score": 16.362,
+        "app_count": 775
+      },
+      {
+        "term": "wallet",
+        "z_score": 16.354,
+        "app_count": 370
+      },
+      {
+        "term": "pay",
+        "z_score": 14.873,
+        "app_count": 757
+      },
+      {
+        "term": "fee",
+        "z_score": 12.255,
+        "app_count": 232
+      },
+      {
+        "term": "account",
+        "z_score": 11.671,
+        "app_count": 956
+      },
+      {
+        "term": "block",
+        "z_score": 11.421,
+        "app_count": 321
+      }
+    ],
+    "Google Pay": [
+      {
+        "term": "reward",
+        "z_score": 16.939,
+        "app_count": 306
+      },
+      {
+        "term": "google",
+        "z_score": 13.218,
+        "app_count": 154
+      },
+      {
+        "term": "money",
+        "z_score": 11.284,
+        "app_count": 675
+      },
+      {
+        "term": "pocket",
+        "z_score": 9.642,
+        "app_count": 86
+      },
+      {
+        "term": "bug",
+        "z_score": 9.474,
+        "app_count": 106
+      },
+      {
+        "term": "recharge",
+        "z_score": 7.909,
+        "app_count": 260
+      },
+      {
+        "term": "not work",
+        "z_score": 7.705,
+        "app_count": 432
+      },
+      {
+        "term": "pocket money",
+        "z_score": 7.64,
+        "app_count": 61
+      }
+    ]
+  },
+  "charts": [
+    {
+      "file": "data\\charts\\textmining\\tm_02_complaint_topics.png",
+      "title": "Topic Models (NMF) on 1–2★ Complaints per Domain",
+      "subtitle": "Top terms and feature loadings for extracted complaint topics across Food & Grocery (K=6), Shopping (K=6), and Payments (K=5)."
+    },
+    {
+      "file": "data\\charts\\textmining\\tm_03_distinctive_terms.png",
+      "title": "Most Distinctive Words & Phrases per App (Standardized Log-Odds Ratio)",
+      "subtitle": "Top terms differentiating each app from others within its domain, calculated via Monroe et al. (2008) log-odds with informative Dirichlet prior."
+    },
+    {
+      "file": "data\\charts\\textmining\\tm_04_praise_topics.png",
+      "title": "Topics of Praise (4–5★ Reviews) as a Contrast: What Satisfied Users Mention",
+      "subtitle": "NMF topic models fitted on 4–5★ praise reviews across Food & Grocery, Shopping, and Payments (K=4)."
+    },
+    {
+      "file": "data\\charts\\textmining\\tm_05_topic_sentiment.png",
+      "title": "Complaint Topic Sentiment Severity Hierarchy Across Domains",
+      "subtitle": "Comparison of average VADER polarity and share of strongly negative reviews (compound ≤ -0.5) across all 17 complaint topics."
+    }
+  ]
+}

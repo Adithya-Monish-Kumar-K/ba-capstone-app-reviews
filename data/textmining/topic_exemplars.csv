@@ -1,0 +1,86 @@
+domain,topic_id,topic_label,rank,loading,app_name,score,sentiment_compound,clean_text
+Food & Grocery,1,Order Cancellation & Refund,1,0.0774,Domino's,1,0.0,dominoze denieng order
+Food & Grocery,1,Order Cancellation & Refund,2,0.0717,Blinkit,1,-0.25,cancel order not
+Food & Grocery,1,Order Cancellation & Refund,3,0.0715,Swiggy,1,0.0,order not deliver order
+Food & Grocery,1,Order Cancellation & Refund,4,0.0687,Swiggy,1,0.0,order not deliver
+Food & Grocery,1,Order Cancellation & Refund,5,0.0687,Zomato,1,0.0,order not deliver
+Food & Grocery,2,Customer Support & Bot Loop,1,0.1494,Swiggy,1,-0.6249,worst customer service
+Food & Grocery,2,Customer Support & Bot Loop,2,0.1494,Swiggy,1,-0.6249,worst customer service
+Food & Grocery,2,Customer Support & Bot Loop,3,0.1494,Swiggy,1,-0.6249,worst customer service
+Food & Grocery,2,Customer Support & Bot Loop,4,0.1494,Swiggy,1,-0.6249,worst customer service
+Food & Grocery,2,Customer Support & Bot Loop,5,0.1494,Blinkit,1,-0.6249,worst customer service
+Food & Grocery,3,Excessive Delivery & Handling Charges,1,0.163,Blinkit,1,0.0,charge delivery charge handle charge high demange surge charge
+Food & Grocery,3,Excessive Delivery & Handling Charges,2,0.1629,Swiggy,1,-0.2732,charge high delivery charge
+Food & Grocery,3,Excessive Delivery & Handling Charges,3,0.162,Swiggy,1,0.0,delivery charge high
+Food & Grocery,3,Excessive Delivery & Handling Charges,4,0.162,Zomato,1,-0.2732,delivery charge high
+Food & Grocery,3,Excessive Delivery & Handling Charges,5,0.162,Blinkit,2,0.0,delivery charge high
+Food & Grocery,4,Poor Food Quality & Stale Items,1,0.1628,Domino's,1,-0.1531,vare bad good
+Food & Grocery,4,Poor Food Quality & Stale Items,2,0.156,Blinkit,2,-0.7101,bad experience not good
+Food & Grocery,4,Poor Food Quality & Stale Items,3,0.1496,Zomato,1,-0.7101,bad not good
+Food & Grocery,4,Poor Food Quality & Stale Items,4,0.148,Zomato,1,-0.5423,bad chlata not
+Food & Grocery,4,Poor Food Quality & Stale Items,5,0.1413,Swiggy,1,-0.5849,bad custemar servis
+Food & Grocery,5,Delivery Delays & Rider Tracking,1,0.159,Blinkit,1,0.0,delivery naver time
+Food & Grocery,5,Delivery Delays & Rider Tracking,2,0.1554,Zomato,1,0.296,tumi pabe tokhon delivery somoi moto dile
+Food & Grocery,5,Delivery Delays & Rider Tracking,3,0.1554,Domino's,1,0.0,kayada delivery starte koro
+Food & Grocery,5,Delivery Delays & Rider Tracking,4,0.1554,Zomato,1,0.0,bakwash delivery compony
+Food & Grocery,5,Delivery Delays & Rider Tracking,5,0.1554,Blinkit,1,0.0,totel laite delivery parternes
+Food & Grocery,6,COD & Payment Option Failures,1,0.2191,Domino's,1,0.0,not certify cash delivery not available
+Food & Grocery,6,COD & Payment Option Failures,2,0.2165,Swiggy,1,0.0,cash delivery not available
+Food & Grocery,6,COD & Payment Option Failures,3,0.2165,Zomato,1,0.0,cash delivery not available
+Food & Grocery,6,COD & Payment Option Failures,4,0.2165,Swiggy,1,0.0,cash delivery not available
+Food & Grocery,6,COD & Payment Option Failures,5,0.2165,Swiggy,1,0.0,cash delivery not available
+Shopping,1,Return Rejection & Defective Products,1,0.1073,Meesho,1,0.0,rai kish product katai
+Shopping,1,Return Rejection & Defective Products,2,0.1073,Meesho,2,0.0,okk okk product
+Shopping,1,Return Rejection & Defective Products,3,0.1073,Meesho,2,0.0,product nie harasment
+Shopping,1,Return Rejection & Defective Products,4,0.089,Meesho,1,-0.4767,deverler wrong product not return product
+Shopping,1,Return Rejection & Defective Products,5,0.0784,Flipkart,1,0.0,product not return
+Shopping,2,Customer Service & Escalation Failure,1,0.1304,Myntra,1,0.4019,shuttest customer support
+Shopping,2,Customer Service & Escalation Failure,2,0.1304,Amazon,1,0.4019,customer support nonexistent
+Shopping,2,Customer Service & Escalation Failure,3,0.1304,Flipkart,1,0.2023,insensitive customer support
+Shopping,2,Customer Service & Escalation Failure,4,0.129,Flipkart,2,0.0,not saported customer
+Shopping,2,Customer Service & Escalation Failure,5,0.1288,Flipkart,1,0.0,looser customer service
+Shopping,3,Courier Delays & Delivery Agent Issues,1,0.185,Flipkart,1,0.0,youe delivery poore
+Shopping,3,Courier Delays & Delivery Agent Issues,2,0.185,Meesho,1,0.0,casu delivery ila
+Shopping,3,Courier Delays & Delivery Agent Issues,3,0.185,Flipkart,1,0.0,not tarting delivery
+Shopping,3,Courier Delays & Delivery Agent Issues,4,0.185,Flipkart,1,0.0,canot vash delivery
+Shopping,3,Courier Delays & Delivery Agent Issues,5,0.185,Amazon,1,0.0,not caah delivery
+Shopping,4,Poor Shopping Experience & Fabric Quality,1,0.1923,Meesho,1,-0.5423,varre bad sopimg
+Shopping,4,Poor Shopping Experience & Fabric Quality,2,0.1923,Flipkart,1,-0.5423,bad dilavery expurence
+Shopping,4,Poor Shopping Experience & Fabric Quality,3,0.1923,Meesho,1,-0.5423,vare vare bad
+Shopping,4,Poor Shopping Experience & Fabric Quality,4,0.1923,Myntra,1,-0.5423,highcost quilty bad
+Shopping,4,Poor Shopping Experience & Fabric Quality,5,0.1923,Meesho,1,-0.5423,bad itams not bay
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,1,0.1536,Amazon,1,-0.6249,worst comm ever
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,2,0.1536,Amazon,1,-0.6249,worst exprince ever
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,3,0.1459,Flipkart,1,-0.8481,worst worst experience
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,4,0.1457,Flipkart,1,-0.6249,worst ewor order
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,5,0.1387,Myntra,1,-0.8481,worst experience worst service
+Shopping,6,Order Cancellation & Rescheduling,1,0.1243,Meesho,1,0.0,not dileverd order
+Shopping,6,Order Cancellation & Rescheduling,2,0.1243,Meesho,1,0.0,order kio callsenelled
+Shopping,6,Order Cancellation & Rescheduling,3,0.1243,Meesho,1,0.0,firod order khagya
+Shopping,6,Order Cancellation & Rescheduling,4,0.1243,Meesho,1,0.0,veat arripiku order
+Shopping,6,Order Cancellation & Rescheduling,5,0.1243,Flipkart,1,0.0,juct chuk order
+Payments,1,Failed Transfers & Debited Amounts,1,0.0816,Google Pay,1,-0.906,worst payment ever use issue happen time every time make payment money get deduct bank account receiver not receive wait refund keep contact support completely frustrate waste time cause unnecessary stress not able process payment properly not call reliable payment people trust hard earn money uh keep fail
+Payments,1,Failed Transfers & Debited Amounts,2,0.0791,PhonePe,1,0.7003,upi money send bill payment not give cashback upi bill payment time extra fee gst charge always use central govt npci bhim upi third party upi not use upi want save money
+Payments,1,Failed Transfers & Debited Amounts,3,0.0791,Paytm,1,0.7003,upi money send bill payment not give cashback upi bill payment time extra fee gst charge always use central govt npci bhim upi third party upi not use upi want save money
+Payments,1,Failed Transfers & Debited Amounts,4,0.0777,Google Pay,1,-0.8779,bad make payment twice use qr code payment go cross time payment complete money deduct account person not receive payment money deduct account completely bogus bad transaction not secure not receive payment install file case
+Payments,1,Failed Transfers & Debited Amounts,5,0.0773,Paytm,1,0.2712,listen everyone not use upi lite money automatically drive upi lite bank account stop automatic transfer no option send back bank account like not use rd class loot money work not use
+Payments,2,App Crashes & Update Regressions,1,0.2651,Paytm,1,0.0,not work area
+Payments,2,App Crashes & Update Regressions,2,0.2651,PhonePe,1,0.0,addr cad not work
+Payments,2,App Crashes & Update Regressions,3,0.2651,PhonePe,1,0.0,not work smartphone
+Payments,2,App Crashes & Update Regressions,4,0.2651,Paytm,2,0.0,not work paytam
+Payments,2,App Crashes & Update Regressions,5,0.2651,PhonePe,1,0.0,not work proparly
+Payments,3,Device Environment & Security Scan Errors,1,0.2628,Paytm,1,0.0,device environment not correct
+Payments,3,Device Environment & Security Scan Errors,2,0.2628,Paytm,1,-0.3465,device environment not correct
+Payments,3,Device Environment & Security Scan Errors,3,0.2617,Paytm,1,0.0,ia show device environment not correct
+Payments,3,Device Environment & Security Scan Errors,4,0.2617,Paytm,1,0.0,show device environment not correct
+Payments,3,Device Environment & Security Scan Errors,5,0.2611,Paytm,1,0.0,not open suddenly show device environment not correct
+Payments,4,Account Blocking & AutoPay Issues,1,0.3243,PhonePe,2,-0.1027,phone pay waled
+Payments,4,Account Blocking & AutoPay Issues,2,0.3243,PhonePe,1,0.4939,bakar phone pay hero
+Payments,4,Account Blocking & AutoPay Issues,3,0.3243,PhonePe,1,-0.1027,modi nirmala sitharam krupa phone pay
+Payments,4,Account Blocking & AutoPay Issues,4,0.3243,PhonePe,1,-0.1027,vest phone pay kannadiga
+Payments,4,Account Blocking & AutoPay Issues,5,0.3243,PhonePe,1,-0.1027,phone pay prabulla hepl
+Payments,5,Customer Support Unresponsiveness,1,0.204,Paytm,1,0.128,no customer support
+Payments,5,Customer Support Unresponsiveness,2,0.204,PhonePe,1,0.128,no customer support
+Payments,5,Customer Support Unresponsiveness,3,0.204,Paytm,1,0.128,no customer support
+Payments,5,Customer Support Unresponsiveness,4,0.2039,PhonePe,1,0.4019,customer support chip
+Payments,5,Customer Support Unresponsiveness,5,0.2039,PhonePe,1,0.4019,shoddy customer support

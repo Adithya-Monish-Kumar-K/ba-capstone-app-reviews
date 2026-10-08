@@ -1,0 +1,64 @@
+domain,dominant_topic_id,dominant_topic_label,app_name,reviews,mean_sentiment,pct_strongly_neg
+Food & Grocery,1,Order Cancellation & Refund,Blinkit,10774,-0.2241,29.33
+Food & Grocery,1,Order Cancellation & Refund,Domino's,3135,-0.2831,36.91
+Food & Grocery,1,Order Cancellation & Refund,Swiggy,7856,-0.327,43.33
+Food & Grocery,1,Order Cancellation & Refund,Zomato,6891,-0.2763,38.31
+Food & Grocery,2,Customer Support & Bot Loop,Blinkit,4794,-0.3659,52.36
+Food & Grocery,2,Customer Support & Bot Loop,Domino's,1094,-0.4798,63.99
+Food & Grocery,2,Customer Support & Bot Loop,Swiggy,4850,-0.4291,59.22
+Food & Grocery,2,Customer Support & Bot Loop,Zomato,4902,-0.3945,53.26
+Food & Grocery,3,Excessive Delivery & Handling Charges,Blinkit,4235,-0.1994,22.34
+Food & Grocery,3,Excessive Delivery & Handling Charges,Domino's,359,-0.1245,15.88
+Food & Grocery,3,Excessive Delivery & Handling Charges,Swiggy,1751,-0.2865,33.75
+Food & Grocery,3,Excessive Delivery & Handling Charges,Zomato,2385,-0.1984,22.43
+Food & Grocery,4,Poor Food Quality & Stale Items,Blinkit,5124,-0.4101,55.33
+Food & Grocery,4,Poor Food Quality & Stale Items,Domino's,1327,-0.4803,63.98
+Food & Grocery,4,Poor Food Quality & Stale Items,Swiggy,1861,-0.4741,64.0
+Food & Grocery,4,Poor Food Quality & Stale Items,Zomato,2100,-0.4446,59.24
+Food & Grocery,5,Delivery Delays & Rider Tracking,Blinkit,5723,-0.2397,30.79
+Food & Grocery,5,Delivery Delays & Rider Tracking,Domino's,1320,-0.3117,41.44
+Food & Grocery,5,Delivery Delays & Rider Tracking,Swiggy,4089,-0.344,46.25
+Food & Grocery,5,Delivery Delays & Rider Tracking,Zomato,3724,-0.3182,43.05
+Food & Grocery,6,COD & Payment Option Failures,Blinkit,2141,-0.0986,15.83
+Food & Grocery,6,COD & Payment Option Failures,Domino's,444,-0.1214,15.99
+Food & Grocery,6,COD & Payment Option Failures,Swiggy,636,-0.1113,20.28
+Food & Grocery,6,COD & Payment Option Failures,Zomato,1088,-0.1523,20.22
+Payments,1,Failed Transfers & Debited Amounts,Google Pay,1998,-0.1339,26.58
+Payments,1,Failed Transfers & Debited Amounts,Paytm,2145,-0.1912,31.7
+Payments,1,Failed Transfers & Debited Amounts,PhonePe,2766,-0.1396,24.77
+Payments,2,App Crashes & Update Regressions,Google Pay,464,-0.0841,16.59
+Payments,2,App Crashes & Update Regressions,Paytm,444,-0.1008,16.67
+Payments,2,App Crashes & Update Regressions,PhonePe,359,-0.0712,15.04
+Payments,3,Device Environment & Security Scan Errors,Google Pay,231,-0.1006,9.96
+Payments,3,Device Environment & Security Scan Errors,Paytm,945,-0.1236,21.48
+Payments,3,Device Environment & Security Scan Errors,PhonePe,206,-0.0849,11.17
+Payments,4,Account Blocking & AutoPay Issues,Google Pay,280,-0.1114,17.5
+Payments,4,Account Blocking & AutoPay Issues,Paytm,311,-0.0879,18.01
+Payments,4,Account Blocking & AutoPay Issues,PhonePe,788,-0.1541,23.6
+Payments,5,Customer Support Unresponsiveness,Google Pay,394,-0.238,39.34
+Payments,5,Customer Support Unresponsiveness,Paytm,975,-0.2208,39.79
+Payments,5,Customer Support Unresponsiveness,PhonePe,1035,-0.224,40.39
+Shopping,1,Return Rejection & Defective Products,Amazon,3669,-0.182,30.01
+Shopping,1,Return Rejection & Defective Products,Flipkart,8142,-0.2088,30.28
+Shopping,1,Return Rejection & Defective Products,Meesho,4289,-0.2615,35.98
+Shopping,1,Return Rejection & Defective Products,Myntra,2056,-0.3225,43.39
+Shopping,2,Customer Service & Escalation Failure,Amazon,3752,-0.2098,38.86
+Shopping,2,Customer Service & Escalation Failure,Flipkart,5492,-0.2513,41.66
+Shopping,2,Customer Service & Escalation Failure,Meesho,2304,-0.2339,39.76
+Shopping,2,Customer Service & Escalation Failure,Myntra,1573,-0.3034,47.23
+Shopping,3,Courier Delays & Delivery Agent Issues,Amazon,2608,-0.2977,42.25
+Shopping,3,Courier Delays & Delivery Agent Issues,Flipkart,5428,-0.2854,38.65
+Shopping,3,Courier Delays & Delivery Agent Issues,Meesho,2156,-0.2877,39.7
+Shopping,3,Courier Delays & Delivery Agent Issues,Myntra,955,-0.3572,48.48
+Shopping,4,Poor Shopping Experience & Fabric Quality,Amazon,1119,-0.5615,76.59
+Shopping,4,Poor Shopping Experience & Fabric Quality,Flipkart,2976,-0.5905,81.55
+Shopping,4,Poor Shopping Experience & Fabric Quality,Meesho,1513,-0.6189,83.21
+Shopping,4,Poor Shopping Experience & Fabric Quality,Myntra,584,-0.6186,83.05
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,Amazon,1609,-0.5939,76.94
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,Flipkart,3266,-0.6123,80.56
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,Meesho,1266,-0.6269,79.7
+Shopping,5,Extreme Dissatisfaction & Scam Allegations,Myntra,832,-0.6349,80.53
+Shopping,6,Order Cancellation & Rescheduling,Amazon,3134,-0.2693,38.83
+Shopping,6,Order Cancellation & Rescheduling,Flipkart,7346,-0.312,40.06
+Shopping,6,Order Cancellation & Rescheduling,Meesho,3559,-0.3177,40.91
+Shopping,6,Order Cancellation & Rescheduling,Myntra,1785,-0.3587,46.55
