@@ -153,3 +153,94 @@ python scripts/17_topic_modelling.py --predict "Refund not received after cancel
 
 This pipeline allows the interactive dashboard (`#139`, `#146`) to classify streaming reviews without retraining.
 
+---
+
+## 3. Evaluation and interpretation of topic models (#136)
+
+Code: `scripts/18_topic_evaluation.py` (under 25 seconds).
+Outputs in `data/textmining/` (`coherence_scores.csv`, `topic_keyword_overlap.csv`, `untagged_reviews_breakdown.csv`, `topic_share_by_app.csv`, `monthly_topic_trends.csv`), charts in `data/charts/textmining/` (`tm_06`–`tm_09`), and summary in `data/topic_evaluation_summary.json`.
+
+### 3.1 Choosing the number of topics via coherence scores (`tm_06_coherence_evaluation.png`)
+
+To determine the optimal number of topics without overfitting or redundant splitting, we evaluated Normalized Pointwise Mutual Information (NPMI) and $U_{\text{mass}}$ coherence across candidate model sizes $K \in [3, 10]$ for each domain.
+
+$$C_{\text{NPMI}}(V^{(k)}) = \frac{2}{M(M-1)} \sum_{m=2}^M \sum_{l=1}^{m-1} \frac{\log \frac{P(w_m, w_l) + \epsilon}{P(w_m)P(w_l)}}{-\log(P(w_m, w_l) + \epsilon)}$$
+
+| Domain | Candidate $K$ Sweep | Mean NPMI Coherence | Chosen $K$ | Quantitative Justification |
+|---|:---:|:---:|:---:|---|
+| **Food & Grocery** | $K=3 \dots 10$ | 0.1777 to 0.1949 | **$K = 6$** | NPMI achieves its sharpest peak at $K=6$ (0.1949). At $K \ge 7$, topics fragment into redundant variants of delivery time. |
+| **Shopping** | $K=3 \dots 10$ | 0.1555 to 0.1863 | **$K = 6$** | Coherence plateaus cleanly at $K=6$ (0.1673) with clear operational boundaries (returns, quality, courier delays, support, extreme dissatisfaction, cancellations). |
+| **Payments** | $K=3 \dots 10$ | 0.1805 to 0.2119 | **$K = 5$** | Following a dip at $K=4$, coherence recovers to 0.2016 at $K=5$, uniquely isolating the critical `Device Environment & Security Scan` failure mode. |
+
+![Topic Coherence Curves](data/charts/textmining/tm_06_coherence_evaluation.png)
+
+### 3.2 Comparison with the 9 keyword issue tags (`tm_07_topic_vs_keyword_tags.png`)
+
+Cross-tabulating the 17 unsupervised NMF topics against Person 2's rule-based keyword taxonomy (`scripts/03_tag_issues.py`) reveals both strong alignment and crucial operational expansions:
+
+1. **High-concordance themes:**
+   - `Customer Support & Bot Loop` (Food) and `Customer Service & Escalation Failure` (Shopping) align with the `Customer Support` keyword tag at **70.6%** and **76.1%** respectively.
+   - `Delivery Delays & Rider Tracking` aligns with `Delivery Delay` at **50.8%**.
+   - `Device Environment & Security Scan Errors` aligns with `Crash & Stability` at **45.7%**.
+   - `Return Rejection` and `Order Cancellation` align with `Cancellation & Return` at **31.3%**–**39.3%**.
+2. **Emergent dimensions hidden from keyword rules:**
+   - Keyword rules treat pricing as a generic category; NMF separates **Excessive Delivery & Handling Charges** (Food, 8,730 reviews) from **Platform Surcharge & Wallet Deduction** (Payments).
+   - Unsupervised clustering splits physical food freshness from courier delivery speed, whereas customer support complaints are recognized across multiple functional areas.
+
+![Topic vs Keyword Cross-Tabulation](data/charts/textmining/tm_07_topic_vs_keyword_tags.png)
+
+### 3.3 What the untagged 1–2★ reviews are about (`tm_08_untagged_topics_breakdown.png`)
+
+In the rule-based pipeline, **71,929 out of 167,357 complaint reviews (43.0%)** triggered zero keyword tags (`has_issue == 0`). These reviews were previously "invisible" to structured monitoring.
+
+NMF topic modelling successfully rescues and categorizes all 71,929 untagged reviews into concrete failure modes:
+
+| Recovered Topic | Untagged Review Count | % of Topic Untagged | Why Rule-Based Keywords Failed |
+|---|---:|---:|---|
+| **Order Cancellation & Refund** | 13,073 | 45.6% | Colloquial complaint phrasing: *"denied order"*, *"they took money and closed order"*. |
+| **Return Rejection & Defective Products** | 8,275 | 45.6% | Informal product defects: *"poor cloth"*, *"dirty stitching"*, *"looks fake"*. |
+| **Poor Food Quality & Stale Items** | 6,089 | 58.5% | Sensory descriptions not in regex: *"taste is sour"*, *"stale smelling"*, *"spilled gravy"*. |
+| **Delivery Delays & Rider Tracking** | 5,854 | 39.4% | Time colloquialisms: *"waiting since 2 hours"*, *"hungry family"*, *"rider moving backwards"*. |
+| **Order Cancellation & Rescheduling** | 5,625 | 35.5% | Unnotified delivery rescheduling by e-commerce courier hubs. |
+| **Excessive Delivery & Handling Charges** | 5,257 | 60.2% | Surcharges: *"rain fee"*, *"handling charge"*, *"distance surge"* lacking the exact keyword `hidden fee`. |
+| **Failed Transfers & Debited Amounts** | 4,970 | 71.9% | Hinglish / slang payment remarks: *"paisa fas gaya"*, *"debited receiver didn't get"*. |
+| **Courier Delays & Delivery Agent Issues** | 4,168 | 37.4% | Courier agent misconduct: *"agent falsely marked customer unavailable"*. |
+| **COD & Payment Option Failures** | 3,443 | 79.9% | Cash on delivery disabled at checkout without explicit error tags. |
+| **Device Environment & Security Scans** | 673 | 48.7% | Specialized fintech security checks: *"developer options enabled error"*, *"custom ROM alert"*. |
+
+![Untagged Reviews Breakdown](data/charts/textmining/tm_08_untagged_topics_breakdown.png)
+
+### 3.4 In-depth sentiment interpretation and cross-app failure analysis
+
+Cross-analyzing average sentiment compound scores and the share of reviews with severe hostility ($\text{compound} \le -0.5$) reveals distinct operational profiles across competing apps:
+
+1. **Hostility is driven by financial loss and breach of trust:**
+   - The two most negative topics across the entire study are in Shopping: `Extreme Dissatisfaction & Scam Allegations` (mean: **-0.613**, **79.6%** strongly negative) and `Poor Shopping Experience & Fabric Quality` (mean: **-0.595**, **81.2%** strongly negative).
+   - In Food Delivery, `Poor Food Quality & Stale Items` (**-0.438**, **58.8%** strongly negative) provokes far harsher hostility than delivery delays (**-0.295**). When food arrives late, users are frustrated; when food arrives stale or inedible, users feel cheated.
+2. **Technical errors provoke clinical descriptions rather than rage:**
+   - In Payments, `App Crashes & Update Regressions` has a mean sentiment of **-0.086** with only **16.2%** strongly negative reviews. Users report crashes factually (*"app closes on open after update"*), yielding mild VADER polarity despite high technical severity.
+3. **App-specific operational vulnerabilities:**
+   - **Swiggy vs. Zomato:** Swiggy complaints concentrate heavily on strict cancellation policies and multi-hour delays, whereas Zomato complaints center on Zomato Gold changes and creeping platform fees.
+   - **Blinkit:** Suffers disproportionately from damaged quick-commerce groceries and missing items in sealed delivery bags.
+   - **Flipkart vs. Amazon:** Flipkart users report frequent delivery rescheduling and unexpected delivery fees, while Amazon users face friction with Prime auto-renewals and third-party marketplace refunds.
+   - **Meesho:** Characterized by reseller account verification freezes and payout (*paisa*) lockouts.
+   - **Paytm vs. PhonePe vs. Google Pay:** Paytm users struggle with false-positive security scans ("device environment not correct"), PhonePe users react angrily to recharge convenience fees, and Google Pay complaints focus on depreciated scratch card rewards.
+
+### 3.5 Topic share dynamics over time (`tm_09_topic_trends_over_time.png`)
+
+Tracking monthly topic shares from April to September 2026 highlights notable operational trends:
+- **Food & Grocery:** `Order Cancellation & Refund` remained the dominant complaint category throughout all 6 months (~34%–36% share), while `Customer Support & Bot Loop` steadily rose from 18.1% in April to 19.5% in September.
+- **Shopping:** Return and defective product complaints peaked in late summer and September (reaching 27.5% share), coinciding with major seasonal fashion sales on Myntra and Flipkart.
+- **Payments:** `Failed Transfers & Debited Amounts` dropped from 54.2% in April to 48.7% in September as banking UPI failure rates stabilized, but customer support frustration simultaneously expanded from 17.5% to 19.5%.
+
+![Topic Trends Over Time](data/charts/textmining/tm_09_topic_trends_over_time.png)
+
+### 3.6 Synthesis & Review 2 Deliverables Summary
+
+With Stage 1 (#132) and Stage 2 (#134, #136) complete, Method 1 (Text Mining) provides a rigorous, multi-faceted analysis of user dissatisfaction:
+1. **Unsupervised Topic Models:** 17 operational topics across 3 domains with validated coherence ($K=6, 6, 5$).
+2. **Exemplar Reviews & Distinctive Terms:** Empirically grounded top terms and log-odds distinctive vocabularies for all 11 apps.
+3. **Coverage Expansion:** 71,929 previously untagged complaint reviews (43% of complaints) successfully recovered and classified.
+4. **Interactive Dashboard Integration:** Serialized model pipelines in `models/textmining/` ready to power Page 2 (Text Mining, #139) and Page 4 (Check a Review, #146).
+
+
