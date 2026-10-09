@@ -19,7 +19,9 @@ PAGES = {
         st.Page("pages/text_mining.py", title="Text mining", icon=":material/topic:"),
     ],
     # Forecasting, update impact and recommendations: st.Page("pages/...", ...) — #140
-    # Check a review:         st.Page("pages/check_review.py", ...)           — #146
+    "Check a review": [
+    st.Page("pages/check_review.py", title="Check a Review", icon=":material/rate_review:"),
+],
 }
 
 page = st.navigation(PAGES)
