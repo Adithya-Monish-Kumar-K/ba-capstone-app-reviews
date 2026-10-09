@@ -65,3 +65,122 @@ That leaves **224 release events**, from 12 (PhonePe) to 38 (Zomato) per app. `f
 | Extra input | `feed_gap` as an exogenous dummy | The late-April dip for five apps |
 
 These are starting points; the orders are chosen in #135 from the ACF/PACF charts and AIC.
+
+---
+
+## 2. ARIMA forecasting with a rolling backtest (#135)
+
+Code: `scripts/19_forecasting.py` (about 1 minute). Tables in `data/timeseries/`, charts `ts_05`–`ts_07` in `data/charts/timeseries/`, numbers in `data/forecasting_summary.json`.
+
+### 2.1 Models
+
+The forecast target is the daily count of 1–2★ reviews per app (`neg_reviews_filled`, 173 days). Three models are fitted at every step so the main model has something to beat:
+
+| Model | What it does | Intervals |
+|---|---|---|
+| **ARIMA / SARIMA** (main) | ARIMA, with seasonal terms at lag 7 (a weekly cycle, i.e. SARIMA) only for the four Food & Grocery apps (Swiggy, Zomato, Blinkit, Domino's), which have a strong weekday pattern; the other seven apps get a plain ARIMA. For Swiggy, Blinkit, Domino's, Flipkart and Amazon the 0/1 `feed_gap` dummy is an extra input (SARIMAX); it is 0 for every forecast day because the gap is in the past | 80% and 95% |
+| **Seasonal naive** (baseline) | Forecast = the count of the same weekday last week | none |
+| **Holt-Winters** (optional comparison) | Exponential smoothing with a damped additive trend and an additive weekly season | none |
+
+Forecasts and interval limits below zero are set to 0, because counts cannot be negative.
+
+### 2.2 How the orders were chosen (`arima_orders.csv`, `arima_candidates.csv`)
+
+1. **d** is fixed from the ADF test of Stage 1: 1 for Zomato and Blinkit, 0 for the rest; **D = 0** everywhere (seasonal strength is below 0.64). A constant is included only when d = 0.
+2. **ACF/PACF propose.** On the (differenced) training series, p goes up to the last PACF lag outside ±1.96/√n among lags 1–3, q up to the last significant ACF lag among 1–3, and a seasonal AR (or MA) term at lag 7 is tried if the PACF (or ACF) is significant at lag 7 **or** the app has a strong weekday effect in Stage 1 (a weekday 15% or more away from the weekly mean: the four food apps, +22% to +38% on Sundays; every other app is below 15%). This gives 6 to 36 candidate orders per app.
+3. **AICc chooses.** Every candidate is fitted and the lowest corrected AIC wins; any order within 2 AICc points of the minimum counts as equally good and the one with the fewest terms is taken. All 378 candidate fits converged, and every candidate with its AICc is in `arima_candidates.csv`.
+4. **No look-ahead.** For the backtest the orders are chosen on the **first 84 days only**; for the final forecast they are chosen again on all 173 days. Both choices are in `arima_orders.csv` (`stage` = `backtest` or `final`).
+
+Final orders (p, d, q)(P, 0, Q)₇:
+
+| Domain | App | Order | Notes |
+|---|---|---|---|
+| Food & Grocery | Swiggy | (0,0,1)(1,0,1) | seasonal AR and MA at lag 7; feed-gap input |
+| | Zomato | (2,1,1)(1,0,1) | differenced once |
+| | Blinkit | (1,1,1)(1,0,1) | differenced once; feed-gap input |
+| | Domino's | (0,0,1)(1,0,1) | seasonal terms because of its +38% Sunday effect; feed-gap input |
+| Shopping | Myntra | (3,0,2) | |
+| | Flipkart | (1,0,1) | strong trend, handled by the AR term; feed-gap input |
+| | Amazon | (1,0,1) | feed-gap input |
+| | Meesho | (0,0,2) | |
+| Payments | Paytm | (2,0,2) | |
+| | PhonePe | (1,0,0) | |
+| | Google Pay | (1,0,0) | |
+
+The four food apps are the only ones with seasonal terms, which matches the Sunday peak found in Stage 1. Shopping and payment apps need only short-memory terms. As a check, forcing seasonal terms onto those seven apps changed their backtest error by less than 1.5 reviews a day (Paytm, PhonePe and Google Pay: no change; Myntra and Meesho slightly worse), so plain ARIMA is enough for them.
+
+### 2.3 Rolling-origin backtest (`backtest_forecasts.csv`, `backtest_summary.csv`, `ts_06_rolling_backtest.png`)
+
+The models are fitted on the first 84 days (12 weeks), forecast the next 28 days, then the origin moves one week forward and every model is refitted: **9 origins** (23 Jun to 18 Aug), each with a 28-day forecast, so 252 forecast days per app and model. Every row of `backtest_forecasts.csv` has the origin, the horizon (1–28 days), the actual count, the forecast and, for ARIMA, the 80% and 95% limits. Stage 4 (#137) uses this table for MASE, residual checks, interval coverage and unusual-day alerts.
+
+![Rolling backtest](data/charts/timeseries/ts_06_rolling_backtest.png)
+
+### 2.4 Comparison with the baseline (`ts_07_backtest_mae_vs_baseline.png`)
+
+Mean absolute error over all 28 forecast days, in reviews per day (lower is better; best per app in bold):
+
+| App | ARIMA | Seasonal naive | Holt-Winters |
+|---|---:|---:|---:|
+| Swiggy | 27.6 | 34.6 | **27.4** |
+| Zomato | 22.8 | 23.9 | **21.5** |
+| Blinkit | 28.8 | 33.8 | **26.8** |
+| Domino's | 15.8 | 18.3 | **14.4** |
+| Myntra | **10.5** | 13.9 | 12.8 |
+| Flipkart | **38.1** | 56.0 | 54.7 |
+| Amazon | **12.9** | 16.9 | 14.5 |
+| Meesho | **13.6** | 19.3 | 15.1 |
+| Paytm | 8.6 | 8.8 | **7.9** |
+| PhonePe | **7.9** | 10.0 | 8.0 |
+| Google Pay | 10.9 | **6.2** | 7.5 |
+
+- **ARIMA beats the seasonal-naive baseline for 10 of 11 apps.** The largest gains are for Flipkart (−32%), Meesho (−30%), Myntra (−24%), Amazon (−24%) and PhonePe (−21%), the apps with a trend or slow-moving level that "same day last week" misses.
+- **It does not beat the baseline for Google Pay.** Google Pay has a low, noisy level with short spikes (mid-May and September) and its level shifts, so a model that returns to the training mean is a poor guide, while last week's value adapts faster. For Google Pay ARIMA forecasts about 28 a day while the actual level over the backtest was about 20.
+- **Holt-Winters is as good as or better than ARIMA for the four Food & Grocery apps and for Paytm** (Domino's: 14.4 against 15.8), and clearly worse for Flipkart and Myntra. ARIMA stays the main model because it is the only one with prediction intervals and because it takes the feed gap as an input.
+- Error grows with the horizon for the trending apps (Flipkart ARIMA 31.8 in days 1–7, 37.1 in days 15–28), but not for apps that are already close to their mean.
+
+The 80% and 95% intervals contained 81% and 93% of the backtest days, close to their nominal levels (a first check only; the formal coverage test is #137).
+
+![Backtest error](data/charts/timeseries/ts_07_backtest_mae_vs_baseline.png)
+
+### 2.5 Forecast for 21 Sep – 18 Oct 2026 (`forecast_daily.csv`, `forecast_weekly.csv`, `ts_05_forecast_next_4_weeks.png`)
+
+The final models are fitted on all 173 days and forecast four Monday–Sunday weeks. `forecast_daily.csv` has the daily forecast of all three models (ARIMA with 80% and 95% limits); `forecast_weekly.csv` has the weekly totals, whose intervals come from 2,000 simulated future paths of the ARIMA model.
+
+Expected number of 1–2★ reviews in the first forecast week (21–27 Sep), with the 80% interval and the average of the last four weeks of data:
+
+| App | Week 1 forecast | 80% interval | Last 4 weeks (weekly average) |
+|---|---:|---|---:|
+| Flipkart | 1,830 | 1,596 – 2,056 | 1,973 |
+| Blinkit | 1,711 | 1,488 – 1,929 | 1,849 |
+| Swiggy | 1,037 | 889 – 1,180 | 973 |
+| Zomato | 977 | 811 – 1,151 | 1,054 |
+| Meesho | 737 | 676 – 801 | 712 |
+| Amazon | 714 | 642 – 786 | 758 |
+| Domino's | 413 | 327 – 495 | 386 |
+| Myntra | 371 | 318 – 424 | 414 |
+| PhonePe | 348 | 270 – 431 | 385 |
+| Google Pay | 192 | 105 – 310 | 187 |
+| Paytm | 136 | 75 – 205 | 348 |
+
+![Forecast](data/charts/timeseries/ts_05_forecast_next_4_weeks.png)
+
+How to read it:
+
+- **Food apps keep their weekly shape**: Zomato, Blinkit, Swiggy and Domino's forecasts peak on Sundays, as the seasonal terms learned (Domino's: about 75 on Sundays against about 50–52 on Tuesdays and Wednesdays).
+- **Shopping and payment apps are nearly flat**: with no seasonality the forecast returns to a level within days, and the interval carries the uncertainty. Flipkart's forecast rises slowly from 252 to 284 a day.
+- **Intervals are wide for noisy apps.** Google Pay's 95% daily interval is about 0–74 for a forecast of 27, and Swiggy's reaches about 250 against a forecast of 130–180, because of the short spikes in the training data. The intervals are an honest statement that single days cannot be predicted well; weekly totals are much better determined.
+- **Paytm is the one forecast to treat with care.** Paytm jumped from about 30 to 80 a day in September and fell back to 25 on 20 Sep. The (2,0,2) model fitted on that shape swings below the long-run mean first (forecast 136 in week 1, −61% against the last four weeks) and then back up. `forecast_weekly.csv` carries `change_vs_last_4_weeks_pct`, and `forecasting_summary.json` lists Paytm under `large_week1_changes`. Treat this app's forecast as unreliable until the September level shift is explained; the forecast-evaluation stage should flag it.
+
+### 2.6 Outputs for the next stages
+
+| Used by | Files |
+|---|---|
+| Forecast evaluation and write-up (#137, #142) | `backtest_forecasts.csv`, `backtest_summary.csv`, `arima_orders.csv`, `arima_candidates.csv` |
+| Dashboard forecasting page and recommendations (#140, #141) | `forecast_daily.csv`, `forecast_weekly.csv`, `forecasting_summary.json` |
+
+### 2.7 Limits
+
+- Only 173 days are available, so there is no yearly pattern and the backtest has just 9 origins; the first origin already needs 84 days.
+- The series are counts of reviews, which depend on app traffic and campaigns that the model does not see. The forecast answers "what if the next weeks look like the recent past", not "what will a campaign do".
+- Level shifts and spikes (Paytm in September, Swiggy in late July) are not predictable by ARIMA; they widen the intervals instead.
+- The forecast does not include release dates. Whether a new version raises the count is the question of the update-impact stage (#138).
