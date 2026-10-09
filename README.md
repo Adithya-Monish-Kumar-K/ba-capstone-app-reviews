@@ -160,7 +160,8 @@ ba-capstone-app-reviews/
 │   ├── 13_model_robustness_checks.py
 │   ├── 14_predict_review.py     # classify new review text with the saved models
 │   ├── 15_time_series_data.py   # Review 2: daily/weekly series, release events, STL, ADF, ACF/PACF
-│   └── 16_text_preprocessing.py # Review 2: cleaned complaint/praise corpora, document-term matrices
+│   ├── 16_text_preprocessing.py # Review 2: cleaned complaint/praise corpora, document-term matrices
+│   └── 19_forecasting.py        # Review 2: ARIMA/SARIMAX forecasts with rolling backtest, baselines
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
@@ -252,6 +253,7 @@ It prints the issue tags, the sentiment scores and each model's probability that
 ```bash
 python scripts/15_time_series_data.py      # time-series data preparation (~10 s)
 python scripts/16_text_preprocessing.py    # text-mining data preparation (~3 min; downloads NLTK WordNet once)
+python scripts/19_forecasting.py           # ARIMA forecasts and rolling backtest (~1 min; needs scripts/15 first)
 streamlit run dashboard/app.py             # interactive dashboard
 ```
 

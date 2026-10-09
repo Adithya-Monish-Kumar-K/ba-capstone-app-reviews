@@ -1,0 +1,133 @@
+app_name,domain,model,horizon_band,mae,rmse,mean_actual,forecasts,origins,mae_pct_of_mean
+Amazon,Shopping,ARIMA,1-7 days,12.562,16.855,108.095,63,9,11.621
+Amazon,Shopping,ARIMA,8-14 days,13.652,17.691,109.937,63,9,12.419
+Amazon,Shopping,ARIMA,15-28 days,12.642,16.557,109.333,126,9,11.563
+Amazon,Shopping,ARIMA,all (1-28 days),12.875,16.921,109.175,252,9,11.793
+Amazon,Shopping,Holt-Winters,1-7 days,12.215,16.374,108.095,63,9,11.3
+Amazon,Shopping,Holt-Winters,8-14 days,15.731,19.651,109.937,63,9,14.309
+Amazon,Shopping,Holt-Winters,15-28 days,14.975,18.174,109.333,126,9,13.697
+Amazon,Shopping,Holt-Winters,all (1-28 days),14.474,18.131,109.175,252,9,13.258
+Amazon,Shopping,Seasonal naive,1-7 days,16.508,19.893,108.095,63,9,15.272
+Amazon,Shopping,Seasonal naive,8-14 days,17.492,21.78,109.937,63,9,15.911
+Amazon,Shopping,Seasonal naive,15-28 days,16.889,20.388,109.333,126,9,15.447
+Amazon,Shopping,Seasonal naive,all (1-28 days),16.944,20.624,109.175,252,9,15.521
+Blinkit,Food & Grocery,ARIMA,1-7 days,21.842,29.57,241.238,63,9,9.054
+Blinkit,Food & Grocery,ARIMA,8-14 days,29.049,38.776,247.841,63,9,11.721
+Blinkit,Food & Grocery,ARIMA,15-28 days,32.195,42.363,247.81,126,9,12.992
+Blinkit,Food & Grocery,ARIMA,all (1-28 days),28.82,38.624,246.175,252,9,11.707
+Blinkit,Food & Grocery,Holt-Winters,1-7 days,22.272,30.228,241.238,63,9,9.232
+Blinkit,Food & Grocery,Holt-Winters,8-14 days,27.183,36.571,247.841,63,9,10.968
+Blinkit,Food & Grocery,Holt-Winters,15-28 days,28.903,39.3,247.81,126,9,11.664
+Blinkit,Food & Grocery,Holt-Winters,all (1-28 days),26.815,36.538,246.175,252,9,10.893
+Blinkit,Food & Grocery,Seasonal naive,1-7 days,27.524,34.28,241.238,63,9,11.409
+Blinkit,Food & Grocery,Seasonal naive,8-14 days,35.46,46.075,247.841,63,9,14.308
+Blinkit,Food & Grocery,Seasonal naive,15-28 days,36.143,48.24,247.81,126,9,14.585
+Blinkit,Food & Grocery,Seasonal naive,all (1-28 days),33.817,44.588,246.175,252,9,13.737
+Domino's,Food & Grocery,ARIMA,1-7 days,14.495,23.017,56.556,63,9,25.63
+Domino's,Food & Grocery,ARIMA,8-14 days,15.442,24.809,58.016,63,9,26.616
+Domino's,Food & Grocery,ARIMA,15-28 days,16.6,25.771,57.143,126,9,29.05
+Domino's,Food & Grocery,ARIMA,all (1-28 days),15.784,24.867,57.214,252,9,27.588
+Domino's,Food & Grocery,Holt-Winters,1-7 days,13.114,22.974,56.556,63,9,23.188
+Domino's,Food & Grocery,Holt-Winters,8-14 days,13.445,23.291,58.016,63,9,23.174
+Domino's,Food & Grocery,Holt-Winters,15-28 days,15.544,25.992,57.143,126,9,27.201
+Domino's,Food & Grocery,Holt-Winters,all (1-28 days),14.411,24.604,57.214,252,9,25.189
+Domino's,Food & Grocery,Seasonal naive,1-7 days,17.111,31.046,56.556,63,9,30.255
+Domino's,Food & Grocery,Seasonal naive,8-14 days,17.683,29.411,58.016,63,9,30.479
+Domino's,Food & Grocery,Seasonal naive,15-28 days,19.286,33.218,57.143,126,9,33.75
+Domino's,Food & Grocery,Seasonal naive,all (1-28 days),18.341,31.764,57.214,252,9,32.057
+Flipkart,Shopping,ARIMA,1-7 days,31.802,45.548,309.984,63,9,10.259
+Flipkart,Shopping,ARIMA,8-14 days,46.56,58.06,313.492,63,9,14.852
+Flipkart,Shopping,ARIMA,15-28 days,37.077,46.36,304.786,126,9,12.165
+Flipkart,Shopping,ARIMA,all (1-28 days),38.129,49.356,308.262,252,9,12.369
+Flipkart,Shopping,Holt-Winters,1-7 days,32.007,43.44,309.984,63,9,10.325
+Flipkart,Shopping,Holt-Winters,8-14 days,61.521,72.358,313.492,63,9,19.625
+Flipkart,Shopping,Holt-Winters,15-28 days,62.684,71.192,304.786,126,9,20.566
+Flipkart,Shopping,Holt-Winters,all (1-28 days),54.724,65.687,308.262,252,9,17.752
+Flipkart,Shopping,Seasonal naive,1-7 days,43.381,56.97,309.984,63,9,13.995
+Flipkart,Shopping,Seasonal naive,8-14 days,66.19,74.99,313.492,63,9,21.114
+Flipkart,Shopping,Seasonal naive,15-28 days,57.23,67.336,304.786,126,9,18.777
+Flipkart,Shopping,Seasonal naive,all (1-28 days),56.008,66.965,308.262,252,9,18.169
+Google Pay,Payments,ARIMA,1-7 days,10.262,11.245,19.444,63,9,52.776
+Google Pay,Payments,ARIMA,8-14 days,11.214,12.031,19.238,63,9,58.291
+Google Pay,Payments,ARIMA,15-28 days,11.104,12.009,20.944,126,9,53.018
+Google Pay,Payments,ARIMA,all (1-28 days),10.921,11.828,20.143,252,9,54.219
+Google Pay,Payments,Holt-Winters,1-7 days,6.958,9.644,19.444,63,9,35.783
+Google Pay,Payments,Holt-Winters,8-14 days,6.804,9.535,19.238,63,9,35.37
+Google Pay,Payments,Holt-Winters,15-28 days,8.075,11.474,20.944,126,9,38.555
+Google Pay,Payments,Holt-Winters,all (1-28 days),7.478,10.574,20.143,252,9,37.126
+Google Pay,Payments,Seasonal naive,1-7 days,5.444,7.186,19.444,63,9,28.0
+Google Pay,Payments,Seasonal naive,8-14 days,5.683,7.27,19.238,63,9,29.538
+Google Pay,Payments,Seasonal naive,15-28 days,6.817,8.92,20.944,126,9,32.55
+Google Pay,Payments,Seasonal naive,all (1-28 days),6.19,8.118,20.143,252,9,30.733
+Meesho,Shopping,ARIMA,1-7 days,13.908,17.714,109.063,63,9,12.752
+Meesho,Shopping,ARIMA,8-14 days,13.685,17.671,107.746,63,9,12.701
+Meesho,Shopping,ARIMA,15-28 days,13.465,17.743,106.032,126,9,12.699
+Meesho,Shopping,ARIMA,all (1-28 days),13.631,17.718,107.218,252,9,12.713
+Meesho,Shopping,Holt-Winters,1-7 days,14.685,18.563,109.063,63,9,13.465
+Meesho,Shopping,Holt-Winters,8-14 days,16.148,20.196,107.746,63,9,14.987
+Meesho,Shopping,Holt-Winters,15-28 days,14.729,18.661,106.032,126,9,13.891
+Meesho,Shopping,Holt-Winters,all (1-28 days),15.073,19.033,107.218,252,9,14.058
+Meesho,Shopping,Seasonal naive,1-7 days,18.238,21.678,109.063,63,9,16.722
+Meesho,Shopping,Seasonal naive,8-14 days,19.397,24.178,107.746,63,9,18.002
+Meesho,Shopping,Seasonal naive,15-28 days,19.778,24.536,106.032,126,9,18.653
+Meesho,Shopping,Seasonal naive,all (1-28 days),19.298,23.762,107.218,252,9,17.998
+Myntra,Shopping,ARIMA,1-7 days,9.088,12.278,49.429,63,9,18.385
+Myntra,Shopping,ARIMA,8-14 days,11.218,15.254,51.19,63,9,21.913
+Myntra,Shopping,ARIMA,15-28 days,10.793,15.112,54.056,126,9,19.966
+Myntra,Shopping,ARIMA,all (1-28 days),10.473,14.493,52.183,252,9,20.069
+Myntra,Shopping,Holt-Winters,1-7 days,9.851,12.767,49.429,63,9,19.93
+Myntra,Shopping,Holt-Winters,8-14 days,14.102,17.638,51.19,63,9,27.549
+Myntra,Shopping,Holt-Winters,15-28 days,13.721,18.134,54.056,126,9,25.383
+Myntra,Shopping,Holt-Winters,all (1-28 days),12.849,16.821,52.183,252,9,24.623
+Myntra,Shopping,Seasonal naive,1-7 days,12.889,16.126,49.429,63,9,26.076
+Myntra,Shopping,Seasonal naive,8-14 days,14.556,18.707,51.19,63,9,28.434
+Myntra,Shopping,Seasonal naive,15-28 days,14.103,18.341,54.056,126,9,26.09
+Myntra,Shopping,Seasonal naive,all (1-28 days),13.913,17.908,52.183,252,9,26.662
+Paytm,Payments,ARIMA,1-7 days,5.574,6.878,31.984,63,9,17.426
+Paytm,Payments,ARIMA,8-14 days,6.674,7.642,31.794,63,9,20.99
+Paytm,Payments,ARIMA,15-28 days,10.989,14.628,36.54,126,9,30.075
+Paytm,Payments,ARIMA,all (1-28 days),8.556,11.551,34.214,252,9,25.008
+Paytm,Payments,Holt-Winters,1-7 days,5.298,6.611,31.984,63,9,16.563
+Paytm,Payments,Holt-Winters,8-14 days,5.366,6.505,31.794,63,9,16.876
+Paytm,Payments,Holt-Winters,15-28 days,10.472,15.994,36.54,126,9,28.66
+Paytm,Payments,Holt-Winters,all (1-28 days),7.902,12.224,34.214,252,9,23.096
+Paytm,Payments,Seasonal naive,1-7 days,5.73,7.694,31.984,63,9,17.916
+Paytm,Payments,Seasonal naive,8-14 days,6.46,8.245,31.794,63,9,20.32
+Paytm,Payments,Seasonal naive,15-28 days,11.492,16.986,36.54,126,9,31.451
+Paytm,Payments,Seasonal naive,all (1-28 days),8.794,13.269,34.214,252,9,25.702
+PhonePe,Payments,ARIMA,1-7 days,6.588,8.371,46.635,63,9,14.126
+PhonePe,Payments,ARIMA,8-14 days,8.004,9.764,45.81,63,9,17.471
+PhonePe,Payments,ARIMA,15-28 days,8.459,10.174,45.19,126,9,18.718
+PhonePe,Payments,ARIMA,all (1-28 days),7.877,9.649,45.706,252,9,17.234
+PhonePe,Payments,Holt-Winters,1-7 days,7.19,8.859,46.635,63,9,15.418
+PhonePe,Payments,Holt-Winters,8-14 days,8.548,10.266,45.81,63,9,18.66
+PhonePe,Payments,Holt-Winters,15-28 days,8.143,10.651,45.19,126,9,18.018
+PhonePe,Payments,Holt-Winters,all (1-28 days),8.006,10.134,45.706,252,9,17.516
+PhonePe,Payments,Seasonal naive,1-7 days,9.19,12.175,46.635,63,9,19.707
+PhonePe,Payments,Seasonal naive,8-14 days,10.841,13.654,45.81,63,9,23.666
+PhonePe,Payments,Seasonal naive,15-28 days,9.984,13.428,45.19,126,9,22.093
+PhonePe,Payments,Seasonal naive,all (1-28 days),10.0,13.184,45.706,252,9,21.879
+Swiggy,Food & Grocery,ARIMA,1-7 days,27.922,49.891,148.238,63,9,18.836
+Swiggy,Food & Grocery,ARIMA,8-14 days,27.832,49.759,148.286,63,9,18.769
+Swiggy,Food & Grocery,ARIMA,15-28 days,27.326,48.801,148.135,126,9,18.447
+Swiggy,Food & Grocery,ARIMA,all (1-28 days),27.601,49.315,148.198,252,9,18.625
+Swiggy,Food & Grocery,Holt-Winters,1-7 days,27.316,52.184,148.238,63,9,18.427
+Swiggy,Food & Grocery,Holt-Winters,8-14 days,26.636,50.437,148.286,63,9,17.962
+Swiggy,Food & Grocery,Holt-Winters,15-28 days,27.736,50.509,148.135,126,9,18.723
+Swiggy,Food & Grocery,Holt-Winters,all (1-28 days),27.356,50.915,148.198,252,9,18.459
+Swiggy,Food & Grocery,Seasonal naive,1-7 days,34.27,69.719,148.238,63,9,23.118
+Swiggy,Food & Grocery,Seasonal naive,8-14 days,34.032,67.902,148.286,63,9,22.95
+Swiggy,Food & Grocery,Seasonal naive,15-28 days,35.119,68.216,148.135,126,9,23.707
+Swiggy,Food & Grocery,Seasonal naive,all (1-28 days),34.635,68.517,148.198,252,9,23.371
+Zomato,Food & Grocery,ARIMA,1-7 days,17.833,23.126,157.992,63,9,11.287
+Zomato,Food & Grocery,ARIMA,8-14 days,23.333,29.765,157.341,63,9,14.829
+Zomato,Food & Grocery,ARIMA,15-28 days,24.977,33.246,157.373,126,9,15.871
+Zomato,Food & Grocery,ARIMA,all (1-28 days),22.78,30.131,157.52,252,9,14.462
+Zomato,Food & Grocery,Holt-Winters,1-7 days,17.75,22.86,157.992,63,9,11.235
+Zomato,Food & Grocery,Holt-Winters,8-14 days,22.151,28.594,157.341,63,9,14.078
+Zomato,Food & Grocery,Holt-Winters,15-28 days,23.008,31.092,157.373,126,9,14.62
+Zomato,Food & Grocery,Holt-Winters,all (1-28 days),21.479,28.608,157.52,252,9,13.636
+Zomato,Food & Grocery,Seasonal naive,1-7 days,22.873,31.23,157.992,63,9,14.477
+Zomato,Food & Grocery,Seasonal naive,8-14 days,24.667,33.244,157.341,63,9,15.677
+Zomato,Food & Grocery,Seasonal naive,15-28 days,24.024,33.822,157.373,126,9,15.266
+Zomato,Food & Grocery,Seasonal naive,all (1-28 days),23.897,33.046,157.52,252,9,15.171

@@ -1,0 +1,232 @@
+{
+  "series_modelled": "daily count of 1-2 star reviews per app (neg_reviews_filled)",
+  "train_window": [
+    "2026-04-01",
+    "2026-09-20"
+  ],
+  "days": 173,
+  "backtest": {
+    "initial_train_days": 84,
+    "horizon_days": 28,
+    "step_days": 7,
+    "origins": 9,
+    "forecasts_per_app_and_model": 252,
+    "orders_chosen_on": "first 84 days only (no future data)"
+  },
+  "final_forecast": {
+    "from": "2026-09-21",
+    "to": "2026-10-18",
+    "days": 28,
+    "intervals": "80% and 95%; weekly totals from 2,000 simulated paths"
+  },
+  "order_selection": "ACF/PACF of the training series propose the orders (p, q up to 3; seasonal AR/MA if significant at lag 7 or the app has a strong weekday effect); lowest AICc wins (within 2 points the fewest terms); d from the ADF test",
+  "models": [
+    "ARIMA",
+    "Seasonal naive",
+    "Holt-Winters"
+  ],
+  "arima_beats_seasonal_naive_on_mae": {
+    "apps": 10,
+    "of": 11,
+    "does_not_beat": [
+      "Google Pay"
+    ]
+  },
+  "interval_coverage_check": {
+    "nominal_80": 0.814,
+    "nominal_95": 0.927,
+    "note": "share of backtest days inside the interval, pooled over apps; the full check is in #137"
+  },
+  "large_week1_changes": {
+    "rule": "week-1 forecast differs from the average of the last 4 weeks by more than 30%; read these forecasts with care",
+    "apps": {
+      "Paytm": -61.0
+    }
+  },
+  "mae_all_horizons": {
+    "Swiggy": {
+      "ARIMA": 27.6,
+      "Holt-Winters": 27.36,
+      "Seasonal naive": 34.64
+    },
+    "Zomato": {
+      "ARIMA": 22.78,
+      "Holt-Winters": 21.48,
+      "Seasonal naive": 23.9
+    },
+    "Blinkit": {
+      "ARIMA": 28.82,
+      "Holt-Winters": 26.82,
+      "Seasonal naive": 33.82
+    },
+    "Domino's": {
+      "ARIMA": 15.78,
+      "Holt-Winters": 14.41,
+      "Seasonal naive": 18.34
+    },
+    "Myntra": {
+      "ARIMA": 10.47,
+      "Holt-Winters": 12.85,
+      "Seasonal naive": 13.91
+    },
+    "Flipkart": {
+      "ARIMA": 38.13,
+      "Holt-Winters": 54.72,
+      "Seasonal naive": 56.01
+    },
+    "Amazon": {
+      "ARIMA": 12.88,
+      "Holt-Winters": 14.47,
+      "Seasonal naive": 16.94
+    },
+    "Meesho": {
+      "ARIMA": 13.63,
+      "Holt-Winters": 15.07,
+      "Seasonal naive": 19.3
+    },
+    "Paytm": {
+      "ARIMA": 8.56,
+      "Holt-Winters": 7.9,
+      "Seasonal naive": 8.79
+    },
+    "PhonePe": {
+      "ARIMA": 7.88,
+      "Holt-Winters": 8.01,
+      "Seasonal naive": 10.0
+    },
+    "Google Pay": {
+      "ARIMA": 10.92,
+      "Holt-Winters": 7.48,
+      "Seasonal naive": 6.19
+    }
+  },
+  "orders": {
+    "Swiggy": {
+      "p": 0,
+      "d": 0,
+      "q": 1,
+      "P": 1,
+      "D": 0,
+      "Q": 1,
+      "season": 7,
+      "feed_gap_input": true
+    },
+    "Zomato": {
+      "p": 2,
+      "d": 1,
+      "q": 1,
+      "P": 1,
+      "D": 0,
+      "Q": 1,
+      "season": 7,
+      "feed_gap_input": false
+    },
+    "Blinkit": {
+      "p": 1,
+      "d": 1,
+      "q": 1,
+      "P": 1,
+      "D": 0,
+      "Q": 1,
+      "season": 7,
+      "feed_gap_input": true
+    },
+    "Domino's": {
+      "p": 0,
+      "d": 0,
+      "q": 1,
+      "P": 1,
+      "D": 0,
+      "Q": 1,
+      "season": 7,
+      "feed_gap_input": true
+    },
+    "Myntra": {
+      "p": 3,
+      "d": 0,
+      "q": 2,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": false
+    },
+    "Flipkart": {
+      "p": 1,
+      "d": 0,
+      "q": 1,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": true
+    },
+    "Amazon": {
+      "p": 1,
+      "d": 0,
+      "q": 1,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": true
+    },
+    "Meesho": {
+      "p": 0,
+      "d": 0,
+      "q": 2,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": false
+    },
+    "Paytm": {
+      "p": 2,
+      "d": 0,
+      "q": 2,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": false
+    },
+    "PhonePe": {
+      "p": 1,
+      "d": 0,
+      "q": 0,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": false
+    },
+    "Google Pay": {
+      "p": 1,
+      "d": 0,
+      "q": 0,
+      "P": 0,
+      "D": 0,
+      "Q": 0,
+      "season": 7,
+      "feed_gap_input": false
+    }
+  },
+  "charts": [
+    {
+      "file": "data/charts/timeseries/ts_05_forecast_next_4_weeks.png",
+      "title": "ARIMA forecast of daily 1\u20132\u2605 reviews, 21 Sep \u2013 18 Oct 2026",
+      "subtitle": "Line = last 10 weeks of actual counts, then the ARIMA forecast (weekly seasonal terms for the four Food & Grocery apps only). Dark band = 80% and light band = 95% prediction interval. Dotted line = last day of data (20 Sep). The interval widens with the horizon; food apps keep their Sunday peak."
+    },
+    {
+      "file": "data/charts/timeseries/ts_06_rolling_backtest.png",
+      "title": "Rolling-origin backtest: each coloured line is one 28-day forecast made from a different week",
+      "subtitle": "Black = actual daily 1\u20132\u2605 reviews. 9 origins one week apart, the first after 84 days (23 Jun). Each forecast uses only data up to its origin; the orders are fixed from the first 84 days."
+    },
+    {
+      "file": "data/charts/timeseries/ts_07_backtest_mae_vs_baseline.png",
+      "title": "Backtest error of ARIMA against the seasonal-naive baseline and Holt-Winters",
+      "subtitle": "Average over all 28 forecast days and all backtest origins. Error is relative to each app's level so apps of different size can be compared. Full evaluation (MASE, residual checks, interval coverage) is in the forecast-evaluation stage."
+    }
+  ]
+}

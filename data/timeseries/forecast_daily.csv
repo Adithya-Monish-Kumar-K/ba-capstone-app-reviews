@@ -1,0 +1,925 @@
+app_name,model,day,horizon,forecast,lower_80,upper_80,lower_95,upper_95
+Swiggy,ARIMA,2026-09-21,1,128.51,88.2,168.81,66.86,190.15
+Swiggy,ARIMA,2026-09-22,2,133.59,89.63,177.54,66.36,200.81
+Swiggy,ARIMA,2026-09-23,3,141.33,97.38,185.28,74.11,208.55
+Swiggy,ARIMA,2026-09-24,4,139.17,95.22,183.12,71.95,206.39
+Swiggy,ARIMA,2026-09-25,5,160.15,116.2,204.11,92.93,227.37
+Swiggy,ARIMA,2026-09-26,6,154.78,110.83,198.74,87.56,222.0
+Swiggy,ARIMA,2026-09-27,7,179.79,135.84,223.74,112.57,247.01
+Swiggy,ARIMA,2026-09-28,8,131.95,87.87,176.02,64.54,199.36
+Swiggy,ARIMA,2026-09-29,9,133.76,89.66,177.86,66.32,201.2
+Swiggy,ARIMA,2026-09-30,10,141.43,97.34,185.53,74.0,208.87
+Swiggy,ARIMA,2026-10-01,11,139.29,95.2,183.39,71.86,206.73
+Swiggy,ARIMA,2026-10-02,12,160.09,115.99,204.18,92.65,227.52
+Swiggy,ARIMA,2026-10-03,13,154.76,110.67,198.86,87.33,222.2
+Swiggy,ARIMA,2026-10-04,14,179.54,135.45,223.63,112.11,246.98
+Swiggy,ARIMA,2026-10-05,15,132.14,87.92,176.35,64.52,199.76
+Swiggy,ARIMA,2026-10-06,16,133.94,89.7,178.17,66.28,201.59
+Swiggy,ARIMA,2026-10-07,17,141.54,97.3,185.77,73.89,209.18
+Swiggy,ARIMA,2026-10-08,18,139.41,95.18,183.65,71.77,207.06
+Swiggy,ARIMA,2026-10-09,19,160.02,115.79,204.25,92.37,227.66
+Swiggy,ARIMA,2026-10-10,20,154.74,110.51,198.98,87.1,222.39
+Swiggy,ARIMA,2026-10-11,21,179.29,135.06,223.53,111.65,246.94
+Swiggy,ARIMA,2026-10-12,22,132.33,87.98,176.68,64.5,200.15
+Swiggy,ARIMA,2026-10-13,23,134.11,89.74,178.48,66.25,201.97
+Swiggy,ARIMA,2026-10-14,24,141.64,97.27,186.0,73.78,209.49
+Swiggy,ARIMA,2026-10-15,25,139.54,95.17,183.9,71.68,207.39
+Swiggy,ARIMA,2026-10-16,26,159.95,115.58,204.32,92.1,227.8
+Swiggy,ARIMA,2026-10-17,27,154.73,110.36,199.09,86.87,222.58
+Swiggy,ARIMA,2026-10-18,28,179.05,134.68,223.42,111.2,246.9
+Swiggy,Seasonal naive,2026-09-21,1,147.0,,,,
+Swiggy,Seasonal naive,2026-09-22,2,132.0,,,,
+Swiggy,Seasonal naive,2026-09-23,3,133.0,,,,
+Swiggy,Seasonal naive,2026-09-24,4,124.0,,,,
+Swiggy,Seasonal naive,2026-09-25,5,129.0,,,,
+Swiggy,Seasonal naive,2026-09-26,6,124.0,,,,
+Swiggy,Seasonal naive,2026-09-27,7,164.0,,,,
+Swiggy,Seasonal naive,2026-09-28,8,147.0,,,,
+Swiggy,Seasonal naive,2026-09-29,9,132.0,,,,
+Swiggy,Seasonal naive,2026-09-30,10,133.0,,,,
+Swiggy,Seasonal naive,2026-10-01,11,124.0,,,,
+Swiggy,Seasonal naive,2026-10-02,12,129.0,,,,
+Swiggy,Seasonal naive,2026-10-03,13,124.0,,,,
+Swiggy,Seasonal naive,2026-10-04,14,164.0,,,,
+Swiggy,Seasonal naive,2026-10-05,15,147.0,,,,
+Swiggy,Seasonal naive,2026-10-06,16,132.0,,,,
+Swiggy,Seasonal naive,2026-10-07,17,133.0,,,,
+Swiggy,Seasonal naive,2026-10-08,18,124.0,,,,
+Swiggy,Seasonal naive,2026-10-09,19,129.0,,,,
+Swiggy,Seasonal naive,2026-10-10,20,124.0,,,,
+Swiggy,Seasonal naive,2026-10-11,21,164.0,,,,
+Swiggy,Seasonal naive,2026-10-12,22,147.0,,,,
+Swiggy,Seasonal naive,2026-10-13,23,132.0,,,,
+Swiggy,Seasonal naive,2026-10-14,24,133.0,,,,
+Swiggy,Seasonal naive,2026-10-15,25,124.0,,,,
+Swiggy,Seasonal naive,2026-10-16,26,129.0,,,,
+Swiggy,Seasonal naive,2026-10-17,27,124.0,,,,
+Swiggy,Seasonal naive,2026-10-18,28,164.0,,,,
+Swiggy,Holt-Winters,2026-09-21,1,113.0,,,,
+Swiggy,Holt-Winters,2026-09-22,2,110.92,,,,
+Swiggy,Holt-Winters,2026-09-23,3,124.06,,,,
+Swiggy,Holt-Winters,2026-09-24,4,124.36,,,,
+Swiggy,Holt-Winters,2026-09-25,5,144.56,,,,
+Swiggy,Holt-Winters,2026-09-26,6,138.78,,,,
+Swiggy,Holt-Winters,2026-09-27,7,171.52,,,,
+Swiggy,Holt-Winters,2026-09-28,8,112.64,,,,
+Swiggy,Holt-Winters,2026-09-29,9,110.56,,,,
+Swiggy,Holt-Winters,2026-09-30,10,123.7,,,,
+Swiggy,Holt-Winters,2026-10-01,11,124.0,,,,
+Swiggy,Holt-Winters,2026-10-02,12,144.2,,,,
+Swiggy,Holt-Winters,2026-10-03,13,138.42,,,,
+Swiggy,Holt-Winters,2026-10-04,14,171.17,,,,
+Swiggy,Holt-Winters,2026-10-05,15,112.28,,,,
+Swiggy,Holt-Winters,2026-10-06,16,110.2,,,,
+Swiggy,Holt-Winters,2026-10-07,17,123.35,,,,
+Swiggy,Holt-Winters,2026-10-08,18,123.65,,,,
+Swiggy,Holt-Winters,2026-10-09,19,143.86,,,,
+Swiggy,Holt-Winters,2026-10-10,20,138.08,,,,
+Swiggy,Holt-Winters,2026-10-11,21,170.83,,,,
+Swiggy,Holt-Winters,2026-10-12,22,111.94,,,,
+Swiggy,Holt-Winters,2026-10-13,23,109.86,,,,
+Swiggy,Holt-Winters,2026-10-14,24,123.01,,,,
+Swiggy,Holt-Winters,2026-10-15,25,123.31,,,,
+Swiggy,Holt-Winters,2026-10-16,26,143.52,,,,
+Swiggy,Holt-Winters,2026-10-17,27,137.74,,,,
+Swiggy,Holt-Winters,2026-10-18,28,170.49,,,,
+Zomato,ARIMA,2026-09-21,1,115.32,84.4,146.24,68.04,162.61
+Zomato,ARIMA,2026-09-22,2,114.59,81.44,147.75,63.89,165.3
+Zomato,ARIMA,2026-09-23,3,125.76,89.65,161.86,70.54,180.97
+Zomato,ARIMA,2026-09-24,4,124.03,86.75,161.31,67.02,181.04
+Zomato,ARIMA,2026-09-25,5,148.21,110.07,186.35,89.88,206.55
+Zomato,ARIMA,2026-09-26,6,164.63,126.01,203.25,105.56,223.69
+Zomato,ARIMA,2026-09-27,7,184.52,145.6,223.45,124.99,244.06
+Zomato,ARIMA,2026-09-28,8,135.31,95.46,175.15,74.36,196.25
+Zomato,ARIMA,2026-09-29,9,131.21,91.07,171.35,69.82,192.6
+Zomato,ARIMA,2026-09-30,10,138.42,98.02,178.82,76.63,200.21
+Zomato,ARIMA,2026-10-01,11,134.2,93.66,174.73,72.2,196.19
+Zomato,ARIMA,2026-10-02,12,155.91,115.28,196.54,93.77,218.05
+Zomato,ARIMA,2026-10-03,13,170.5,129.82,211.19,108.28,232.73
+Zomato,ARIMA,2026-10-04,14,188.85,148.13,229.58,126.57,251.13
+Zomato,ARIMA,2026-10-05,15,139.24,98.08,180.41,76.28,202.2
+Zomato,ARIMA,2026-10-06,16,134.41,93.14,175.68,71.29,197.52
+Zomato,ARIMA,2026-10-07,17,140.91,99.53,182.29,77.62,204.2
+Zomato,ARIMA,2026-10-08,18,136.25,94.81,177.69,72.88,199.62
+Zomato,ARIMA,2026-10-09,19,157.31,115.84,198.79,93.88,220.75
+Zomato,ARIMA,2026-10-10,20,171.42,129.92,212.92,107.95,234.89
+Zomato,ARIMA,2026-10-11,21,189.31,147.79,230.83,125.82,252.81
+Zomato,ARIMA,2026-10-12,22,140.14,98.25,182.02,76.08,204.19
+Zomato,ARIMA,2026-10-13,23,135.22,93.26,177.18,71.04,199.39
+Zomato,ARIMA,2026-10-14,24,141.52,99.47,183.58,77.21,205.84
+Zomato,ARIMA,2026-10-15,25,136.84,94.74,178.93,72.45,201.22
+Zomato,ARIMA,2026-10-16,26,157.57,115.44,199.7,93.14,222.0
+Zomato,ARIMA,2026-10-17,27,171.45,129.3,213.6,106.99,235.91
+Zomato,ARIMA,2026-10-18,28,189.07,146.91,231.23,124.59,253.55
+Zomato,Seasonal naive,2026-09-21,1,167.0,,,,
+Zomato,Seasonal naive,2026-09-22,2,124.0,,,,
+Zomato,Seasonal naive,2026-09-23,3,117.0,,,,
+Zomato,Seasonal naive,2026-09-24,4,120.0,,,,
+Zomato,Seasonal naive,2026-09-25,5,125.0,,,,
+Zomato,Seasonal naive,2026-09-26,6,136.0,,,,
+Zomato,Seasonal naive,2026-09-27,7,157.0,,,,
+Zomato,Seasonal naive,2026-09-28,8,167.0,,,,
+Zomato,Seasonal naive,2026-09-29,9,124.0,,,,
+Zomato,Seasonal naive,2026-09-30,10,117.0,,,,
+Zomato,Seasonal naive,2026-10-01,11,120.0,,,,
+Zomato,Seasonal naive,2026-10-02,12,125.0,,,,
+Zomato,Seasonal naive,2026-10-03,13,136.0,,,,
+Zomato,Seasonal naive,2026-10-04,14,157.0,,,,
+Zomato,Seasonal naive,2026-10-05,15,167.0,,,,
+Zomato,Seasonal naive,2026-10-06,16,124.0,,,,
+Zomato,Seasonal naive,2026-10-07,17,117.0,,,,
+Zomato,Seasonal naive,2026-10-08,18,120.0,,,,
+Zomato,Seasonal naive,2026-10-09,19,125.0,,,,
+Zomato,Seasonal naive,2026-10-10,20,136.0,,,,
+Zomato,Seasonal naive,2026-10-11,21,157.0,,,,
+Zomato,Seasonal naive,2026-10-12,22,167.0,,,,
+Zomato,Seasonal naive,2026-10-13,23,124.0,,,,
+Zomato,Seasonal naive,2026-10-14,24,117.0,,,,
+Zomato,Seasonal naive,2026-10-15,25,120.0,,,,
+Zomato,Seasonal naive,2026-10-16,26,125.0,,,,
+Zomato,Seasonal naive,2026-10-17,27,136.0,,,,
+Zomato,Seasonal naive,2026-10-18,28,157.0,,,,
+Zomato,Holt-Winters,2026-09-21,1,102.54,,,,
+Zomato,Holt-Winters,2026-09-22,2,103.44,,,,
+Zomato,Holt-Winters,2026-09-23,3,110.01,,,,
+Zomato,Holt-Winters,2026-09-24,4,102.17,,,,
+Zomato,Holt-Winters,2026-09-25,5,123.0,,,,
+Zomato,Holt-Winters,2026-09-26,6,131.11,,,,
+Zomato,Holt-Winters,2026-09-27,7,165.09,,,,
+Zomato,Holt-Winters,2026-09-28,8,101.63,,,,
+Zomato,Holt-Winters,2026-09-29,9,102.53,,,,
+Zomato,Holt-Winters,2026-09-30,10,109.11,,,,
+Zomato,Holt-Winters,2026-10-01,11,101.27,,,,
+Zomato,Holt-Winters,2026-10-02,12,122.1,,,,
+Zomato,Holt-Winters,2026-10-03,13,130.22,,,,
+Zomato,Holt-Winters,2026-10-04,14,164.2,,,,
+Zomato,Holt-Winters,2026-10-05,15,100.75,,,,
+Zomato,Holt-Winters,2026-10-06,16,101.65,,,,
+Zomato,Holt-Winters,2026-10-07,17,108.24,,,,
+Zomato,Holt-Winters,2026-10-08,18,100.4,,,,
+Zomato,Holt-Winters,2026-10-09,19,121.24,,,,
+Zomato,Holt-Winters,2026-10-10,20,129.37,,,,
+Zomato,Holt-Winters,2026-10-11,21,163.35,,,,
+Zomato,Holt-Winters,2026-10-12,22,99.9,,,,
+Zomato,Holt-Winters,2026-10-13,23,100.81,,,,
+Zomato,Holt-Winters,2026-10-14,24,107.4,,,,
+Zomato,Holt-Winters,2026-10-15,25,99.57,,,,
+Zomato,Holt-Winters,2026-10-16,26,120.41,,,,
+Zomato,Holt-Winters,2026-10-17,27,128.54,,,,
+Zomato,Holt-Winters,2026-10-18,28,162.53,,,,
+Blinkit,ARIMA,2026-09-21,1,226.45,187.56,265.33,166.98,285.92
+Blinkit,ARIMA,2026-09-22,2,228.3,183.98,272.63,160.51,296.09
+Blinkit,ARIMA,2026-09-23,3,235.5,189.07,281.93,164.49,306.51
+Blinkit,ARIMA,2026-09-24,4,239.54,191.89,287.18,166.67,312.4
+Blinkit,ARIMA,2026-09-25,5,244.24,195.69,292.8,169.98,318.5
+Blinkit,ARIMA,2026-09-26,6,239.27,189.92,288.61,163.8,314.73
+Blinkit,ARIMA,2026-09-27,7,297.84,247.75,347.92,221.24,374.43
+Blinkit,ARIMA,2026-09-28,8,237.79,186.72,288.87,159.68,315.9
+Blinkit,ARIMA,2026-09-29,9,233.52,181.61,285.44,154.13,312.92
+Blinkit,ARIMA,2026-09-30,10,238.14,185.45,290.82,157.56,318.71
+Blinkit,ARIMA,2026-10-01,11,241.09,187.67,294.5,159.4,322.77
+Blinkit,ARIMA,2026-10-02,12,245.33,191.2,299.45,162.55,328.1
+Blinkit,ARIMA,2026-10-03,13,240.16,185.34,294.98,156.32,324.0
+Blinkit,ARIMA,2026-10-04,14,298.64,243.13,354.15,213.74,383.53
+Blinkit,ARIMA,2026-10-05,15,238.57,182.12,295.02,152.23,324.9
+Blinkit,ARIMA,2026-10-06,16,234.29,177.02,291.55,146.71,321.86
+Blinkit,ARIMA,2026-10-07,17,238.89,180.87,296.91,150.16,327.62
+Blinkit,ARIMA,2026-10-08,18,241.84,183.11,300.56,152.03,331.65
+Blinkit,ARIMA,2026-10-09,19,246.08,186.66,305.5,155.21,336.95
+Blinkit,ARIMA,2026-10-10,20,240.91,180.81,301.01,149.0,332.83
+Blinkit,ARIMA,2026-10-11,21,299.38,238.61,360.16,206.44,392.33
+Blinkit,ARIMA,2026-10-12,22,239.32,177.63,301.01,144.97,333.66
+Blinkit,ARIMA,2026-10-13,23,235.04,172.56,297.52,139.48,330.59
+Blinkit,ARIMA,2026-10-14,24,239.64,176.42,302.87,142.95,336.34
+Blinkit,ARIMA,2026-10-15,25,242.59,178.67,306.51,144.83,340.34
+Blinkit,ARIMA,2026-10-16,26,246.83,182.23,311.43,148.03,345.62
+Blinkit,ARIMA,2026-10-17,27,241.66,176.4,306.93,141.85,341.48
+Blinkit,ARIMA,2026-10-18,28,300.13,234.2,366.06,199.29,400.96
+Blinkit,Seasonal naive,2026-09-21,1,288.0,,,,
+Blinkit,Seasonal naive,2026-09-22,2,263.0,,,,
+Blinkit,Seasonal naive,2026-09-23,3,206.0,,,,
+Blinkit,Seasonal naive,2026-09-24,4,248.0,,,,
+Blinkit,Seasonal naive,2026-09-25,5,221.0,,,,
+Blinkit,Seasonal naive,2026-09-26,6,208.0,,,,
+Blinkit,Seasonal naive,2026-09-27,7,272.0,,,,
+Blinkit,Seasonal naive,2026-09-28,8,288.0,,,,
+Blinkit,Seasonal naive,2026-09-29,9,263.0,,,,
+Blinkit,Seasonal naive,2026-09-30,10,206.0,,,,
+Blinkit,Seasonal naive,2026-10-01,11,248.0,,,,
+Blinkit,Seasonal naive,2026-10-02,12,221.0,,,,
+Blinkit,Seasonal naive,2026-10-03,13,208.0,,,,
+Blinkit,Seasonal naive,2026-10-04,14,272.0,,,,
+Blinkit,Seasonal naive,2026-10-05,15,288.0,,,,
+Blinkit,Seasonal naive,2026-10-06,16,263.0,,,,
+Blinkit,Seasonal naive,2026-10-07,17,206.0,,,,
+Blinkit,Seasonal naive,2026-10-08,18,248.0,,,,
+Blinkit,Seasonal naive,2026-10-09,19,221.0,,,,
+Blinkit,Seasonal naive,2026-10-10,20,208.0,,,,
+Blinkit,Seasonal naive,2026-10-11,21,272.0,,,,
+Blinkit,Seasonal naive,2026-10-12,22,288.0,,,,
+Blinkit,Seasonal naive,2026-10-13,23,263.0,,,,
+Blinkit,Seasonal naive,2026-10-14,24,206.0,,,,
+Blinkit,Seasonal naive,2026-10-15,25,248.0,,,,
+Blinkit,Seasonal naive,2026-10-16,26,221.0,,,,
+Blinkit,Seasonal naive,2026-10-17,27,208.0,,,,
+Blinkit,Seasonal naive,2026-10-18,28,272.0,,,,
+Blinkit,Holt-Winters,2026-09-21,1,212.27,,,,
+Blinkit,Holt-Winters,2026-09-22,2,206.49,,,,
+Blinkit,Holt-Winters,2026-09-23,3,212.03,,,,
+Blinkit,Holt-Winters,2026-09-24,4,215.07,,,,
+Blinkit,Holt-Winters,2026-09-25,5,219.63,,,,
+Blinkit,Holt-Winters,2026-09-26,6,214.49,,,,
+Blinkit,Holt-Winters,2026-09-27,7,276.15,,,,
+Blinkit,Holt-Winters,2026-09-28,8,212.27,,,,
+Blinkit,Holt-Winters,2026-09-29,9,206.49,,,,
+Blinkit,Holt-Winters,2026-09-30,10,212.03,,,,
+Blinkit,Holt-Winters,2026-10-01,11,215.07,,,,
+Blinkit,Holt-Winters,2026-10-02,12,219.63,,,,
+Blinkit,Holt-Winters,2026-10-03,13,214.49,,,,
+Blinkit,Holt-Winters,2026-10-04,14,276.15,,,,
+Blinkit,Holt-Winters,2026-10-05,15,212.27,,,,
+Blinkit,Holt-Winters,2026-10-06,16,206.49,,,,
+Blinkit,Holt-Winters,2026-10-07,17,212.03,,,,
+Blinkit,Holt-Winters,2026-10-08,18,215.07,,,,
+Blinkit,Holt-Winters,2026-10-09,19,219.63,,,,
+Blinkit,Holt-Winters,2026-10-10,20,214.49,,,,
+Blinkit,Holt-Winters,2026-10-11,21,276.15,,,,
+Blinkit,Holt-Winters,2026-10-12,22,212.27,,,,
+Blinkit,Holt-Winters,2026-10-13,23,206.49,,,,
+Blinkit,Holt-Winters,2026-10-14,24,212.03,,,,
+Blinkit,Holt-Winters,2026-10-15,25,215.07,,,,
+Blinkit,Holt-Winters,2026-10-16,26,219.63,,,,
+Blinkit,Holt-Winters,2026-10-17,27,214.49,,,,
+Blinkit,Holt-Winters,2026-10-18,28,276.15,,,,
+Domino's,ARIMA,2026-09-21,1,54.77,29.92,79.63,16.77,92.78
+Domino's,ARIMA,2026-09-22,2,52.0,26.21,77.8,12.55,91.46
+Domino's,ARIMA,2026-09-23,3,50.22,24.42,76.01,10.77,89.67
+Domino's,ARIMA,2026-09-24,4,52.76,26.97,78.56,13.31,92.21
+Domino's,ARIMA,2026-09-25,5,59.7,33.91,85.5,20.25,99.15
+Domino's,ARIMA,2026-09-26,6,68.3,42.5,94.09,28.85,107.75
+Domino's,ARIMA,2026-09-27,7,74.97,49.18,100.76,35.52,114.42
+Domino's,ARIMA,2026-09-28,8,54.09,28.2,79.97,14.5,93.67
+Domino's,ARIMA,2026-09-29,9,52.2,26.31,78.1,12.61,91.8
+Domino's,ARIMA,2026-09-30,10,50.46,24.57,76.35,10.86,90.06
+Domino's,ARIMA,2026-10-01,11,52.94,27.05,78.84,13.35,92.54
+Domino's,ARIMA,2026-10-02,12,59.73,33.83,85.62,20.13,99.32
+Domino's,ARIMA,2026-10-03,13,68.13,42.23,94.02,28.53,107.72
+Domino's,ARIMA,2026-10-04,14,74.65,48.75,100.54,35.05,114.24
+Domino's,ARIMA,2026-10-05,15,54.24,28.26,80.22,14.51,93.97
+Domino's,ARIMA,2026-10-06,16,52.4,26.42,78.39,12.66,92.14
+Domino's,ARIMA,2026-10-07,17,50.7,24.71,76.68,10.96,90.43
+Domino's,ARIMA,2026-10-08,18,53.12,27.14,79.11,13.39,92.86
+Domino's,ARIMA,2026-10-09,19,59.75,33.77,85.73,20.01,99.49
+Domino's,ARIMA,2026-10-10,20,67.96,41.97,93.94,28.22,107.7
+Domino's,ARIMA,2026-10-11,21,74.33,48.35,100.31,34.59,114.07
+Domino's,ARIMA,2026-10-12,22,54.39,28.32,80.45,14.53,94.25
+Domino's,ARIMA,2026-10-13,23,52.59,26.52,78.66,12.72,92.47
+Domino's,ARIMA,2026-10-14,24,50.93,24.86,77.0,11.05,90.8
+Domino's,ARIMA,2026-10-15,25,53.3,27.23,79.37,13.43,93.17
+Domino's,ARIMA,2026-10-16,26,59.77,33.7,85.85,19.9,99.65
+Domino's,ARIMA,2026-10-17,27,67.79,41.72,93.87,27.92,107.67
+Domino's,ARIMA,2026-10-18,28,74.02,47.95,100.09,34.15,113.89
+Domino's,Seasonal naive,2026-09-21,1,100.0,,,,
+Domino's,Seasonal naive,2026-09-22,2,50.0,,,,
+Domino's,Seasonal naive,2026-09-23,3,42.0,,,,
+Domino's,Seasonal naive,2026-09-24,4,50.0,,,,
+Domino's,Seasonal naive,2026-09-25,5,54.0,,,,
+Domino's,Seasonal naive,2026-09-26,6,55.0,,,,
+Domino's,Seasonal naive,2026-09-27,7,75.0,,,,
+Domino's,Seasonal naive,2026-09-28,8,100.0,,,,
+Domino's,Seasonal naive,2026-09-29,9,50.0,,,,
+Domino's,Seasonal naive,2026-09-30,10,42.0,,,,
+Domino's,Seasonal naive,2026-10-01,11,50.0,,,,
+Domino's,Seasonal naive,2026-10-02,12,54.0,,,,
+Domino's,Seasonal naive,2026-10-03,13,55.0,,,,
+Domino's,Seasonal naive,2026-10-04,14,75.0,,,,
+Domino's,Seasonal naive,2026-10-05,15,100.0,,,,
+Domino's,Seasonal naive,2026-10-06,16,50.0,,,,
+Domino's,Seasonal naive,2026-10-07,17,42.0,,,,
+Domino's,Seasonal naive,2026-10-08,18,50.0,,,,
+Domino's,Seasonal naive,2026-10-09,19,54.0,,,,
+Domino's,Seasonal naive,2026-10-10,20,55.0,,,,
+Domino's,Seasonal naive,2026-10-11,21,75.0,,,,
+Domino's,Seasonal naive,2026-10-12,22,100.0,,,,
+Domino's,Seasonal naive,2026-10-13,23,50.0,,,,
+Domino's,Seasonal naive,2026-10-14,24,42.0,,,,
+Domino's,Seasonal naive,2026-10-15,25,50.0,,,,
+Domino's,Seasonal naive,2026-10-16,26,54.0,,,,
+Domino's,Seasonal naive,2026-10-17,27,55.0,,,,
+Domino's,Seasonal naive,2026-10-18,28,75.0,,,,
+Domino's,Holt-Winters,2026-09-21,1,50.5,,,,
+Domino's,Holt-Winters,2026-09-22,2,52.28,,,,
+Domino's,Holt-Winters,2026-09-23,3,51.57,,,,
+Domino's,Holt-Winters,2026-09-24,4,54.9,,,,
+Domino's,Holt-Winters,2026-09-25,5,58.76,,,,
+Domino's,Holt-Winters,2026-09-26,6,67.55,,,,
+Domino's,Holt-Winters,2026-09-27,7,80.97,,,,
+Domino's,Holt-Winters,2026-09-28,8,50.5,,,,
+Domino's,Holt-Winters,2026-09-29,9,52.28,,,,
+Domino's,Holt-Winters,2026-09-30,10,51.57,,,,
+Domino's,Holt-Winters,2026-10-01,11,54.9,,,,
+Domino's,Holt-Winters,2026-10-02,12,58.76,,,,
+Domino's,Holt-Winters,2026-10-03,13,67.55,,,,
+Domino's,Holt-Winters,2026-10-04,14,80.97,,,,
+Domino's,Holt-Winters,2026-10-05,15,50.5,,,,
+Domino's,Holt-Winters,2026-10-06,16,52.28,,,,
+Domino's,Holt-Winters,2026-10-07,17,51.57,,,,
+Domino's,Holt-Winters,2026-10-08,18,54.9,,,,
+Domino's,Holt-Winters,2026-10-09,19,58.76,,,,
+Domino's,Holt-Winters,2026-10-10,20,67.55,,,,
+Domino's,Holt-Winters,2026-10-11,21,80.97,,,,
+Domino's,Holt-Winters,2026-10-12,22,50.5,,,,
+Domino's,Holt-Winters,2026-10-13,23,52.28,,,,
+Domino's,Holt-Winters,2026-10-14,24,51.57,,,,
+Domino's,Holt-Winters,2026-10-15,25,54.9,,,,
+Domino's,Holt-Winters,2026-10-16,26,58.76,,,,
+Domino's,Holt-Winters,2026-10-17,27,67.55,,,,
+Domino's,Holt-Winters,2026-10-18,28,80.97,,,,
+Myntra,ARIMA,2026-09-21,1,55.64,43.99,67.28,37.83,73.44
+Myntra,ARIMA,2026-09-22,2,52.99,40.97,65.01,34.6,71.38
+Myntra,ARIMA,2026-09-23,3,52.43,40.31,64.54,33.89,70.96
+Myntra,ARIMA,2026-09-24,4,52.42,40.14,64.69,33.64,71.19
+Myntra,ARIMA,2026-09-25,5,52.48,39.91,65.05,33.25,71.7
+Myntra,ARIMA,2026-09-26,6,52.49,39.5,65.48,32.62,72.35
+Myntra,ARIMA,2026-09-27,7,52.42,38.95,65.89,31.82,73.02
+Myntra,ARIMA,2026-09-28,8,52.29,38.35,66.24,30.96,73.62
+Myntra,ARIMA,2026-09-29,9,52.12,37.75,66.5,30.15,74.1
+Myntra,ARIMA,2026-09-30,10,51.94,37.21,66.66,29.42,74.46
+Myntra,ARIMA,2026-10-01,11,51.74,36.74,66.74,28.8,74.68
+Myntra,ARIMA,2026-10-02,12,51.56,36.35,66.76,28.3,74.81
+Myntra,ARIMA,2026-10-03,13,51.38,36.03,66.73,27.91,74.86
+Myntra,ARIMA,2026-10-04,14,51.22,35.78,66.67,27.6,74.85
+Myntra,ARIMA,2026-10-05,15,51.09,35.58,66.6,27.37,74.81
+Myntra,ARIMA,2026-10-06,16,50.97,35.42,66.52,27.19,74.75
+Myntra,ARIMA,2026-10-07,17,50.87,35.3,66.45,27.06,74.69
+Myntra,ARIMA,2026-10-08,18,50.8,35.21,66.38,26.96,74.63
+Myntra,ARIMA,2026-10-09,19,50.74,35.15,66.32,26.89,74.58
+Myntra,ARIMA,2026-10-10,20,50.69,35.1,66.28,26.84,74.53
+Myntra,ARIMA,2026-10-11,21,50.65,35.06,66.25,26.81,74.5
+Myntra,ARIMA,2026-10-12,22,50.63,35.04,66.22,26.78,74.48
+Myntra,ARIMA,2026-10-13,23,50.61,35.02,66.21,26.77,74.46
+Myntra,ARIMA,2026-10-14,24,50.6,35.01,66.2,26.76,74.45
+Myntra,ARIMA,2026-10-15,25,50.6,35.01,66.19,26.75,74.45
+Myntra,ARIMA,2026-10-16,26,50.6,35.01,66.19,26.75,74.45
+Myntra,ARIMA,2026-10-17,27,50.6,35.01,66.19,26.75,74.45
+Myntra,ARIMA,2026-10-18,28,50.6,35.01,66.2,26.76,74.45
+Myntra,Seasonal naive,2026-09-21,1,46.0,,,,
+Myntra,Seasonal naive,2026-09-22,2,59.0,,,,
+Myntra,Seasonal naive,2026-09-23,3,49.0,,,,
+Myntra,Seasonal naive,2026-09-24,4,55.0,,,,
+Myntra,Seasonal naive,2026-09-25,5,67.0,,,,
+Myntra,Seasonal naive,2026-09-26,6,62.0,,,,
+Myntra,Seasonal naive,2026-09-27,7,65.0,,,,
+Myntra,Seasonal naive,2026-09-28,8,46.0,,,,
+Myntra,Seasonal naive,2026-09-29,9,59.0,,,,
+Myntra,Seasonal naive,2026-09-30,10,49.0,,,,
+Myntra,Seasonal naive,2026-10-01,11,55.0,,,,
+Myntra,Seasonal naive,2026-10-02,12,67.0,,,,
+Myntra,Seasonal naive,2026-10-03,13,62.0,,,,
+Myntra,Seasonal naive,2026-10-04,14,65.0,,,,
+Myntra,Seasonal naive,2026-10-05,15,46.0,,,,
+Myntra,Seasonal naive,2026-10-06,16,59.0,,,,
+Myntra,Seasonal naive,2026-10-07,17,49.0,,,,
+Myntra,Seasonal naive,2026-10-08,18,55.0,,,,
+Myntra,Seasonal naive,2026-10-09,19,67.0,,,,
+Myntra,Seasonal naive,2026-10-10,20,62.0,,,,
+Myntra,Seasonal naive,2026-10-11,21,65.0,,,,
+Myntra,Seasonal naive,2026-10-12,22,46.0,,,,
+Myntra,Seasonal naive,2026-10-13,23,59.0,,,,
+Myntra,Seasonal naive,2026-10-14,24,49.0,,,,
+Myntra,Seasonal naive,2026-10-15,25,55.0,,,,
+Myntra,Seasonal naive,2026-10-16,26,67.0,,,,
+Myntra,Seasonal naive,2026-10-17,27,62.0,,,,
+Myntra,Seasonal naive,2026-10-18,28,65.0,,,,
+Myntra,Holt-Winters,2026-09-21,1,60.18,,,,
+Myntra,Holt-Winters,2026-09-22,2,63.96,,,,
+Myntra,Holt-Winters,2026-09-23,3,61.33,,,,
+Myntra,Holt-Winters,2026-09-24,4,64.72,,,,
+Myntra,Holt-Winters,2026-09-25,5,60.91,,,,
+Myntra,Holt-Winters,2026-09-26,6,61.59,,,,
+Myntra,Holt-Winters,2026-09-27,7,61.82,,,,
+Myntra,Holt-Winters,2026-09-28,8,60.46,,,,
+Myntra,Holt-Winters,2026-09-29,9,64.24,,,,
+Myntra,Holt-Winters,2026-09-30,10,61.61,,,,
+Myntra,Holt-Winters,2026-10-01,11,65.0,,,,
+Myntra,Holt-Winters,2026-10-02,12,61.19,,,,
+Myntra,Holt-Winters,2026-10-03,13,61.86,,,,
+Myntra,Holt-Winters,2026-10-04,14,62.09,,,,
+Myntra,Holt-Winters,2026-10-05,15,60.73,,,,
+Myntra,Holt-Winters,2026-10-06,16,64.51,,,,
+Myntra,Holt-Winters,2026-10-07,17,61.88,,,,
+Myntra,Holt-Winters,2026-10-08,18,65.27,,,,
+Myntra,Holt-Winters,2026-10-09,19,61.46,,,,
+Myntra,Holt-Winters,2026-10-10,20,62.13,,,,
+Myntra,Holt-Winters,2026-10-11,21,62.36,,,,
+Myntra,Holt-Winters,2026-10-12,22,60.99,,,,
+Myntra,Holt-Winters,2026-10-13,23,64.78,,,,
+Myntra,Holt-Winters,2026-10-14,24,62.14,,,,
+Myntra,Holt-Winters,2026-10-15,25,65.53,,,,
+Myntra,Holt-Winters,2026-10-16,26,61.71,,,,
+Myntra,Holt-Winters,2026-10-17,27,62.38,,,,
+Myntra,Holt-Winters,2026-10-18,28,62.61,,,,
+Flipkart,ARIMA,2026-09-21,1,251.68,216.49,286.88,197.86,305.51
+Flipkart,ARIMA,2026-09-22,2,255.6,215.73,295.48,194.62,316.59
+Flipkart,ARIMA,2026-09-23,3,259.06,215.9,302.23,193.05,325.08
+Flipkart,ARIMA,2026-09-24,4,262.11,216.55,307.66,192.44,331.78
+Flipkart,ARIMA,2026-09-25,5,264.79,217.46,312.12,192.41,337.17
+Flipkart,ARIMA,2026-09-26,6,267.16,218.49,315.82,192.73,341.58
+Flipkart,ARIMA,2026-09-27,7,269.24,219.57,318.91,193.27,345.21
+Flipkart,ARIMA,2026-09-28,8,271.08,220.64,321.52,193.93,348.22
+Flipkart,ARIMA,2026-09-29,9,272.7,221.66,323.73,194.65,350.74
+Flipkart,ARIMA,2026-09-30,10,274.12,222.64,325.61,195.38,352.86
+Flipkart,ARIMA,2026-10-01,11,275.38,223.54,327.22,196.1,354.66
+Flipkart,ARIMA,2026-10-02,12,276.49,224.38,328.59,196.8,356.18
+Flipkart,ARIMA,2026-10-03,13,277.46,225.15,329.78,197.46,357.47
+Flipkart,ARIMA,2026-10-04,14,278.32,225.85,330.8,198.07,358.58
+Flipkart,ARIMA,2026-10-05,15,279.08,226.48,331.68,198.64,359.53
+Flipkart,ARIMA,2026-10-06,16,279.75,227.05,332.45,199.16,360.35
+Flipkart,ARIMA,2026-10-07,17,280.34,227.57,333.11,199.63,361.05
+Flipkart,ARIMA,2026-10-08,18,280.86,228.03,333.69,200.06,361.66
+Flipkart,ARIMA,2026-10-09,19,281.32,228.44,334.19,200.45,362.18
+Flipkart,ARIMA,2026-10-10,20,281.72,228.81,334.63,200.8,362.64
+Flipkart,ARIMA,2026-10-11,21,282.07,229.13,335.01,201.11,363.04
+Flipkart,ARIMA,2026-10-12,22,282.39,229.43,335.35,201.39,363.38
+Flipkart,ARIMA,2026-10-13,23,282.66,229.69,335.64,201.64,363.68
+Flipkart,ARIMA,2026-10-14,24,282.91,229.92,335.9,201.87,363.95
+Flipkart,ARIMA,2026-10-15,25,283.12,230.12,336.12,202.06,364.18
+Flipkart,ARIMA,2026-10-16,26,283.31,230.3,336.32,202.24,364.38
+Flipkart,ARIMA,2026-10-17,27,283.48,230.46,336.49,202.4,364.55
+Flipkart,ARIMA,2026-10-18,28,283.62,230.6,336.64,202.54,364.71
+Flipkart,Seasonal naive,2026-09-21,1,288.0,,,,
+Flipkart,Seasonal naive,2026-09-22,2,280.0,,,,
+Flipkart,Seasonal naive,2026-09-23,3,290.0,,,,
+Flipkart,Seasonal naive,2026-09-24,4,265.0,,,,
+Flipkart,Seasonal naive,2026-09-25,5,237.0,,,,
+Flipkart,Seasonal naive,2026-09-26,6,254.0,,,,
+Flipkart,Seasonal naive,2026-09-27,7,240.0,,,,
+Flipkart,Seasonal naive,2026-09-28,8,288.0,,,,
+Flipkart,Seasonal naive,2026-09-29,9,280.0,,,,
+Flipkart,Seasonal naive,2026-09-30,10,290.0,,,,
+Flipkart,Seasonal naive,2026-10-01,11,265.0,,,,
+Flipkart,Seasonal naive,2026-10-02,12,237.0,,,,
+Flipkart,Seasonal naive,2026-10-03,13,254.0,,,,
+Flipkart,Seasonal naive,2026-10-04,14,240.0,,,,
+Flipkart,Seasonal naive,2026-10-05,15,288.0,,,,
+Flipkart,Seasonal naive,2026-10-06,16,280.0,,,,
+Flipkart,Seasonal naive,2026-10-07,17,290.0,,,,
+Flipkart,Seasonal naive,2026-10-08,18,265.0,,,,
+Flipkart,Seasonal naive,2026-10-09,19,237.0,,,,
+Flipkart,Seasonal naive,2026-10-10,20,254.0,,,,
+Flipkart,Seasonal naive,2026-10-11,21,240.0,,,,
+Flipkart,Seasonal naive,2026-10-12,22,288.0,,,,
+Flipkart,Seasonal naive,2026-10-13,23,280.0,,,,
+Flipkart,Seasonal naive,2026-10-14,24,290.0,,,,
+Flipkart,Seasonal naive,2026-10-15,25,265.0,,,,
+Flipkart,Seasonal naive,2026-10-16,26,237.0,,,,
+Flipkart,Seasonal naive,2026-10-17,27,254.0,,,,
+Flipkart,Seasonal naive,2026-10-18,28,240.0,,,,
+Flipkart,Holt-Winters,2026-09-21,1,229.53,,,,
+Flipkart,Holt-Winters,2026-09-22,2,234.53,,,,
+Flipkart,Holt-Winters,2026-09-23,3,228.0,,,,
+Flipkart,Holt-Winters,2026-09-24,4,229.4,,,,
+Flipkart,Holt-Winters,2026-09-25,5,227.99,,,,
+Flipkart,Holt-Winters,2026-09-26,6,246.27,,,,
+Flipkart,Holt-Winters,2026-09-27,7,245.33,,,,
+Flipkart,Holt-Winters,2026-09-28,8,229.53,,,,
+Flipkart,Holt-Winters,2026-09-29,9,234.53,,,,
+Flipkart,Holt-Winters,2026-09-30,10,228.0,,,,
+Flipkart,Holt-Winters,2026-10-01,11,229.4,,,,
+Flipkart,Holt-Winters,2026-10-02,12,227.99,,,,
+Flipkart,Holt-Winters,2026-10-03,13,246.27,,,,
+Flipkart,Holt-Winters,2026-10-04,14,245.33,,,,
+Flipkart,Holt-Winters,2026-10-05,15,229.53,,,,
+Flipkart,Holt-Winters,2026-10-06,16,234.53,,,,
+Flipkart,Holt-Winters,2026-10-07,17,228.0,,,,
+Flipkart,Holt-Winters,2026-10-08,18,229.4,,,,
+Flipkart,Holt-Winters,2026-10-09,19,227.99,,,,
+Flipkart,Holt-Winters,2026-10-10,20,246.27,,,,
+Flipkart,Holt-Winters,2026-10-11,21,245.33,,,,
+Flipkart,Holt-Winters,2026-10-12,22,229.53,,,,
+Flipkart,Holt-Winters,2026-10-13,23,234.53,,,,
+Flipkart,Holt-Winters,2026-10-14,24,228.0,,,,
+Flipkart,Holt-Winters,2026-10-15,25,229.4,,,,
+Flipkart,Holt-Winters,2026-10-16,26,227.99,,,,
+Flipkart,Holt-Winters,2026-10-17,27,246.27,,,,
+Flipkart,Holt-Winters,2026-10-18,28,245.33,,,,
+Amazon,ARIMA,2026-09-21,1,101.84,86.36,117.31,78.17,125.5
+Amazon,ARIMA,2026-09-22,2,101.88,85.79,117.98,77.26,126.5
+Amazon,ARIMA,2026-09-23,3,101.92,85.36,118.48,76.6,127.25
+Amazon,ARIMA,2026-09-24,4,101.96,85.05,118.86,76.1,127.81
+Amazon,ARIMA,2026-09-25,5,101.99,84.82,119.16,75.73,128.24
+Amazon,ARIMA,2026-09-26,6,102.02,84.65,119.38,75.46,128.57
+Amazon,ARIMA,2026-09-27,7,102.04,84.53,119.55,75.25,128.82
+Amazon,ARIMA,2026-09-28,8,102.06,84.43,119.69,75.1,129.02
+Amazon,ARIMA,2026-09-29,9,102.08,84.36,119.79,74.99,129.17
+Amazon,ARIMA,2026-09-30,10,102.09,84.31,119.87,74.9,129.29
+Amazon,ARIMA,2026-10-01,11,102.11,84.28,119.94,74.84,129.38
+Amazon,ARIMA,2026-10-02,12,102.12,84.25,119.99,74.79,129.45
+Amazon,ARIMA,2026-10-03,13,102.13,84.23,120.03,74.76,129.5
+Amazon,ARIMA,2026-10-04,14,102.14,84.22,120.06,74.73,129.55
+Amazon,ARIMA,2026-10-05,15,102.15,84.21,120.09,74.71,129.58
+Amazon,ARIMA,2026-10-06,16,102.16,84.2,120.11,74.7,129.61
+Amazon,ARIMA,2026-10-07,17,102.16,84.2,120.12,74.69,129.63
+Amazon,ARIMA,2026-10-08,18,102.17,84.2,120.14,74.69,129.65
+Amazon,ARIMA,2026-10-09,19,102.17,84.2,120.15,74.68,129.66
+Amazon,ARIMA,2026-10-10,20,102.18,84.2,120.16,74.68,129.67
+Amazon,ARIMA,2026-10-11,21,102.18,84.2,120.16,74.68,129.68
+Amazon,ARIMA,2026-10-12,22,102.18,84.2,120.17,74.68,129.69
+Amazon,ARIMA,2026-10-13,23,102.19,84.2,120.17,74.68,129.7
+Amazon,ARIMA,2026-10-14,24,102.19,84.2,120.18,74.68,129.7
+Amazon,ARIMA,2026-10-15,25,102.19,84.2,120.18,74.68,129.71
+Amazon,ARIMA,2026-10-16,26,102.19,84.2,120.18,74.68,129.71
+Amazon,ARIMA,2026-10-17,27,102.19,84.2,120.19,74.68,129.71
+Amazon,ARIMA,2026-10-18,28,102.2,84.2,120.19,74.68,129.71
+Amazon,Seasonal naive,2026-09-21,1,101.0,,,,
+Amazon,Seasonal naive,2026-09-22,2,96.0,,,,
+Amazon,Seasonal naive,2026-09-23,3,79.0,,,,
+Amazon,Seasonal naive,2026-09-24,4,92.0,,,,
+Amazon,Seasonal naive,2026-09-25,5,113.0,,,,
+Amazon,Seasonal naive,2026-09-26,6,99.0,,,,
+Amazon,Seasonal naive,2026-09-27,7,104.0,,,,
+Amazon,Seasonal naive,2026-09-28,8,101.0,,,,
+Amazon,Seasonal naive,2026-09-29,9,96.0,,,,
+Amazon,Seasonal naive,2026-09-30,10,79.0,,,,
+Amazon,Seasonal naive,2026-10-01,11,92.0,,,,
+Amazon,Seasonal naive,2026-10-02,12,113.0,,,,
+Amazon,Seasonal naive,2026-10-03,13,99.0,,,,
+Amazon,Seasonal naive,2026-10-04,14,104.0,,,,
+Amazon,Seasonal naive,2026-10-05,15,101.0,,,,
+Amazon,Seasonal naive,2026-10-06,16,96.0,,,,
+Amazon,Seasonal naive,2026-10-07,17,79.0,,,,
+Amazon,Seasonal naive,2026-10-08,18,92.0,,,,
+Amazon,Seasonal naive,2026-10-09,19,113.0,,,,
+Amazon,Seasonal naive,2026-10-10,20,99.0,,,,
+Amazon,Seasonal naive,2026-10-11,21,104.0,,,,
+Amazon,Seasonal naive,2026-10-12,22,101.0,,,,
+Amazon,Seasonal naive,2026-10-13,23,96.0,,,,
+Amazon,Seasonal naive,2026-10-14,24,79.0,,,,
+Amazon,Seasonal naive,2026-10-15,25,92.0,,,,
+Amazon,Seasonal naive,2026-10-16,26,113.0,,,,
+Amazon,Seasonal naive,2026-10-17,27,99.0,,,,
+Amazon,Seasonal naive,2026-10-18,28,104.0,,,,
+Amazon,Holt-Winters,2026-09-21,1,100.81,,,,
+Amazon,Holt-Winters,2026-09-22,2,101.49,,,,
+Amazon,Holt-Winters,2026-09-23,3,98.24,,,,
+Amazon,Holt-Winters,2026-09-24,4,101.75,,,,
+Amazon,Holt-Winters,2026-09-25,5,97.95,,,,
+Amazon,Holt-Winters,2026-09-26,6,102.71,,,,
+Amazon,Holt-Winters,2026-09-27,7,101.92,,,,
+Amazon,Holt-Winters,2026-09-28,8,100.81,,,,
+Amazon,Holt-Winters,2026-09-29,9,101.49,,,,
+Amazon,Holt-Winters,2026-09-30,10,98.24,,,,
+Amazon,Holt-Winters,2026-10-01,11,101.75,,,,
+Amazon,Holt-Winters,2026-10-02,12,97.95,,,,
+Amazon,Holt-Winters,2026-10-03,13,102.71,,,,
+Amazon,Holt-Winters,2026-10-04,14,101.92,,,,
+Amazon,Holt-Winters,2026-10-05,15,100.81,,,,
+Amazon,Holt-Winters,2026-10-06,16,101.49,,,,
+Amazon,Holt-Winters,2026-10-07,17,98.24,,,,
+Amazon,Holt-Winters,2026-10-08,18,101.75,,,,
+Amazon,Holt-Winters,2026-10-09,19,97.95,,,,
+Amazon,Holt-Winters,2026-10-10,20,102.71,,,,
+Amazon,Holt-Winters,2026-10-11,21,101.92,,,,
+Amazon,Holt-Winters,2026-10-12,22,100.81,,,,
+Amazon,Holt-Winters,2026-10-13,23,101.49,,,,
+Amazon,Holt-Winters,2026-10-14,24,98.24,,,,
+Amazon,Holt-Winters,2026-10-15,25,101.75,,,,
+Amazon,Holt-Winters,2026-10-16,26,97.95,,,,
+Amazon,Holt-Winters,2026-10-17,27,102.71,,,,
+Amazon,Holt-Winters,2026-10-18,28,101.92,,,,
+Meesho,ARIMA,2026-09-21,1,107.86,89.09,126.62,79.15,136.56
+Meesho,ARIMA,2026-09-22,2,107.72,88.77,126.67,78.74,136.7
+Meesho,ARIMA,2026-09-23,3,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-24,4,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-25,5,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-26,6,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-27,7,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-28,8,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-29,9,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-09-30,10,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-01,11,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-02,12,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-03,13,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-04,14,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-05,15,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-06,16,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-07,17,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-08,18,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-09,19,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-10,20,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-11,21,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-12,22,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-13,23,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-14,24,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-15,25,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-16,26,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-17,27,104.29,84.99,123.59,74.77,133.81
+Meesho,ARIMA,2026-10-18,28,104.29,84.99,123.59,74.77,133.81
+Meesho,Seasonal naive,2026-09-21,1,91.0,,,,
+Meesho,Seasonal naive,2026-09-22,2,89.0,,,,
+Meesho,Seasonal naive,2026-09-23,3,92.0,,,,
+Meesho,Seasonal naive,2026-09-24,4,120.0,,,,
+Meesho,Seasonal naive,2026-09-25,5,92.0,,,,
+Meesho,Seasonal naive,2026-09-26,6,112.0,,,,
+Meesho,Seasonal naive,2026-09-27,7,120.0,,,,
+Meesho,Seasonal naive,2026-09-28,8,91.0,,,,
+Meesho,Seasonal naive,2026-09-29,9,89.0,,,,
+Meesho,Seasonal naive,2026-09-30,10,92.0,,,,
+Meesho,Seasonal naive,2026-10-01,11,120.0,,,,
+Meesho,Seasonal naive,2026-10-02,12,92.0,,,,
+Meesho,Seasonal naive,2026-10-03,13,112.0,,,,
+Meesho,Seasonal naive,2026-10-04,14,120.0,,,,
+Meesho,Seasonal naive,2026-10-05,15,91.0,,,,
+Meesho,Seasonal naive,2026-10-06,16,89.0,,,,
+Meesho,Seasonal naive,2026-10-07,17,92.0,,,,
+Meesho,Seasonal naive,2026-10-08,18,120.0,,,,
+Meesho,Seasonal naive,2026-10-09,19,92.0,,,,
+Meesho,Seasonal naive,2026-10-10,20,112.0,,,,
+Meesho,Seasonal naive,2026-10-11,21,120.0,,,,
+Meesho,Seasonal naive,2026-10-12,22,91.0,,,,
+Meesho,Seasonal naive,2026-10-13,23,89.0,,,,
+Meesho,Seasonal naive,2026-10-14,24,92.0,,,,
+Meesho,Seasonal naive,2026-10-15,25,120.0,,,,
+Meesho,Seasonal naive,2026-10-16,26,92.0,,,,
+Meesho,Seasonal naive,2026-10-17,27,112.0,,,,
+Meesho,Seasonal naive,2026-10-18,28,120.0,,,,
+Meesho,Holt-Winters,2026-09-21,1,104.76,,,,
+Meesho,Holt-Winters,2026-09-22,2,108.73,,,,
+Meesho,Holt-Winters,2026-09-23,3,102.72,,,,
+Meesho,Holt-Winters,2026-09-24,4,105.4,,,,
+Meesho,Holt-Winters,2026-09-25,5,100.69,,,,
+Meesho,Holt-Winters,2026-09-26,6,106.57,,,,
+Meesho,Holt-Winters,2026-09-27,7,112.74,,,,
+Meesho,Holt-Winters,2026-09-28,8,104.76,,,,
+Meesho,Holt-Winters,2026-09-29,9,108.73,,,,
+Meesho,Holt-Winters,2026-09-30,10,102.72,,,,
+Meesho,Holt-Winters,2026-10-01,11,105.4,,,,
+Meesho,Holt-Winters,2026-10-02,12,100.7,,,,
+Meesho,Holt-Winters,2026-10-03,13,106.58,,,,
+Meesho,Holt-Winters,2026-10-04,14,112.74,,,,
+Meesho,Holt-Winters,2026-10-05,15,104.76,,,,
+Meesho,Holt-Winters,2026-10-06,16,108.73,,,,
+Meesho,Holt-Winters,2026-10-07,17,102.73,,,,
+Meesho,Holt-Winters,2026-10-08,18,105.4,,,,
+Meesho,Holt-Winters,2026-10-09,19,100.7,,,,
+Meesho,Holt-Winters,2026-10-10,20,106.58,,,,
+Meesho,Holt-Winters,2026-10-11,21,112.74,,,,
+Meesho,Holt-Winters,2026-10-12,22,104.77,,,,
+Meesho,Holt-Winters,2026-10-13,23,108.74,,,,
+Meesho,Holt-Winters,2026-10-14,24,102.73,,,,
+Meesho,Holt-Winters,2026-10-15,25,105.4,,,,
+Meesho,Holt-Winters,2026-10-16,26,100.7,,,,
+Meesho,Holt-Winters,2026-10-17,27,106.58,,,,
+Meesho,Holt-Winters,2026-10-18,28,112.74,,,,
+Paytm,ARIMA,2026-09-21,1,27.18,17.37,36.99,12.18,42.18
+Paytm,ARIMA,2026-09-22,2,23.84,12.96,34.71,7.2,40.47
+Paytm,ARIMA,2026-09-23,3,20.92,9.08,32.76,2.81,39.03
+Paytm,ARIMA,2026-09-24,4,18.46,5.76,31.16,0.0,37.89
+Paytm,ARIMA,2026-09-25,5,16.49,3.05,29.93,0.0,37.05
+Paytm,ARIMA,2026-09-26,6,15.02,0.96,29.08,0.0,36.53
+Paytm,ARIMA,2026-09-27,7,14.05,0.0,28.62,0.0,36.33
+Paytm,ARIMA,2026-09-28,8,13.56,0.0,28.54,0.0,36.46
+Paytm,ARIMA,2026-09-29,9,13.56,0.0,28.83,0.0,36.91
+Paytm,ARIMA,2026-09-30,10,14.0,0.0,29.48,0.0,37.68
+Paytm,ARIMA,2026-10-01,11,14.86,0.0,30.48,0.0,38.75
+Paytm,ARIMA,2026-10-02,12,16.11,0.41,31.81,0.0,40.12
+Paytm,ARIMA,2026-10-03,13,17.69,1.95,33.42,0.0,41.75
+Paytm,ARIMA,2026-10-04,14,19.56,3.81,35.3,0.0,43.64
+Paytm,ARIMA,2026-10-05,15,21.67,5.92,37.41,0.0,45.75
+Paytm,ARIMA,2026-10-06,16,23.97,8.21,39.72,0.0,48.05
+Paytm,ARIMA,2026-10-07,17,26.39,10.62,42.17,2.28,50.51
+Paytm,ARIMA,2026-10-08,18,28.9,13.09,44.72,4.72,53.09
+Paytm,ARIMA,2026-10-09,19,31.44,15.55,47.33,7.14,55.75
+Paytm,ARIMA,2026-10-10,20,33.96,17.96,49.96,9.49,58.42
+Paytm,ARIMA,2026-10-11,21,36.41,20.27,52.54,11.73,61.08
+Paytm,ARIMA,2026-10-12,22,38.74,22.45,55.04,13.82,63.66
+Paytm,ARIMA,2026-10-13,23,40.93,24.46,57.41,15.73,66.13
+Paytm,ARIMA,2026-10-14,24,42.93,26.27,59.6,17.44,68.42
+Paytm,ARIMA,2026-10-15,25,44.72,27.86,61.59,18.94,70.51
+Paytm,ARIMA,2026-10-16,26,46.28,29.23,63.33,20.2,72.36
+Paytm,ARIMA,2026-10-17,27,47.58,30.35,64.81,21.23,73.93
+Paytm,ARIMA,2026-10-18,28,48.62,31.22,66.01,22.01,75.22
+Paytm,Seasonal naive,2026-09-21,1,55.0,,,,
+Paytm,Seasonal naive,2026-09-22,2,55.0,,,,
+Paytm,Seasonal naive,2026-09-23,3,54.0,,,,
+Paytm,Seasonal naive,2026-09-24,4,49.0,,,,
+Paytm,Seasonal naive,2026-09-25,5,50.0,,,,
+Paytm,Seasonal naive,2026-09-26,6,36.0,,,,
+Paytm,Seasonal naive,2026-09-27,7,25.0,,,,
+Paytm,Seasonal naive,2026-09-28,8,55.0,,,,
+Paytm,Seasonal naive,2026-09-29,9,55.0,,,,
+Paytm,Seasonal naive,2026-09-30,10,54.0,,,,
+Paytm,Seasonal naive,2026-10-01,11,49.0,,,,
+Paytm,Seasonal naive,2026-10-02,12,50.0,,,,
+Paytm,Seasonal naive,2026-10-03,13,36.0,,,,
+Paytm,Seasonal naive,2026-10-04,14,25.0,,,,
+Paytm,Seasonal naive,2026-10-05,15,55.0,,,,
+Paytm,Seasonal naive,2026-10-06,16,55.0,,,,
+Paytm,Seasonal naive,2026-10-07,17,54.0,,,,
+Paytm,Seasonal naive,2026-10-08,18,49.0,,,,
+Paytm,Seasonal naive,2026-10-09,19,50.0,,,,
+Paytm,Seasonal naive,2026-10-10,20,36.0,,,,
+Paytm,Seasonal naive,2026-10-11,21,25.0,,,,
+Paytm,Seasonal naive,2026-10-12,22,55.0,,,,
+Paytm,Seasonal naive,2026-10-13,23,55.0,,,,
+Paytm,Seasonal naive,2026-10-14,24,54.0,,,,
+Paytm,Seasonal naive,2026-10-15,25,49.0,,,,
+Paytm,Seasonal naive,2026-10-16,26,50.0,,,,
+Paytm,Seasonal naive,2026-10-17,27,36.0,,,,
+Paytm,Seasonal naive,2026-10-18,28,25.0,,,,
+Paytm,Holt-Winters,2026-09-21,1,31.91,,,,
+Paytm,Holt-Winters,2026-09-22,2,30.43,,,,
+Paytm,Holt-Winters,2026-09-23,3,28.56,,,,
+Paytm,Holt-Winters,2026-09-24,4,26.32,,,,
+Paytm,Holt-Winters,2026-09-25,5,26.65,,,,
+Paytm,Holt-Winters,2026-09-26,6,27.51,,,,
+Paytm,Holt-Winters,2026-09-27,7,24.7,,,,
+Paytm,Holt-Winters,2026-09-28,8,25.95,,,,
+Paytm,Holt-Winters,2026-09-29,9,25.66,,,,
+Paytm,Holt-Winters,2026-09-30,10,24.75,,,,
+Paytm,Holt-Winters,2026-10-01,11,23.27,,,,
+Paytm,Holt-Winters,2026-10-02,12,24.21,,,,
+Paytm,Holt-Winters,2026-10-03,13,25.55,,,,
+Paytm,Holt-Winters,2026-10-04,14,23.14,,,,
+Paytm,Holt-Winters,2026-10-05,15,24.7,,,,
+Paytm,Holt-Winters,2026-10-06,16,24.66,,,,
+Paytm,Holt-Winters,2026-10-07,17,23.95,,,,
+Paytm,Holt-Winters,2026-10-08,18,22.63,,,,
+Paytm,Holt-Winters,2026-10-09,19,23.7,,,,
+Paytm,Holt-Winters,2026-10-10,20,25.14,,,,
+Paytm,Holt-Winters,2026-10-11,21,22.81,,,,
+Paytm,Holt-Winters,2026-10-12,22,24.44,,,,
+Paytm,Holt-Winters,2026-10-13,23,24.45,,,,
+Paytm,Holt-Winters,2026-10-14,24,23.78,,,,
+Paytm,Holt-Winters,2026-10-15,25,22.49,,,,
+Paytm,Holt-Winters,2026-10-16,26,23.59,,,,
+Paytm,Holt-Winters,2026-10-17,27,25.06,,,,
+Paytm,Holt-Winters,2026-10-18,28,22.75,,,,
+PhonePe,ARIMA,2026-09-21,1,47.96,29.81,66.12,20.19,75.73
+PhonePe,ARIMA,2026-09-22,2,49.29,29.39,69.2,18.85,79.73
+PhonePe,ARIMA,2026-09-23,3,49.89,29.65,70.13,18.94,80.84
+PhonePe,ARIMA,2026-09-24,4,50.16,29.85,70.47,19.1,81.21
+PhonePe,ARIMA,2026-09-25,5,50.28,29.96,70.6,19.2,81.36
+PhonePe,ARIMA,2026-09-26,6,50.33,30.01,70.66,19.25,81.41
+PhonePe,ARIMA,2026-09-27,7,50.36,30.04,70.68,19.28,81.44
+PhonePe,ARIMA,2026-09-28,8,50.37,30.05,70.69,19.29,81.45
+PhonePe,ARIMA,2026-09-29,9,50.37,30.05,70.7,19.29,81.46
+PhonePe,ARIMA,2026-09-30,10,50.38,30.05,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-01,11,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-02,12,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-03,13,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-04,14,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-05,15,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-06,16,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-07,17,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-08,18,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-09,19,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-10,20,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-11,21,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-12,22,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-13,23,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-14,24,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-15,25,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-16,26,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-17,27,50.38,30.06,70.7,19.3,81.46
+PhonePe,ARIMA,2026-10-18,28,50.38,30.06,70.7,19.3,81.46
+PhonePe,Seasonal naive,2026-09-21,1,33.0,,,,
+PhonePe,Seasonal naive,2026-09-22,2,50.0,,,,
+PhonePe,Seasonal naive,2026-09-23,3,76.0,,,,
+PhonePe,Seasonal naive,2026-09-24,4,88.0,,,,
+PhonePe,Seasonal naive,2026-09-25,5,196.0,,,,
+PhonePe,Seasonal naive,2026-09-26,6,84.0,,,,
+PhonePe,Seasonal naive,2026-09-27,7,45.0,,,,
+PhonePe,Seasonal naive,2026-09-28,8,33.0,,,,
+PhonePe,Seasonal naive,2026-09-29,9,50.0,,,,
+PhonePe,Seasonal naive,2026-09-30,10,76.0,,,,
+PhonePe,Seasonal naive,2026-10-01,11,88.0,,,,
+PhonePe,Seasonal naive,2026-10-02,12,196.0,,,,
+PhonePe,Seasonal naive,2026-10-03,13,84.0,,,,
+PhonePe,Seasonal naive,2026-10-04,14,45.0,,,,
+PhonePe,Seasonal naive,2026-10-05,15,33.0,,,,
+PhonePe,Seasonal naive,2026-10-06,16,50.0,,,,
+PhonePe,Seasonal naive,2026-10-07,17,76.0,,,,
+PhonePe,Seasonal naive,2026-10-08,18,88.0,,,,
+PhonePe,Seasonal naive,2026-10-09,19,196.0,,,,
+PhonePe,Seasonal naive,2026-10-10,20,84.0,,,,
+PhonePe,Seasonal naive,2026-10-11,21,45.0,,,,
+PhonePe,Seasonal naive,2026-10-12,22,33.0,,,,
+PhonePe,Seasonal naive,2026-10-13,23,50.0,,,,
+PhonePe,Seasonal naive,2026-10-14,24,76.0,,,,
+PhonePe,Seasonal naive,2026-10-15,25,88.0,,,,
+PhonePe,Seasonal naive,2026-10-16,26,196.0,,,,
+PhonePe,Seasonal naive,2026-10-17,27,84.0,,,,
+PhonePe,Seasonal naive,2026-10-18,28,45.0,,,,
+PhonePe,Holt-Winters,2026-09-21,1,83.87,,,,
+PhonePe,Holt-Winters,2026-09-22,2,81.61,,,,
+PhonePe,Holt-Winters,2026-09-23,3,84.36,,,,
+PhonePe,Holt-Winters,2026-09-24,4,81.41,,,,
+PhonePe,Holt-Winters,2026-09-25,5,91.01,,,,
+PhonePe,Holt-Winters,2026-09-26,6,82.12,,,,
+PhonePe,Holt-Winters,2026-09-27,7,77.47,,,,
+PhonePe,Holt-Winters,2026-09-28,8,83.87,,,,
+PhonePe,Holt-Winters,2026-09-29,9,81.61,,,,
+PhonePe,Holt-Winters,2026-09-30,10,84.36,,,,
+PhonePe,Holt-Winters,2026-10-01,11,81.41,,,,
+PhonePe,Holt-Winters,2026-10-02,12,91.01,,,,
+PhonePe,Holt-Winters,2026-10-03,13,82.12,,,,
+PhonePe,Holt-Winters,2026-10-04,14,77.47,,,,
+PhonePe,Holt-Winters,2026-10-05,15,83.87,,,,
+PhonePe,Holt-Winters,2026-10-06,16,81.61,,,,
+PhonePe,Holt-Winters,2026-10-07,17,84.36,,,,
+PhonePe,Holt-Winters,2026-10-08,18,81.41,,,,
+PhonePe,Holt-Winters,2026-10-09,19,91.01,,,,
+PhonePe,Holt-Winters,2026-10-10,20,82.12,,,,
+PhonePe,Holt-Winters,2026-10-11,21,77.47,,,,
+PhonePe,Holt-Winters,2026-10-12,22,83.87,,,,
+PhonePe,Holt-Winters,2026-10-13,23,81.61,,,,
+PhonePe,Holt-Winters,2026-10-14,24,84.36,,,,
+PhonePe,Holt-Winters,2026-10-15,25,81.41,,,,
+PhonePe,Holt-Winters,2026-10-16,26,91.01,,,,
+PhonePe,Holt-Winters,2026-10-17,27,82.12,,,,
+PhonePe,Holt-Winters,2026-10-18,28,77.47,,,,
+Google Pay,ARIMA,2026-09-21,1,27.92,0.0,56.07,0.0,70.98
+Google Pay,ARIMA,2026-09-22,2,27.51,0.0,57.61,0.0,73.55
+Google Pay,ARIMA,2026-09-23,3,27.35,0.0,57.72,0.0,73.8
+Google Pay,ARIMA,2026-09-24,4,27.3,0.0,57.7,0.0,73.8
+Google Pay,ARIMA,2026-09-25,5,27.27,0.0,57.69,0.0,73.79
+Google Pay,ARIMA,2026-09-26,6,27.27,0.0,57.68,0.0,73.78
+Google Pay,ARIMA,2026-09-27,7,27.26,0.0,57.68,0.0,73.78
+Google Pay,ARIMA,2026-09-28,8,27.26,0.0,57.68,0.0,73.78
+Google Pay,ARIMA,2026-09-29,9,27.26,0.0,57.67,0.0,73.78
+Google Pay,ARIMA,2026-09-30,10,27.26,0.0,57.67,0.0,73.78
+Google Pay,ARIMA,2026-10-01,11,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-02,12,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-03,13,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-04,14,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-05,15,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-06,16,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-07,17,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-08,18,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-09,19,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-10,20,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-11,21,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-12,22,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-13,23,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-14,24,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-15,25,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-16,26,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-17,27,27.26,0.0,57.67,0.0,73.77
+Google Pay,ARIMA,2026-10-18,28,27.26,0.0,57.67,0.0,73.77
+Google Pay,Seasonal naive,2026-09-21,1,23.0,,,,
+Google Pay,Seasonal naive,2026-09-22,2,36.0,,,,
+Google Pay,Seasonal naive,2026-09-23,3,51.0,,,,
+Google Pay,Seasonal naive,2026-09-24,4,34.0,,,,
+Google Pay,Seasonal naive,2026-09-25,5,31.0,,,,
+Google Pay,Seasonal naive,2026-09-26,6,19.0,,,,
+Google Pay,Seasonal naive,2026-09-27,7,29.0,,,,
+Google Pay,Seasonal naive,2026-09-28,8,23.0,,,,
+Google Pay,Seasonal naive,2026-09-29,9,36.0,,,,
+Google Pay,Seasonal naive,2026-09-30,10,51.0,,,,
+Google Pay,Seasonal naive,2026-10-01,11,34.0,,,,
+Google Pay,Seasonal naive,2026-10-02,12,31.0,,,,
+Google Pay,Seasonal naive,2026-10-03,13,19.0,,,,
+Google Pay,Seasonal naive,2026-10-04,14,29.0,,,,
+Google Pay,Seasonal naive,2026-10-05,15,23.0,,,,
+Google Pay,Seasonal naive,2026-10-06,16,36.0,,,,
+Google Pay,Seasonal naive,2026-10-07,17,51.0,,,,
+Google Pay,Seasonal naive,2026-10-08,18,34.0,,,,
+Google Pay,Seasonal naive,2026-10-09,19,31.0,,,,
+Google Pay,Seasonal naive,2026-10-10,20,19.0,,,,
+Google Pay,Seasonal naive,2026-10-11,21,29.0,,,,
+Google Pay,Seasonal naive,2026-10-12,22,23.0,,,,
+Google Pay,Seasonal naive,2026-10-13,23,36.0,,,,
+Google Pay,Seasonal naive,2026-10-14,24,51.0,,,,
+Google Pay,Seasonal naive,2026-10-15,25,34.0,,,,
+Google Pay,Seasonal naive,2026-10-16,26,31.0,,,,
+Google Pay,Seasonal naive,2026-10-17,27,19.0,,,,
+Google Pay,Seasonal naive,2026-10-18,28,29.0,,,,
+Google Pay,Holt-Winters,2026-09-21,1,35.09,,,,
+Google Pay,Holt-Winters,2026-09-22,2,26.42,,,,
+Google Pay,Holt-Winters,2026-09-23,3,25.6,,,,
+Google Pay,Holt-Winters,2026-09-24,4,26.94,,,,
+Google Pay,Holt-Winters,2026-09-25,5,22.89,,,,
+Google Pay,Holt-Winters,2026-09-26,6,21.06,,,,
+Google Pay,Holt-Winters,2026-09-27,7,21.9,,,,
+Google Pay,Holt-Winters,2026-09-28,8,34.93,,,,
+Google Pay,Holt-Winters,2026-09-29,9,26.26,,,,
+Google Pay,Holt-Winters,2026-09-30,10,25.44,,,,
+Google Pay,Holt-Winters,2026-10-01,11,26.78,,,,
+Google Pay,Holt-Winters,2026-10-02,12,22.73,,,,
+Google Pay,Holt-Winters,2026-10-03,13,20.91,,,,
+Google Pay,Holt-Winters,2026-10-04,14,21.75,,,,
+Google Pay,Holt-Winters,2026-10-05,15,34.78,,,,
+Google Pay,Holt-Winters,2026-10-06,16,26.11,,,,
+Google Pay,Holt-Winters,2026-10-07,17,25.3,,,,
+Google Pay,Holt-Winters,2026-10-08,18,26.63,,,,
+Google Pay,Holt-Winters,2026-10-09,19,22.59,,,,
+Google Pay,Holt-Winters,2026-10-10,20,20.76,,,,
+Google Pay,Holt-Winters,2026-10-11,21,21.61,,,,
+Google Pay,Holt-Winters,2026-10-12,22,34.64,,,,
+Google Pay,Holt-Winters,2026-10-13,23,25.97,,,,
+Google Pay,Holt-Winters,2026-10-14,24,25.16,,,,
+Google Pay,Holt-Winters,2026-10-15,25,26.5,,,,
+Google Pay,Holt-Winters,2026-10-16,26,22.45,,,,
+Google Pay,Holt-Winters,2026-10-17,27,20.63,,,,
+Google Pay,Holt-Winters,2026-10-18,28,21.48,,,,

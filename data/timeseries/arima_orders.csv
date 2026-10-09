@@ -1,0 +1,23 @@
+app_name,stage,train_days,p,d,q,P,D,Q,season,feed_gap_input,aicc,candidates_tried,p_max,q_max,seasonal_ar,seasonal_ma
+Swiggy,backtest,84,1,0,0,1,0,1,7,True,786.86,16,1,1,True,True
+Swiggy,final,173,0,0,1,1,0,1,7,True,1704.42,16,1,1,True,True
+Zomato,backtest,84,0,1,1,1,0,1,7,False,797.65,16,1,1,True,True
+Zomato,final,173,2,1,1,1,0,1,7,False,1605.58,32,3,1,True,True
+Blinkit,backtest,84,0,1,2,1,0,1,7,True,827.46,36,2,2,True,True
+Blinkit,final,173,1,1,1,1,0,1,7,True,1689.37,32,3,1,True,True
+Domino's,backtest,84,0,0,1,1,0,1,7,True,722.46,16,1,1,True,True
+Domino's,final,173,0,0,1,1,0,1,7,True,1533.45,16,1,1,True,True
+Myntra,backtest,84,1,0,1,0,0,0,7,False,592.9,24,2,3,False,True
+Myntra,final,173,3,0,2,0,0,0,7,False,1270.69,32,3,3,False,True
+Flipkart,backtest,84,1,0,1,0,0,0,7,True,793.25,24,2,3,False,True
+Flipkart,final,173,1,0,1,0,0,0,7,True,1648.45,24,2,3,False,True
+Amazon,backtest,84,0,0,0,0,0,0,7,True,661.08,4,1,1,False,False
+Amazon,final,173,1,0,1,0,0,0,7,True,1363.59,24,2,3,False,True
+Meesho,backtest,84,0,0,0,0,0,0,7,False,656.95,9,2,2,False,False
+Meesho,final,173,0,0,2,0,0,0,7,False,1427.99,9,2,2,False,False
+Paytm,backtest,84,2,0,0,0,0,0,7,False,600.15,12,2,3,False,False
+Paytm,final,173,2,0,2,0,0,0,7,False,1209.74,32,3,3,False,True
+PhonePe,backtest,84,2,0,0,0,0,0,7,False,638.57,12,2,3,False,False
+PhonePe,final,173,1,0,0,0,0,0,7,False,1414.56,6,1,2,False,False
+Google Pay,backtest,84,1,0,0,0,0,0,7,False,818.13,4,1,1,False,False
+Google Pay,final,173,1,0,0,0,0,0,7,False,1566.27,6,1,2,False,False
