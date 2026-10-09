@@ -244,3 +244,34 @@ With Stage 1 (#132) and Stage 2 (#134, #136) complete, Method 1 (Text Mining) pr
 4. **Interactive Dashboard Integration:** Serialized model pipelines in `models/textmining/` ready to power Page 2 (Text Mining, #139) and Page 4 (Check a Review, #146).
 
 
+
+---
+
+## 4. Dashboard: text-mining page (#139)
+
+Code: `dashboard/pages/text_mining.py`, example reviews from `scripts/20_topic_examples.py` (about 5 seconds). Screenshot: `dashboard/screenshots/text_mining.png`. Run with `streamlit run dashboard/app.py` and open **Text mining**.
+
+![Text-mining page](dashboard/screenshots/text_mining.png)
+
+The page reads only the small tables of Stages 1–2 and never loads the 1.1 million reviews, so it opens in a few seconds. It follows the shared sidebar filters: **domain** and **app** change what is shown; the **date range** narrows the monthly topic trend (the topic tables themselves are for the whole window, because the topic assignment is not stored per day).
+
+| Section | What the user can do | Source |
+|---|---|---|
+| Header numbers | Complaint reviews with a topic, number of topics, mean sentiment and share of strongly negative reviews for the chosen domain and apps, plus the largest and the most negative topic | `topic_share_by_app.csv`, `topic_sentiment_by_app.csv` |
+| **Topic explorer** | Pick a domain, see each topic's share of complaints; pick a topic to see its top terms (NMF weights), reviews, mean VADER and strongly-negative share, and **example reviews** per app as the users wrote them | `topics.csv`, `topic_examples.csv` |
+| Keyword-tag overlap | For the picked topic, which of the 9 keyword issue tags its reviews carry and how many carry none (the part the keyword rules miss) | `topic_keyword_overlap.csv` |
+| **Topics by app** | Heatmap of topic × app, switchable between the **share of the app's complaints** and the **share of strongly negative reviews** | same two tables |
+| **Topic share over time** | Monthly share of the picked topic against the other topics (grey); the date range of the sidebar applies | `monthly_topic_trends.csv` |
+| **Distinctive terms per app** | Pick an app to see the words and two-word phrases (hatched) most typical of its complaints against the other apps of its domain, with z-scores | `distinctive_terms.csv` |
+| Expanders | Praise topics of the 4–5★ contrast; coherence scores behind the number of topics; a table by topic with CSV download | `topic_modelling_summary.json`, `coherence_scores.csv` |
+
+### 4.1 Example reviews (`scripts/20_topic_examples.py`, `data/textmining/topic_examples.csv`)
+
+`topic_exemplars.csv` keeps only the cleaned, lemmatised text of the best-fitting reviews ("order not deliver"), which is hard to read on a dashboard. The script joins `review_topics.csv.gz` with the original text in `data/tagged/` and keeps, for each of the 17 topics and each app of its domain, the **3 best-fitting reviews** (highest topic confidence) that are 1–2★, 60–300 characters long, at least 95% ASCII (the models are English), have a topic confidence of at least 0.5 and are not duplicates. That gives 189 examples for 63 topic-and-app cells.
+
+### 4.2 Things to know when reading the page
+
+- The examples are the **best-fitting** reviews, not a random sample, so they show what a topic is about, not how typical a review is. Some are Hinglish (the topic models keep Hinglish negations such as "nahi").
+- Topic shares over time are for the whole domain. The data has no per-app topic assignment by month in the saved tables.
+- September is partial (1–20 Sep).
+- A deep link such as `/text_mining` skips `app.py` and so skips the sidebar filters; open the dashboard from its first page and use the sidebar menu (the same holds for the Overview page).

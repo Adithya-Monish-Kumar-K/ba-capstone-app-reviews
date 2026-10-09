@@ -15,7 +15,9 @@ PAGES = {
     "Overview": [
         st.Page("pages/overview.py", title="Overview", icon=":material/dashboard:", default=True),
     ],
-    # Text mining:            st.Page("pages/text_mining.py", ...)            — #139
+    "Text mining": [
+        st.Page("pages/text_mining.py", title="Text mining", icon=":material/topic:"),
+    ],
     # Forecasting, update impact and recommendations: st.Page("pages/...", ...) — #140
     # Check a review:         st.Page("pages/check_review.py", ...)           — #146
 }

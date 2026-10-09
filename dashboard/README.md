@@ -16,6 +16,7 @@ The app reads only small precomputed tables (for example `data/timeseries/daily_
 | `app.py` | Entry point: page list (`st.navigation`) and the sidebar filters |
 | `common.py` | Shared data loaders, the `Filters` object, `apply_filters()`, chart styling, feed-gap shading |
 | `pages/overview.py` | Overview page (#133): headline numbers, trends per domain, share of 1–2★ reviews, top issues |
+| `pages/text_mining.py` | Text-mining page (#139): topic explorer with example reviews, topics by app, topic share over time, distinctive terms per app. Reads `data/textmining/*.csv` and `data/topic_modelling_summary.json` |
 | `screenshots/` | Screenshots used as evidence in pull requests and the report |
 | `../.streamlit/config.toml` | Theme |
 
@@ -41,7 +42,7 @@ df = apply_filters(my_table, f)   # keeps the selected apps and dates (needs app
 4. Use `style(fig)` from `common.py` on Plotly figures and `shade_feed_gap(fig)` on time charts.
 5. Run the app, check every filter combination, and add a screenshot to `screenshots/`.
 
-Planned pages: text mining (#139), check a review (#146), forecasting, update impact and recommendations (#140).
+Planned pages: check a review (#146), forecasting, update impact and recommendations (#140).
 
 ## Public link (Streamlit Community Cloud)
 
