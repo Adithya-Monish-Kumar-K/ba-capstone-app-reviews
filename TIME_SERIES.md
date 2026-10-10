@@ -1,7 +1,7 @@
 # Time-Series Analysis — Review 2, Method 2
 
 **Capstone Project — Review 2 (Unit 3): Time-Series Analysis**
-*Input: `data/tagged/*.csv.gz` (1,137,987 reviews, 11 apps, 1 Apr – 20 Sep 2026)*
+_Input: `data/tagged/_.csv.gz` (1,137,987 reviews, 11 apps, 1 Apr – 20 Sep 2026)\*
 
 The question: how many 1–2★ reviews will each app get in the coming weeks, and did a new app version make things worse? This document grows stage by stage: data preparation (#131), ARIMA forecasting (#135), forecast evaluation (#137) and update impact (#138).
 
@@ -15,24 +15,24 @@ Code: `scripts/15_time_series_data.py` (about 10 seconds). Tables in `data/times
 
 The modelled series is the **daily count of 1–2★ reviews per app** (173 days, 1 Apr – 20 Sep 2026). Counts are used instead of the share of 1–2★ reviews, because the late-April feed gap removes mostly positive reviews, which distorts shares far more than counts.
 
-| File | Contents |
-|---|---|
-| `daily_app.csv` | One row per app per day: reviews, 1–2★ and 4–5★ counts, mean rating, mean sentiment, share of 1–2★, the 9 issue counts, weekday, and the quality flags below |
-| `daily_domain.csv` | The same, summed per domain |
-| `weekly_app.csv`, `weekly_domain.csv` | Monday–Sunday weeks; `complete_week` marks weeks fully inside the window (24 of 25) |
-| `release_events.csv` | One row per app version: first day seen, reviews, rating, share of 1–2★, and whether it counts as a new release |
-| `stl_components.csv` | STL trend, weekly seasonal and remainder components per app |
-| `patterns_by_app.csv` | Trend and seasonal strength, weekday effect, trend change, suggested differencing |
-| `stationarity.csv` | ADF tests on the level, the first difference, the weekly difference and both |
-| `acf_pacf.csv` | ACF and PACF for lags 0–28, for the level and the weekly difference |
+| File                                  | Contents                                                                                                                                                     |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `daily_app.csv`                       | One row per app per day: reviews, 1–2★ and 4–5★ counts, mean rating, mean sentiment, share of 1–2★, the 9 issue counts, weekday, and the quality flags below |
+| `daily_domain.csv`                    | The same, summed per domain                                                                                                                                  |
+| `weekly_app.csv`, `weekly_domain.csv` | Monday–Sunday weeks; `complete_week` marks weeks fully inside the window (24 of 25)                                                                          |
+| `release_events.csv`                  | One row per app version: first day seen, reviews, rating, share of 1–2★, and whether it counts as a new release                                              |
+| `stl_components.csv`                  | STL trend, weekly seasonal and remainder components per app                                                                                                  |
+| `patterns_by_app.csv`                 | Trend and seasonal strength, weekday effect, trend change, suggested differencing                                                                            |
+| `stationarity.csv`                    | ADF tests on the level, the first difference, the weekly difference and both                                                                                 |
+| `acf_pacf.csv`                        | ACF and PACF for lags 0–28, for the level and the weekly difference                                                                                          |
 
 ### 1.2 Data-quality flags
 
-| Flag | Meaning | How to use it |
-|---|---|---|
-| `feed_gap` | 21 Apr – 5 May for Swiggy, Blinkit, Domino's, Flipkart and Amazon (75 app-days). Positive reviews are mostly missing from the Play Store feed; 1–2★ counts fall far less | Pass it to ARIMA as an extra input (SARIMAX) so the model does not read the dip as a real change |
-| `source_gap`, `source_coverage` | Zomato has no reviews from 23 Jul 22:00 to 25 Jul 12:30. Coverage is 0.92, 0 and 0.48 for those three days | 24 Jul is filled in `neg_reviews_filled` with the mean of the same weekday one and two weeks either side (165.5). 23 and 25 Jul keep their real counts, because reviews arrive in a burst after the outage |
-| `neg_reviews_filled` | `neg_reviews` with only the fully missing Zomato day filled | Use this column for models; `neg_reviews` stays raw |
+| Flag                            | Meaning                                                                                                                                                                  | How to use it                                                                                                                                                                                              |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `feed_gap`                      | 21 Apr – 5 May for Swiggy, Blinkit, Domino's, Flipkart and Amazon (75 app-days). Positive reviews are mostly missing from the Play Store feed; 1–2★ counts fall far less | Pass it to ARIMA as an extra input (SARIMAX) so the model does not read the dip as a real change                                                                                                           |
+| `source_gap`, `source_coverage` | Zomato has no reviews from 23 Jul 22:00 to 25 Jul 12:30. Coverage is 0.92, 0 and 0.48 for those three days                                                               | 24 Jul is filled in `neg_reviews_filled` with the mean of the same weekday one and two weeks either side (165.5). 23 and 25 Jul keep their real counts, because reviews arrive in a burst after the outage |
+| `neg_reviews_filled`            | `neg_reviews` with only the fully missing Zomato day filled                                                                                                              | Use this column for models; `neg_reviews` stays raw                                                                                                                                                        |
 
 ### 1.3 Release events
 
@@ -56,13 +56,13 @@ That leaves **224 release events**, from 12 (PhonePe) to 38 (Zomato) per app. `f
 
 ### 1.5 Starting points for the ARIMA models (#135)
 
-| | Suggestion | Why |
-|---|---|---|
-| Series | `neg_reviews_filled` per app | Raw counts with only the missing Zomato day filled |
-| d (non-seasonal differencing) | 1 for Zomato and Blinkit, 0 for the rest (`suggested_d`) | ADF on the level |
-| D (seasonal differencing) | 0 for every app (`suggested_D`) | STL seasonal strength is below 0.64 everywhere |
-| Seasonal terms | Try a seasonal AR or MA term at lag 7 for Zomato, Blinkit and the other food apps | Weekly ACF spikes and the Sunday effect |
-| Extra input | `feed_gap` as an exogenous dummy | The late-April dip for five apps |
+|                               | Suggestion                                                                        | Why                                                |
+| ----------------------------- | --------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Series                        | `neg_reviews_filled` per app                                                      | Raw counts with only the missing Zomato day filled |
+| d (non-seasonal differencing) | 1 for Zomato and Blinkit, 0 for the rest (`suggested_d`)                          | ADF on the level                                   |
+| D (seasonal differencing)     | 0 for every app (`suggested_D`)                                                   | STL seasonal strength is below 0.64 everywhere     |
+| Seasonal terms                | Try a seasonal AR or MA term at lag 7 for Zomato, Blinkit and the other food apps | Weekly ACF spikes and the Sunday effect            |
+| Extra input                   | `feed_gap` as an exogenous dummy                                                  | The late-April dip for five apps                   |
 
 These are starting points; the orders are chosen in #135 from the ACF/PACF charts and AIC.
 
@@ -76,11 +76,11 @@ Code: `scripts/19_forecasting.py` (about 1 minute). Tables in `data/timeseries/`
 
 The forecast target is the daily count of 1–2★ reviews per app (`neg_reviews_filled`, 173 days). Three models are fitted at every step so the main model has something to beat:
 
-| Model | What it does | Intervals |
-|---|---|---|
-| **ARIMA / SARIMA** (main) | ARIMA, with seasonal terms at lag 7 (a weekly cycle, i.e. SARIMA) only for the four Food & Grocery apps (Swiggy, Zomato, Blinkit, Domino's), which have a strong weekday pattern; the other seven apps get a plain ARIMA. For Swiggy, Blinkit, Domino's, Flipkart and Amazon the 0/1 `feed_gap` dummy is an extra input (SARIMAX); it is 0 for every forecast day because the gap is in the past | 80% and 95% |
-| **Seasonal naive** (baseline) | Forecast = the count of the same weekday last week | none |
-| **Holt-Winters** (optional comparison) | Exponential smoothing with a damped additive trend and an additive weekly season | none |
+| Model                                  | What it does                                                                                                                                                                                                                                                                                                                                                                                     | Intervals   |
+| -------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- |
+| **ARIMA / SARIMA** (main)              | ARIMA, with seasonal terms at lag 7 (a weekly cycle, i.e. SARIMA) only for the four Food & Grocery apps (Swiggy, Zomato, Blinkit, Domino's), which have a strong weekday pattern; the other seven apps get a plain ARIMA. For Swiggy, Blinkit, Domino's, Flipkart and Amazon the 0/1 `feed_gap` dummy is an extra input (SARIMAX); it is 0 for every forecast day because the gap is in the past | 80% and 95% |
+| **Seasonal naive** (baseline)          | Forecast = the count of the same weekday last week                                                                                                                                                                                                                                                                                                                                               | none        |
+| **Holt-Winters** (optional comparison) | Exponential smoothing with a damped additive trend and an additive weekly season                                                                                                                                                                                                                                                                                                                 | none        |
 
 Forecasts and interval limits below zero are set to 0, because counts cannot be negative.
 
@@ -93,19 +93,19 @@ Forecasts and interval limits below zero are set to 0, because counts cannot be 
 
 Final orders (p, d, q)(P, 0, Q)₇:
 
-| Domain | App | Order | Notes |
-|---|---|---|---|
-| Food & Grocery | Swiggy | (0,0,1)(1,0,1) | seasonal AR and MA at lag 7; feed-gap input |
-| | Zomato | (2,1,1)(1,0,1) | differenced once |
-| | Blinkit | (1,1,1)(1,0,1) | differenced once; feed-gap input |
-| | Domino's | (0,0,1)(1,0,1) | seasonal terms because of its +38% Sunday effect; feed-gap input |
-| Shopping | Myntra | (3,0,2) | |
-| | Flipkart | (1,0,1) | strong trend, handled by the AR term; feed-gap input |
-| | Amazon | (1,0,1) | feed-gap input |
-| | Meesho | (0,0,2) | |
-| Payments | Paytm | (2,0,2) | |
-| | PhonePe | (1,0,0) | |
-| | Google Pay | (1,0,0) | |
+| Domain         | App        | Order          | Notes                                                            |
+| -------------- | ---------- | -------------- | ---------------------------------------------------------------- |
+| Food & Grocery | Swiggy     | (0,0,1)(1,0,1) | seasonal AR and MA at lag 7; feed-gap input                      |
+|                | Zomato     | (2,1,1)(1,0,1) | differenced once                                                 |
+|                | Blinkit    | (1,1,1)(1,0,1) | differenced once; feed-gap input                                 |
+|                | Domino's   | (0,0,1)(1,0,1) | seasonal terms because of its +38% Sunday effect; feed-gap input |
+| Shopping       | Myntra     | (3,0,2)        |                                                                  |
+|                | Flipkart   | (1,0,1)        | strong trend, handled by the AR term; feed-gap input             |
+|                | Amazon     | (1,0,1)        | feed-gap input                                                   |
+|                | Meesho     | (0,0,2)        |                                                                  |
+| Payments       | Paytm      | (2,0,2)        |                                                                  |
+|                | PhonePe    | (1,0,0)        |                                                                  |
+|                | Google Pay | (1,0,0)        |                                                                  |
 
 The four food apps are the only ones with seasonal terms, which matches the Sunday peak found in Stage 1. Shopping and payment apps need only short-memory terms. As a check, forcing seasonal terms onto those seven apps changed their backtest error by less than 1.5 reviews a day (Paytm, PhonePe and Google Pay: no change; Myntra and Meesho slightly worse), so plain ARIMA is enough for them.
 
@@ -119,19 +119,19 @@ The models are fitted on the first 84 days (12 weeks), forecast the next 28 days
 
 Mean absolute error over all 28 forecast days, in reviews per day (lower is better; best per app in bold):
 
-| App | ARIMA | Seasonal naive | Holt-Winters |
-|---|---:|---:|---:|
-| Swiggy | 27.6 | 34.6 | **27.4** |
-| Zomato | 22.8 | 23.9 | **21.5** |
-| Blinkit | 28.8 | 33.8 | **26.8** |
-| Domino's | 15.8 | 18.3 | **14.4** |
-| Myntra | **10.5** | 13.9 | 12.8 |
-| Flipkart | **38.1** | 56.0 | 54.7 |
-| Amazon | **12.9** | 16.9 | 14.5 |
-| Meesho | **13.6** | 19.3 | 15.1 |
-| Paytm | 8.6 | 8.8 | **7.9** |
-| PhonePe | **7.9** | 10.0 | 8.0 |
-| Google Pay | 10.9 | **6.2** | 7.5 |
+| App        |    ARIMA | Seasonal naive | Holt-Winters |
+| ---------- | -------: | -------------: | -----------: |
+| Swiggy     |     27.6 |           34.6 |     **27.4** |
+| Zomato     |     22.8 |           23.9 |     **21.5** |
+| Blinkit    |     28.8 |           33.8 |     **26.8** |
+| Domino's   |     15.8 |           18.3 |     **14.4** |
+| Myntra     | **10.5** |           13.9 |         12.8 |
+| Flipkart   | **38.1** |           56.0 |         54.7 |
+| Amazon     | **12.9** |           16.9 |         14.5 |
+| Meesho     | **13.6** |           19.3 |         15.1 |
+| Paytm      |      8.6 |            8.8 |      **7.9** |
+| PhonePe    |  **7.9** |           10.0 |          8.0 |
+| Google Pay |     10.9 |        **6.2** |          7.5 |
 
 - **ARIMA beats the seasonal-naive baseline for 10 of 11 apps.** The largest gains are for Flipkart (−32%), Meesho (−30%), Myntra (−24%), Amazon (−24%) and PhonePe (−21%), the apps with a trend or slow-moving level that "same day last week" misses.
 - **It does not beat the baseline for Google Pay.** Google Pay has a low, noisy level with short spikes (mid-May and September) and its level shifts, so a model that returns to the training mean is a poor guide, while last week's value adapts faster. For Google Pay ARIMA forecasts about 28 a day while the actual level over the backtest was about 20.
@@ -142,25 +142,39 @@ The 80% and 95% intervals contained 81% and 93% of the backtest days, close to t
 
 ![Backtest error](data/charts/timeseries/ts_07_backtest_mae_vs_baseline.png)
 
-### 2.5 Forecast for 21 Sep – 18 Oct 2026 (`forecast_daily.csv`, `forecast_weekly.csv`, `ts_05_forecast_next_4_weeks.png`)
+### 2.5 Formal forecast evaluation and unusual-day alerts (#137)
+
+The rolling-origin backtest was evaluated using mean absolute error (MAE), root mean squared error (RMSE), and mean absolute scaled error (MASE). MASE was scaled using the mean absolute seven-day seasonal-naive difference from the first 84 days of each app's series. Lower values indicate better forecast accuracy.
+
+**Overall model comparison.** Across the 11 apps, ARIMA achieved a mean MAE of 17.950 and RMSE of 24.950 reviews per day, compared with 19.143 and 26.661 for Holt–Winters and 21.985 and 31.068 for seasonal naive. Mean MASE was 0.883 for ARIMA, 0.931 for Holt–Winters and 1.081 for seasonal naive. ARIMA outperformed seasonal naive on 10 of 11 apps; Google Pay was the exception, where seasonal naive performed better. These are unweighted averages across apps, so each app contributes equally.
+
+**Prediction-interval coverage.** Across the 2,772 ARIMA backtest forecast rows with available intervals, the empirical coverage was 81.42% for nominal 80% intervals and 92.75% for nominal 95% intervals. The 80% interval coverage was close to its nominal level, while the 95% intervals under-covered slightly. Because rolling forecast windows overlap, these observations are not independent; coverage should be interpreted as a descriptive backtest measure rather than an independent-sample calibration test.
+
+**Residual diagnostics.** Ljung–Box tests were applied to the final fitted ARIMA/SARIMAX residuals at lag 14. All 11 apps had p-values above 0.05, so the tests did not detect statistically significant residual autocorrelation at that lag. This does not prove that residuals are fully random or that the models capture every pattern.
+
+**Unusual-day alerts.** A forecast row was flagged when its observed negative-review count fell outside the ARIMA 95% prediction interval. The evaluation produced 201 flagged forecast rows. Since multiple rolling origins can forecast the same app and calendar day, the unique app-day summary is used to distinguish individual unusual days from repeated alerts for the same event. For example, Swiggy's 24 July 2026 spike was flagged by multiple forecast origins. Such alerts indicate unexpected observations, not proof that an app update or a particular event caused the spike.
+
+Evaluation outputs are saved under `data/timeseries/`: `evaluation_metrics_by_app.csv`, `evaluation_metrics_by_horizon.csv`, `prediction_interval_coverage.csv`, `residual_diagnostics.csv`, `residual_acf.csv`, `unusual_day_alerts.csv` and `unusual_days_unique.csv`. The associated charts are `ts_08_evaluation_mae.png`, `ts_09_interval_coverage.png` and `ts_10_residual_acf.png` in `data/charts/timeseries/`.
+
+### 2.6 Forecast for 21 Sep – 18 Oct 2026 (`forecast_daily.csv`, `forecast_weekly.csv`, `ts_05_forecast_next_4_weeks.png`)
 
 The final models are fitted on all 173 days and forecast four Monday–Sunday weeks. `forecast_daily.csv` has the daily forecast of all three models (ARIMA with 80% and 95% limits); `forecast_weekly.csv` has the weekly totals, whose intervals come from 2,000 simulated future paths of the ARIMA model.
 
 Expected number of 1–2★ reviews in the first forecast week (21–27 Sep), with the 80% interval and the average of the last four weeks of data:
 
-| App | Week 1 forecast | 80% interval | Last 4 weeks (weekly average) |
-|---|---:|---|---:|
-| Flipkart | 1,830 | 1,596 – 2,056 | 1,973 |
-| Blinkit | 1,711 | 1,488 – 1,929 | 1,849 |
-| Swiggy | 1,037 | 889 – 1,180 | 973 |
-| Zomato | 977 | 811 – 1,151 | 1,054 |
-| Meesho | 737 | 676 – 801 | 712 |
-| Amazon | 714 | 642 – 786 | 758 |
-| Domino's | 413 | 327 – 495 | 386 |
-| Myntra | 371 | 318 – 424 | 414 |
-| PhonePe | 348 | 270 – 431 | 385 |
-| Google Pay | 192 | 105 – 310 | 187 |
-| Paytm | 136 | 75 – 205 | 348 |
+| App        | Week 1 forecast | 80% interval  | Last 4 weeks (weekly average) |
+| ---------- | --------------: | ------------- | ----------------------------: |
+| Flipkart   |           1,830 | 1,596 – 2,056 |                         1,973 |
+| Blinkit    |           1,711 | 1,488 – 1,929 |                         1,849 |
+| Swiggy     |           1,037 | 889 – 1,180   |                           973 |
+| Zomato     |             977 | 811 – 1,151   |                         1,054 |
+| Meesho     |             737 | 676 – 801     |                           712 |
+| Amazon     |             714 | 642 – 786     |                           758 |
+| Domino's   |             413 | 327 – 495     |                           386 |
+| Myntra     |             371 | 318 – 424     |                           414 |
+| PhonePe    |             348 | 270 – 431     |                           385 |
+| Google Pay |             192 | 105 – 310     |                           187 |
+| Paytm      |             136 | 75 – 205      |                           348 |
 
 ![Forecast](data/charts/timeseries/ts_05_forecast_next_4_weeks.png)
 
@@ -171,14 +185,14 @@ How to read it:
 - **Intervals are wide for noisy apps.** Google Pay's 95% daily interval is about 0–74 for a forecast of 27, and Swiggy's reaches about 250 against a forecast of 130–180, because of the short spikes in the training data. The intervals are an honest statement that single days cannot be predicted well; weekly totals are much better determined.
 - **Paytm is the one forecast to treat with care.** Paytm jumped from about 30 to 80 a day in September and fell back to 25 on 20 Sep. The (2,0,2) model fitted on that shape swings below the long-run mean first (forecast 136 in week 1, −61% against the last four weeks) and then back up. `forecast_weekly.csv` carries `change_vs_last_4_weeks_pct`, and `forecasting_summary.json` lists Paytm under `large_week1_changes`. Treat this app's forecast as unreliable until the September level shift is explained; the forecast-evaluation stage should flag it.
 
-### 2.6 Outputs for the next stages
+### 2.7 Outputs for the next stages
 
-| Used by | Files |
-|---|---|
-| Forecast evaluation and write-up (#137, #142) | `backtest_forecasts.csv`, `backtest_summary.csv`, `arima_orders.csv`, `arima_candidates.csv` |
-| Dashboard forecasting page and recommendations (#140, #141) | `forecast_daily.csv`, `forecast_weekly.csv`, `forecasting_summary.json` |
+| Used by                                                     | Files                                                                                        |
+| ----------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Forecast evaluation and write-up (#137, #142)               | `backtest_forecasts.csv`, `backtest_summary.csv`, `arima_orders.csv`, `arima_candidates.csv` |
+| Dashboard forecasting page and recommendations (#140, #141) | `forecast_daily.csv`, `forecast_weekly.csv`, `forecasting_summary.json`                      |
 
-### 2.7 Limits
+### 2.8 Limits
 
 - Only 173 days are available, so there is no yearly pattern and the backtest has just 9 origins; the first origin already needs 84 days.
 - The series are counts of reviews, which depend on app traffic and campaigns that the model does not see. The forecast answers "what if the next weeks look like the recent past", not "what will a campaign do".
