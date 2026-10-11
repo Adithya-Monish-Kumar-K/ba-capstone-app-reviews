@@ -243,9 +243,9 @@ Usual gaps by app (points of 1–2★ share, new minus older): Amazon +6.7, Flip
 
 Most releases change nothing measurable: 196 of the 205 testable releases (96%) are within chance of the app's usual gap, and the median gap is +0.25 points. Only one release raised an app's 1–2★ reviews per day significantly against the week before.
 
-![Verdicts](data/charts/update_impact/ui_01_release_verdicts_by_app.png)
+![Verdicts](data/charts/update_impact/01_release_verdicts_by_app.png)
 
-![Release effects](data/charts/update_impact/ui_02_release_effects.png)
+![Release effects](data/charts/update_impact/02_release_effects.png)
 
 ### 3.3 Releases that made things worse (`worse_releases.csv`, `ui_03_worst_release_examples.png`, `ui_04_issue_mix_of_worse_releases.png`)
 
@@ -256,9 +256,9 @@ Most releases change nothing measurable: 196 of the 205 testable releases (96%) 
 | Paytm | 10.84.5 | 3 Sep | 23% vs 13% | +2.4 | +8.1 | < 0.001 | 34 → 66 (q = 0.027) | – | **Confirmed at app level** |
 | Flipkart | 9.3 | 16 Apr | 30% vs 16% | +6.2 | +7.6 | 0.015 | 263 → 234 | Customer Support +4.2, Cancellation & Return +3.2 | New version only |
 
-![Worst releases](data/charts/update_impact/ui_03_worst_release_examples.png)
+![Worst releases](data/charts/update_impact/03_worst_release_examples.png)
 
-![Issue mix](data/charts/update_impact/ui_04_issue_mix_of_worse_releases.png)
+![Issue mix](data/charts/update_impact/04_issue_mix_of_worse_releases.png)
 
 Per app:
 
