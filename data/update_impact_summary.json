@@ -1,0 +1,199 @@
+{
+  "method": {
+    "window_days": 7,
+    "release_day": "first_seen_10th_review",
+    "min_reviews": 30,
+    "min_share_diff_pp": 5.0,
+    "min_issue_diff_pp": 2.0,
+    "false_discovery_rate": 0.05,
+    "main_test": "new version vs older versions over the same 7 days: gap in the share of 1-2 star reviews, compared with the app's usual gap (leave-one-out median); z-test on the excess, Benjamini-Hochberg across releases",
+    "app_level_test": "Welch t-test on 1-2 star reviews per day, 7 days before vs 7 days from the release"
+  },
+  "releases": 224,
+  "testable": 205,
+  "not_testable_reasons": {
+    "window_outside_data": 16,
+    "too_few_reviews": 3
+  },
+  "verdicts": {
+    "Worse (confirmed at app level)": 1,
+    "Worse (new version only)": 3,
+    "No clear change": 196,
+    "Better": 5,
+    "Not testable": 19
+  },
+  "share_worse_pct_of_testable": 2.0,
+  "median_neg_share_diff_pp": 0.25,
+  "usual_gap_by_app_pp": {
+    "Amazon": 6.7,
+    "Blinkit": 1.55,
+    "Domino's": -1.28,
+    "Flipkart": 6.25,
+    "Google Pay": 1.4,
+    "Meesho": -1.74,
+    "Myntra": 1.59,
+    "Paytm": 2.71,
+    "PhonePe": -0.46,
+    "Swiggy": -3.2,
+    "Zomato": -1.83
+  },
+  "raw_rule_without_app_baseline_would_flag": 23,
+  "significant_before_after_count_rises": 1,
+  "significant_before_after_count_falls": 0,
+  "worse_releases_with_forecast_alert_in_week_after": 1,
+  "most_elevated_issue_in_worse_releases": {
+    "Customer Support": 2
+  },
+  "by_app": {
+    "Swiggy": {
+      "testable": 20,
+      "made_worse": 2,
+      "confirmed_at_app_level": 0,
+      "better": 1,
+      "worst_release": "4.107.1"
+    },
+    "Zomato": {
+      "testable": 33,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 1,
+      "worst_release": ""
+    },
+    "Blinkit": {
+      "testable": 22,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 0,
+      "worst_release": ""
+    },
+    "Domino's": {
+      "testable": 15,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 0,
+      "worst_release": ""
+    },
+    "Myntra": {
+      "testable": 17,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 0,
+      "worst_release": ""
+    },
+    "Flipkart": {
+      "testable": 12,
+      "made_worse": 1,
+      "confirmed_at_app_level": 0,
+      "better": 1,
+      "worst_release": "9.3"
+    },
+    "Amazon": {
+      "testable": 13,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 0,
+      "worst_release": ""
+    },
+    "Meesho": {
+      "testable": 21,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 0,
+      "worst_release": ""
+    },
+    "Paytm": {
+      "testable": 18,
+      "made_worse": 1,
+      "confirmed_at_app_level": 1,
+      "better": 1,
+      "worst_release": "10.84.5"
+    },
+    "PhonePe": {
+      "testable": 12,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 0,
+      "worst_release": ""
+    },
+    "Google Pay": {
+      "testable": 22,
+      "made_worse": 0,
+      "confirmed_at_app_level": 0,
+      "better": 1,
+      "worst_release": ""
+    }
+  },
+  "worst_releases": [
+    {
+      "app": "Swiggy",
+      "version": "4.107.1",
+      "release_day": "2026-04-19",
+      "neg_share_new": 0.599,
+      "neg_share_older": 0.421,
+      "diff_pp": 17.9,
+      "excess_over_usual_pp": 21.2,
+      "verdict": "Worse (new version only)",
+      "issue": "Customer Support"
+    },
+    {
+      "app": "Swiggy",
+      "version": "4.107.2",
+      "release_day": "2026-04-23",
+      "neg_share_new": 0.879,
+      "neg_share_older": 0.827,
+      "diff_pp": 5.2,
+      "excess_over_usual_pp": 8.5,
+      "verdict": "Worse (new version only)",
+      "issue": ""
+    },
+    {
+      "app": "Paytm",
+      "version": "10.84.5",
+      "release_day": "2026-09-03",
+      "neg_share_new": 0.233,
+      "neg_share_older": 0.128,
+      "diff_pp": 10.5,
+      "excess_over_usual_pp": 8.1,
+      "verdict": "Worse (confirmed at app level)",
+      "issue": ""
+    },
+    {
+      "app": "Flipkart",
+      "version": "9.3",
+      "release_day": "2026-04-16",
+      "neg_share_new": 0.301,
+      "neg_share_older": 0.163,
+      "diff_pp": 13.8,
+      "excess_over_usual_pp": 7.6,
+      "verdict": "Worse (new version only)",
+      "issue": "Customer Support"
+    }
+  ],
+  "sensitivity_release_day_first_seen": {
+    "testable": 202,
+    "made_worse": 4,
+    "same_releases_flagged": 4
+  },
+  "charts": [
+    {
+      "file": "data/charts/update_impact/ui_01_release_verdicts_by_app.png",
+      "title": "4 of 205 testable releases made things worse; most releases changed nothing measurable",
+      "subtitle": "Verdict for each of the 224 release events. 'Worse' = over the same 7 days, the new version's share of 1\u20132\u2605 reviews exceeds older versions' by at least 5 points more than the app's usual new-version gap (Benjamini\u2013Hochberg q < 0.05). 'Confirmed' = the app's 1\u20132\u2605 reviews per day also rose significantly against the week before."
+    },
+    {
+      "file": "data/charts/update_impact/ui_02_release_effects.png",
+      "title": "How each release compares with the versions it replaced",
+      "subtitle": "One dot per release: share of 1\u20132\u2605 reviews on the new version minus the share on older versions, over the same 7 days from the release, with its 95% interval. Dashed line = the app's usual gap (median over its releases); grey band = within \u00b15 points of it. Flipkart and Amazon users on the newest version are always more negative, so only releases well above that line count. Red = made things worse, blue = better, grey dots = no clear change."
+    },
+    {
+      "file": "data/charts/update_impact/ui_03_worst_release_examples.png",
+      "title": "Releases that made things worse: daily 1\u20132\u2605 reviews around the release",
+      "subtitle": "Grey band = the 7 days before the release; coloured band = the 7 days from the release (dotted line = release day). The worst release of each app among those flagged as worse."
+    },
+    {
+      "file": "data/charts/update_impact/ui_04_issue_mix_of_worse_releases.png",
+      "title": "What got worse: issue mix of the releases that made things worse",
+      "subtitle": "Share of reviews mentioning each issue on the new version minus older versions, same 7 days (keyword tags; a review can have several). * = significant increase (q < 0.05, at least 2 points). Red = more on the new version."
+    }
+  ]
+}
