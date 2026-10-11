@@ -18,7 +18,13 @@ PAGES = {
     "Text mining": [
         st.Page("pages/text_mining.py", title="Text mining", icon=":material/topic:"),
     ],
-    # Forecasting, update impact and recommendations: st.Page("pages/...", ...) — #140
+    "Forecasting and update impact": [
+        st.Page("pages/forecasting.py", title="Forecasting", icon=":material/trending_up:"),
+        st.Page("pages/update_impact.py", title="Update impact", icon=":material/system_update:"),
+    ],
+    "Recommendations": [
+        st.Page("pages/recommendations.py", title="Recommendations", icon=":material/checklist:"),
+    ],
     "Check a review": [
     st.Page("pages/check_review.py", title="Check a Review", icon=":material/rate_review:"),
 ],

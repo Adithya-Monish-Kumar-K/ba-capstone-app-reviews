@@ -198,3 +198,90 @@ How to read it:
 - The series are counts of reviews, which depend on app traffic and campaigns that the model does not see. The forecast answers "what if the next weeks look like the recent past", not "what will a campaign do".
 - Level shifts and spikes (Paytm in September, Swiggy in late July) are not predictable by ARIMA; they widen the intervals instead.
 - The forecast does not include release dates. Whether a new version raises the count is the question of the update-impact stage (#138).
+
+---
+
+## 3. Update impact before and after each app version (#138)
+
+Code: `scripts/21_update_impact.py` (about 10 seconds; needs `scripts/15_time_series_data.py` and `scripts/20_forecast_evaluation.py` first). Tables in `data/update_impact/`, charts in `data/charts/update_impact/`, numbers in `data/update_impact_summary.json`.
+
+The question: after each new app version, did 1–2★ reviews, the rating or the issue mix get worse, and is the change larger than chance?
+
+### 3.1 Method
+
+Each of the 224 release events in `release_events.csv` (rows with `use_for_update_impact`) is tested. The release day is the day the version reached its 10th review (`first_seen_10th_review`), so a handful of early testers does not start the window.
+
+Two views are compared:
+
+| View | Comparison | Tests |
+| ---- | ---------- | ----- |
+| A. Before vs after (app level) | The app's reviews in the 7 days before the release vs the 7 days from the release | Welch t-test on 1–2★ reviews per day; two-proportion z-test on the 1–2★ share; Welch t-test on the rating |
+| B. New vs older versions (main test) | Over the same 7 days from the release, reviews written on the new version vs reviews on older versions | Two-proportion z-test on the 1–2★ share, Wald 95% interval; per-issue z-tests on the nine keyword issue flags |
+
+View B is the main test because both groups cover the same days, so weekends, sales and outages affect both equally. View A alone cannot separate a release from whatever else happened that week.
+
+**Usual new-version gap.** Users on the newest version are not a random sample: on Flipkart and Amazon they are always about 6 points more negative than users on older versions, release after release. A raw "new minus older" test flagged 23 releases, 9 of them Flipkart's. Each release is therefore compared with its own app's usual gap (the median over the app's other releases, leave-one-out), and the test is on the excess:
+
+- **Worse** = excess over the usual gap of at least 5 points and Benjamini–Hochberg q < 0.05 across all releases.
+- **Worse (confirmed at app level)** = also a significant rise in 1–2★ reviews per day in View A (q < 0.05), outside the late-April feed gap.
+- **Better** = excess of at most −5 points and q < 0.05.
+- **Not testable** = the 7-day windows are not fully inside the data, or fewer than 30 reviews on either version.
+- An issue counts as elevated when its share on the new version is at least 2 points higher with q < 0.05.
+
+Usual gaps by app (points of 1–2★ share, new minus older): Amazon +6.7, Flipkart +6.3, Paytm +2.7, Myntra +1.6, Blinkit +1.6, Google Pay +1.4, PhonePe −0.5, Domino's −1.3, Meesho −1.7, Zomato −1.8, Swiggy −3.2.
+
+### 3.2 Results (`release_impact.csv`, `impact_by_app.csv`, `ui_01_release_verdicts_by_app.png`, `ui_02_release_effects.png`)
+
+| Verdict | Releases |
+| ------- | -------: |
+| Worse (confirmed at app level) | 1 |
+| Worse (new version only) | 3 |
+| No clear change | 196 |
+| Better | 5 |
+| Not testable (16 outside the data, 3 with too few reviews) | 19 |
+| **Total** | **224** |
+
+Most releases change nothing measurable: 196 of the 205 testable releases (96%) are within chance of the app's usual gap, and the median gap is +0.25 points. Only one release raised an app's 1–2★ reviews per day significantly against the week before.
+
+![Verdicts](data/charts/update_impact/01_release_verdicts_by_app.png)
+
+![Release effects](data/charts/update_impact/02_release_effects.png)
+
+### 3.3 Releases that made things worse (`worse_releases.csv`, `ui_03_worst_release_examples.png`, `ui_04_issue_mix_of_worse_releases.png`)
+
+| App | Version | Release day | 1–2★ share new vs older | Usual gap | Excess | q | 1–2★ per day before → after | Elevated issue | Verdict |
+| --- | ------- | ----------- | ----------------------- | --------: | -----: | -: | --------------------------- | -------------- | ------- |
+| Swiggy | 4.107.1 | 19 Apr | 60% vs 42% | −3.3 | +21.2 | < 0.001 | 162 → 150 | Customer Support +8.9 | New version only |
+| Swiggy | 4.107.2 | 23 Apr | 88% vs 83% | −3.3 | +8.5 | 0.015 | 163 → 137 | – | New version only |
+| Paytm | 10.84.5 | 3 Sep | 23% vs 13% | +2.4 | +8.1 | < 0.001 | 34 → 66 (q = 0.027) | – | **Confirmed at app level** |
+| Flipkart | 9.3 | 16 Apr | 30% vs 16% | +6.2 | +7.6 | 0.015 | 263 → 234 | Customer Support +4.2, Cancellation & Return +3.2 | New version only |
+
+![Worst releases](data/charts/update_impact/03_worst_release_examples.png)
+
+![Issue mix](data/charts/update_impact/04_issue_mix_of_worse_releases.png)
+
+Per app:
+
+- **Paytm 10.84.5 is the clearest bad release.** Its users were 10 points more negative than users still on older versions (23% vs 13% 1–2★; average rating 3.95 vs 4.41), 8 points beyond Paytm's usual gap, and the whole app's 1–2★ reviews per day nearly doubled (34 → 66). The forecast-evaluation stage (#137) independently raised 6 alerts above the 95% interval in the week after this release. It explains part of Paytm's September jump and the unreliable Paytm forecast in §2.6. No single keyword issue rose significantly, so the complaints are spread across issues.
+- **Swiggy 4.107.1 and 4.107.2** had much more negative users than older versions in the same days (+21 and +8.5 points beyond the usual gap), with Customer Support complaints up 8.9 points on 4.107.1. Both fall in the 21 Apr – 5 May feed gap, when the feed over-samples negative reviews (shares of 60–88%), so the size of the effect is uncertain; the comparison is still fair because both groups cover the same days. App-level counts did not rise.
+- **Flipkart 9.3** was 7.6 points worse than Flipkart's usual gap, with more Customer Support and Cancellation & Return complaints; it is also in the feed gap. Later Flipkart versions (9.5, 9.6, 9.13) also show significant small rises in Customer Support mentions (+2 to +3 points) without crossing the 5-point rule.
+- **No release made things worse** for Zomato, Blinkit, Domino's, Myntra, Amazon, Meesho, PhonePe or Google Pay.
+
+**Better releases (5):** Swiggy 4.108.0 (36% vs 50%, the version after the bad ones), Zomato 19.6.3 (16% vs 23%), Flipkart 9.4, Paytm 10.83.9 and Google Pay 327.1.1. Swiggy 4.108.0 replaced the two worse Swiggy versions.
+
+**Robustness.** With the release day set to the first review on the version (`first_seen`) instead of the 10th, 202 releases are testable and the same 4 releases are flagged.
+
+### 3.4 Outputs for the next stages
+
+| Used by | Files |
+| ------- | ----- |
+| Combined insights and recommendations (#141) | `worse_releases.csv`, `impact_by_app.csv`, `release_impact.csv` |
+| Dashboard update-impact page (#140) | `release_impact.csv`, `release_issue_changes.csv`, `impact_by_app.csv` |
+
+### 3.5 Limits
+
+- Users choose when to update. Early updaters can differ from late ones, which is why each release is compared with the app's usual gap instead of zero; the remaining bias is unknown.
+- Three of the four worse releases fall in the late-April feed gap, so their shares are inflated; only Paytm 10.84.5 is confirmed by app-level counts outside the gap.
+- A 1–2★ review is the user's judgement, not a confirmed defect, and the issue mix uses keyword tags, which miss complaints worded differently.
+- Releases close together (Swiggy 4.107.1 and 4.107.2, four days apart) have overlapping windows, so their effects cannot be fully separated.
+- Release dates come from the reviews themselves (`app_version`), not from the stores' release notes, so a staged rollout appears on the day it reached 10 reviews.

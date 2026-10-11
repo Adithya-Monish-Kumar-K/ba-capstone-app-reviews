@@ -1,0 +1,12 @@
+app_name,domain,releases,testable,made_worse,confirmed_at_app_level,better,usual_gap_pp,worst_diff_pp,share_worse_pct,worst_release,worst_release_day
+Swiggy,Food & Grocery,22,20,2,0,1,-3.1955,17.8846,10.0000,4.107.1,2026-04-19
+Zomato,Food & Grocery,38,33,0,0,1,-1.8253,3.3277,0.0000,,
+Blinkit,Food & Grocery,22,22,0,0,0,1.5508,5.3514,0.0000,,
+Domino's,Food & Grocery,17,15,0,0,0,-1.2778,3.9849,0.0000,,
+Myntra,Shopping,20,17,0,0,0,1.5906,8.3731,0.0000,,
+Flipkart,Shopping,14,12,1,0,1,6.2524,13.8023,8.3333,9.3,2026-04-16
+Amazon,Shopping,13,13,0,0,0,6.6980,12.6480,0.0000,,
+Meesho,Shopping,23,21,0,0,0,-1.7447,3.4194,0.0000,,
+Paytm,Payments,19,18,1,1,1,2.7134,10.4534,5.5556,10.84.5,2026-09-03
+PhonePe,Payments,12,12,0,0,0,-0.4553,3.4993,0.0000,,
+Google Pay,Payments,24,22,0,0,1,1.3997,6.5894,0.0000,,
