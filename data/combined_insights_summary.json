@@ -1,0 +1,93 @@
+{
+  "priority_rules": {
+    "sig_high_volume": "1\u20132\u2605 reviews per day above the median of the 11 apps",
+    "sig_high_share": "share of 1\u20132\u2605 reviews (feed-gap days excluded) above the all-app share",
+    "sig_rising": "last 4 weeks at least 10% above the first 4 weeks (STL patterns, Stage 1)",
+    "sig_forecast_up": "week-1 forecast at least 5% above the last 4 weeks (Stage 3)",
+    "sig_unusual_days": "at least 5 days above the 95% forecast interval (Stage 4)",
+    "sig_worse_release": "at least one release made things worse (update impact, #138)"
+  },
+  "thresholds": {
+    "all_app_neg_share_pct_excl_feed_gap": 18.94,
+    "median_neg_per_day": 103.0,
+    "rising_pct": 10,
+    "forecast_up_pct": 5,
+    "unusual_days_min": 5,
+    "unreliable_forecast_change_pct": 30
+  },
+  "priority": {
+    "Swiggy": {
+      "score": 4,
+      "priority": "High",
+      "signs": "many 1\u20132\u2605 reviews a day; high share of 1\u20132\u2605 reviews; forecast above recent level; a release made things worse"
+    },
+    "Flipkart": {
+      "score": 3,
+      "priority": "High",
+      "signs": "many 1\u20132\u2605 reviews a day; repeated days above the forecast interval; a release made things worse"
+    },
+    "Amazon": {
+      "score": 3,
+      "priority": "High",
+      "signs": "high share of 1\u20132\u2605 reviews; rising trend; repeated days above the forecast interval"
+    },
+    "Paytm": {
+      "score": 3,
+      "priority": "High",
+      "signs": "rising trend; repeated days above the forecast interval; a release made things worse"
+    },
+    "Blinkit": {
+      "score": 2,
+      "priority": "Medium",
+      "signs": "many 1\u20132\u2605 reviews a day; rising trend"
+    },
+    "Meesho": {
+      "score": 2,
+      "priority": "Medium",
+      "signs": "many 1\u20132\u2605 reviews a day; repeated days above the forecast interval"
+    },
+    "Domino's": {
+      "score": 2,
+      "priority": "Medium",
+      "signs": "high share of 1\u20132\u2605 reviews; forecast above recent level"
+    },
+    "Myntra": {
+      "score": 2,
+      "priority": "Medium",
+      "signs": "rising trend; repeated days above the forecast interval"
+    },
+    "Zomato": {
+      "score": 1,
+      "priority": "Low",
+      "signs": "many 1\u20132\u2605 reviews a day"
+    },
+    "Google Pay": {
+      "score": 1,
+      "priority": "Low",
+      "signs": "high share of 1\u20132\u2605 reviews"
+    },
+    "PhonePe": {
+      "score": 0,
+      "priority": "Low",
+      "signs": ""
+    }
+  },
+  "high_priority_apps": [
+    "Swiggy",
+    "Flipkart",
+    "Amazon",
+    "Paytm"
+  ],
+  "unreliable_forecasts": [
+    "Paytm",
+    "Google Pay"
+  ],
+  "recommendations": 65,
+  "charts": [
+    {
+      "file": "data/charts/combined/ci_01_priority_overview.png",
+      "title": "Which apps need attention first: six warning signs from all stages",
+      "subtitle": "Filled dot = the sign applies. Score = number of signs (3+ High, 2 Medium, 0\u20131 Low). Signs: 1\u20132\u2605 reviews per day above the median app; share of 1\u20132\u2605 reviews above all apps; last 4 weeks 10%+ above the first 4; reliable week-1 forecast 5%+ above the last 4 weeks; 5+ days above the 95% forecast interval; a release that made things worse."
+    }
+  ]
+}
