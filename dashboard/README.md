@@ -4,7 +4,7 @@ Interactive Streamlit dashboard for the Review 2 results.
 
 ```bash
 pip install -r requirements.txt
-streamlit run dashboard/app.py          # run from the repository root; opens http://localhost:8501
+streamlit run dashboard/app.py          
 ```
 
 The app reads only small precomputed tables (for example `data/timeseries/daily_app.csv` from `scripts/15_time_series_data.py`), so it starts in a few seconds and does not load the 1.1 million raw reviews.
@@ -17,6 +17,9 @@ The app reads only small precomputed tables (for example `data/timeseries/daily_
 | `common.py` | Shared data loaders, the `Filters` object, `apply_filters()`, chart styling, feed-gap shading |
 | `pages/overview.py` | Overview page (#133): headline numbers, trends per domain, share of 1–2★ reviews, top issues |
 | `pages/text_mining.py` | Text-mining page (#139): topic explorer with example reviews, topics by app, topic share over time, distinctive terms per app. Reads `data/textmining/*.csv` and `data/topic_modelling_summary.json` |
+| `pages/forecasting.py` | Forecasting page (#140): ARIMA forecast per app with 80% and 95% prediction intervals, optional seasonal-naive and Holt-Winters comparison, unusual days above/below the 95% interval, release markers (red = made things worse), weekly forecast table and backtest MASE. Reads `data/timeseries/forecast_*.csv`, `evaluation_metrics_by_app.csv`, `unusual_days_unique.csv`, `release_events.csv` and `data/update_impact/release_impact.csv` |
+| `pages/update_impact.py` | Update-impact page (#140, analysis #138): verdict per release, new-vs-older 1–2★ gap per app against its usual gap, daily series with releases, before/after detail and issue mix for any release, table with CSV download. Reads `data/update_impact/*.csv` |
+| `pages/recommendations.py` | Recommendations page (#140, analysis #141): priority counts, warning-sign grid, priority table and recommendations per domain and app, filtered by the sidebar domain and app; both tables downloadable. Reads `data/combined/*.csv` |
 | `screenshots/` | Screenshots used as evidence in pull requests and the report |
 | `../.streamlit/config.toml` | Theme |
 
@@ -42,7 +45,7 @@ df = apply_filters(my_table, f)   # keeps the selected apps and dates (needs app
 4. Use `style(fig)` from `common.py` on Plotly figures and `shade_feed_gap(fig)` on time charts.
 5. Run the app, check every filter combination, and add a screenshot to `screenshots/`.
 
-Planned pages: check a review (#146), forecasting, update impact and recommendations (#140).
+Before opening the forecasting, update-impact and recommendations pages, run `python scripts/20_forecast_evaluation.py`, `python scripts/21_update_impact.py` and `python scripts/22_combined_insights.py` (their outputs are committed, so this is only needed after the data changes).
 
 ## Public link (Streamlit Community Cloud)
 
