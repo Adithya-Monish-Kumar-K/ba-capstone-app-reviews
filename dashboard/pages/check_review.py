@@ -8,6 +8,7 @@ import warnings
 from pathlib import Path
 
 import joblib
+import nltk
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -83,6 +84,11 @@ def load_models():
 
 @st.cache_resource
 def load_vader():
+    # Streamlit Community Cloud starts without NLTK data, so fetch the lexicon on first use.
+    try:
+        nltk.data.find("sentiment/vader_lexicon.zip")
+    except LookupError:
+        nltk.download("vader_lexicon", quiet=True)
     return SentimentIntensityAnalyzer()
 
 
