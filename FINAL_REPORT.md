@@ -534,6 +534,8 @@ Every page shares the same sidebar filters: domain, app, date range, and an opti
 - **Pull requests.** Every task is linked to a merged pull request, and every issue is closed.
 - **Order of work.** The work was done as a relay: each stage started on the merged work of the stage before.
 
+![Project board, Review 2 tasks (table view)](docs/Review_2_Board.png)
+
 | Member | Register number | Stage | Board tasks | Pull requests | Evidence |
 |---|---|---|---|---|---|
 | Aditya Monish Kumar K | CB.SC.U4CSE23103 | 1 and 6 | #131 daily and weekly series, release events and patterns; #132 text preprocessing; #133 dashboard skeleton, filters, overview page and deployment. Stage 6: slide deck, final report, contribution summary | #147, #148, #149 | `scripts/15_time_series_data.py`, `scripts/16_text_preprocessing.py`, `data/timeseries/`, `data/textmining/`, `dashboard/app.py`, `dashboard/common.py`, `dashboard/pages/overview.py`, `FINAL_REPORT.md` |
