@@ -8,11 +8,13 @@ This project analyzes Google Play Store reviews from 11 major Indian consumer ap
 * **Shopping:** Myntra, Flipkart, Amazon, Meesho
 * **Payments:** Paytm, PhonePe, Google Pay
 
-This repository is set up for **Review 1: data collection, preprocessing, exploratory data analysis and predictive modelling**. Review 2 adds text mining, time-series forecasting and an interactive dashboard.
+This repository covers **Review 1** (data collection, preprocessing, exploratory data analysis and predictive modelling) and **Review 2** (text mining, time-series forecasting, update impact, combined recommendations and an interactive dashboard).
+
+**Live dashboard:** https://team10-app-reviews.streamlit.app/ · **Final report:** [`FINAL_REPORT.md`](FINAL_REPORT.md)
 
 ### Project Pipeline
 
-**Reviews → Cleaning → Issue Tagging & Sentiment → EDA → Predictive Modelling** (Review 1) → Time-Series Forecasting → Dashboard (Review 2)
+**Reviews → Cleaning → Issue Tagging & Sentiment → EDA → Predictive Modelling** (Review 1) → **Text Mining · Time-Series Forecasting · Update Impact → Combined Insights → Dashboard** (Review 2)
 
 The goal is to identify major user-reported problems, detect reviews that are likely to be problematic, measure how app versions affect ratings and complaints, monitor complaint patterns over time, and provide business-oriented insights.
 
@@ -134,11 +136,15 @@ The two models are close: Logistic Regression is more accurate and precise at th
 ba-capstone-app-reviews/
 │
 ├── README.md
-├── REPORT.md
+├── REPORT.md                    # Review 1 report
+├── FINAL_REPORT.md              # Review 2 final report
 ├── DATA_SOURCES.md
 ├── EDA.md
 ├── MODEL_EVALUATION.md
 ├── MODEL_EVALUATION_SUMMARY.md
+├── TEXT_MINING.md
+├── TIME_SERIES.md
+├── COMBINED_INSIGHTS.md
 ├── requirements.txt
 │
 ├── scripts/
@@ -161,7 +167,13 @@ ba-capstone-app-reviews/
 │   ├── 14_predict_review.py     # classify new review text with the saved models
 │   ├── 15_time_series_data.py   # Review 2: daily/weekly series, release events, STL, ADF, ACF/PACF
 │   ├── 16_text_preprocessing.py # Review 2: cleaned complaint/praise corpora, document-term matrices
-│   └── 19_forecasting.py        # Review 2: ARIMA/SARIMAX forecasts with rolling backtest, baselines
+│   ├── 17_topic_modelling.py    # Review 2: NMF topics, distinctive terms, sentiment per topic
+│   ├── 18_topic_evaluation.py   # Review 2: coherence, keyword-tag overlap, untagged reviews, trends
+│   ├── 19_forecasting.py        # Review 2: ARIMA/SARIMAX forecasts with rolling backtest, baselines
+│   ├── 20_forecast_evaluation.py # Review 2: MAE/RMSE/MASE, interval coverage, Ljung-Box, alerts
+│   ├── 20_topic_examples.py     # Review 2: readable example reviews per topic for the dashboard
+│   ├── 21_update_impact.py      # Review 2: before/after and new-vs-older tests per release
+│   └── 22_combined_insights.py  # Review 2: priority table and recommendations
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
@@ -170,15 +182,18 @@ ba-capstone-app-reviews/
 │   ├── app_metadata.csv
 │   ├── charts/                  # sentiment charts (01–04), eda/, timeseries/ and textmining/
 │   ├── eda/                     # monthly, weekly and version tables
-│   ├── timeseries/              # Review 2: daily/weekly series, release events, patterns
-│   └── textmining/              # Review 2: cleaned corpus and document-term matrices
+│   ├── timeseries/              # Review 2: series, release events, forecasts, evaluation
+│   ├── textmining/              # Review 2: corpus, document-term matrices, topic tables
+│   ├── update_impact/           # Review 2: release verdicts and worse releases
+│   └── combined/                # Review 2: priority table and recommendations
 │
 ├── models/
 │   ├── logistic_regression.pkl
 │   ├── random_forest.pkl
 │   ├── structural_scaler.pkl
 │   ├── svd_model.pkl
-│   └── tfidf_vectorizer.pkl
+│   ├── tfidf_vectorizer.pkl
+│   └── textmining/              # Review 2: saved NMF topic pipelines
 │
 ├── figures/
 │   └── model evaluation charts
@@ -189,11 +204,15 @@ ba-capstone-app-reviews/
 │   └── pages/
 │
 ├── notebooks/
-│   └── Review_1_Analysis.ipynb
+│   ├── Review_1_Analysis.ipynb
+│   └── Review_2.ipynb
 │
 ├── docs/
 │   ├── Review_1_Presentation.pptx
-│   └── Review_1_Contribution_Summary.md
+│   ├── Review_1_Contribution_Summary.md
+│   ├── Review_2_Presentation.pptx   # with PDF copy
+│   ├── Review_2_Contribution_Summary.md
+│   └── Final_Report.pdf
 │
 └── review_2_prep/               # Review 2 workspace
 ```
@@ -253,11 +272,17 @@ It prints the issue tags, the sentiment scores and each model's probability that
 ```bash
 python scripts/15_time_series_data.py      # time-series data preparation (~10 s)
 python scripts/16_text_preprocessing.py    # text-mining data preparation (~3 min; downloads NLTK WordNet once)
+python scripts/17_topic_modelling.py       # NMF topic models, distinctive terms, sentiment per topic
+python scripts/18_topic_evaluation.py      # coherence, keyword-tag comparison, untagged reviews, trends
+python scripts/20_topic_examples.py        # example reviews per topic for the dashboard
 python scripts/19_forecasting.py           # ARIMA forecasts and rolling backtest (~1 min; needs scripts/15 first)
+python scripts/20_forecast_evaluation.py   # forecast accuracy, interval coverage, residual checks, alerts
+python scripts/21_update_impact.py         # update impact of each release
+python scripts/22_combined_insights.py     # priority table and recommendations
 streamlit run dashboard/app.py             # interactive dashboard
 ```
 
-Method details: `TIME_SERIES.md` and `TEXT_MINING.md`. Dashboard structure and how to add a page: `dashboard/README.md`.
+Method details: `TEXT_MINING.md`, `TIME_SERIES.md` and `COMBINED_INSIGHTS.md`; everything together in `FINAL_REPORT.md`. Dashboard structure and how to add a page: `dashboard/README.md`.
 
 ### VADER Setup
 
@@ -337,9 +362,14 @@ The cleaning step keeps a review when at least 85% of its letters are Latin (a�
 | [`EDA.md`](EDA.md)                                                  | Exploratory data analysis                    |
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
+| [`FINAL_REPORT.md`](FINAL_REPORT.md)                                | Review 2 final report (PDF: `docs/Final_Report.pdf`) |
+| [`Review_2.ipynb`](notebooks/Review_2.ipynb)                        | Review 2 final notebook (executed, HTML copy included) |
+| [`Review_2_Presentation.pptx`](docs/Review_2_Presentation.pptx)     | Review 2 presentation (PDF copy included)    |
+| [`Review_2_Contribution_Summary.md`](docs/Review_2_Contribution_Summary.md) | Review 2 individual contribution summary |
 | [`TIME_SERIES.md`](TIME_SERIES.md)                                  | Review 2 Method 2: time-series analysis      |
 | [`TEXT_MINING.md`](TEXT_MINING.md)                                  | Review 2 Method 1: text mining               |
-| [`dashboard/README.md`](dashboard/README.md)                        | Review 2 interactive dashboard               |
+| [`COMBINED_INSIGHTS.md`](COMBINED_INSIGHTS.md)                      | Review 2 combined insights and recommendations |
+| [`dashboard/README.md`](dashboard/README.md)                        | Review 2 interactive dashboard ([live](https://team10-app-reviews.streamlit.app/)) |
 | [`review_2_prep/`](review_2_prep/)                                  | Review 2 workspace                           |
 
 ---
@@ -355,4 +385,11 @@ The analysis shows that:
 * Problematic reviews (19.5% of all reviews) can be found with over 91% accuracy: 87% recall at 74% precision with Random Forest, or 77% precision at 86% recall with Logistic Regression (PR-AUC **0.87**), and the models hold up on later weeks.
 * Collection effects (the late-April feed gap) can look like real changes if data collection is not checked.
 
-It shows how unstructured app reviews can be turned into **actionable business insights for monitoring and prioritization**; Review 2 adds forecasting and an interactive dashboard.
+Review 2 adds two Unit 3 methods and brings everything together:
+
+* Text mining finds 17 complaint topics; it agrees with the keyword tags and also covers the 43% of complaints no keyword matched. Loss and broken trust (scam allegations, poor quality) produce the angriest reviews.
+* ARIMA forecasts daily 1–2★ reviews better than a seasonal-naive baseline for 10 of 11 apps, with intervals close to their nominal coverage, and flags unusual days.
+* Of 205 testable app releases, 196 changed nothing measurable; Paytm 10.84.5 clearly made things worse.
+* A six-sign priority table makes Swiggy, Flipkart, Amazon and Paytm High priority, with 65 recommendations, all on the live dashboard.
+
+It shows how unstructured app reviews can be turned into **actionable business insights for monitoring and prioritization**.
