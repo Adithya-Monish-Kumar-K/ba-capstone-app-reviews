@@ -119,11 +119,12 @@ def main():
              ("Final validated reviews", log["final_rows"])]
     neg = int((df.score <= 2).sum())
     pos = int((df.score >= 4).sum())
+    tm = json.loads((ROOT / "data" / "textmining_summary.json").read_text())["selection"]   # from scripts/16
     units = {
         "Unit 1 (EDA)": f"all {n:,} reviews, 29 columns, 11 apps, 173 days",
         "Unit 2 (classifier)": f"target is_problematic = score ≤ 2: {neg:,} positives ({neg / n:.1%}); "
                                "inputs: content, 9 issue flags, 4 VADER scores, review_length, thumbs_up",
-        "Unit 3, text mining": f"content of the {neg:,} 1–2★ reviews (167,357 with ≥ 3 content words) and "
+        "Unit 3, text mining": f"content of the {neg:,} 1–2★ reviews ({tm['complaint']['kept']:,} with ≥ 3 content words) and "
                                f"{pos:,} 4–5★ reviews as a contrast",
         "Unit 3, time series": "review_date + score: daily 1–2★ counts for 11 apps × 173 days; "
                                f"app_version for release events ({df.groupby(['app_name', 'app_version']).ngroups:,} app versions, 224 new releases)",
