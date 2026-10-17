@@ -32,10 +32,12 @@
 
 | Rubric deliverable | File |
 |---|---|
-| Method 1, text mining: preparation, implementation, evaluation and interpretation | `TEXT_MINING.md`, `FINAL_REPORT.md` §3, notebook §2 |
+| Dataset description, sample dataset, final dataset, data dictionary, validation summary | `DATA_SOURCES.md`, `data/sample/final_dataset_sample.csv`, `data/tagged/` (11 files), `DATA_DICTIONARY.md`, `DATA_VALIDATION.md` |
+| Method 1, text mining: preparation, implementation, evaluation and interpretation | `TEXT_MINING.md`, `FINAL_REPORT.md` §3 (incl. NMF vs LDA, `scripts/23_topic_model_comparison.py`), notebook §2 |
 | Method 2, time series: preparation, implementation, evaluation and interpretation | `TIME_SERIES.md`, `FINAL_REPORT.md` §4, notebook §3–4 |
 | Combined business insights and recommendations | `COMBINED_INSIGHTS.md`, `data/combined/`, `FINAL_REPORT.md` §5 |
 | Interactive dashboard | https://team10-app-reviews.streamlit.app/ · `dashboard/` (6 pages) |
 | Final report | `FINAL_REPORT.md` (PDF copy `docs/Final_Report.pdf`) |
 | Final Jupyter notebook | `notebooks/Review_2.ipynb` (executed; HTML copy `notebooks/Review_2.html`) |
-| Team presentation | `docs/Review_2_Presentation.pptx` (PDF copy included) |
+| Team presentation | `docs/Review_2_Presentation.pptx` on the Final Project Presentation template (PDF copy included) |
+| Execution instructions | `README.md` (Reproducing the Analysis), `FINAL_REPORT.md` §10 |
