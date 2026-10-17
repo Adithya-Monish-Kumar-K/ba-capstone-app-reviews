@@ -53,6 +53,7 @@ DTM_DIR = DATA_DIR / "dtm"
 MODELS_DIR = REPO_ROOT / "models" / "textmining"
 CHARTS_DIR = REPO_ROOT / "data" / "charts" / "textmining"
 SUMMARY_PATH = REPO_ROOT / "data" / "topic_modelling_summary.json"
+UNASSIGNED = "Unassigned"
 CORPUS_PATH = DATA_DIR / "corpus.csv.gz"
 
 DOMAIN_SLUG = {"Food & Grocery": "food_grocery", "Shopping": "shopping", "Payments": "payments"}
@@ -68,38 +69,40 @@ plt.rcParams.update({
     "axes.axisbelow": True, "legend.frameon": False,
 })
 
-# Predefined domain topic counts and canonical labels based on domain coherence and taxonomy alignment
+# Topic counts per domain (K, see scripts/18_topic_evaluation.py) and topic names. NMF is deterministic (nndsvda start,
+# seed 42), so topic i is always the same topic; each name describes what the topic's top terms say, and names are
+# unique across domains. Some topics are general dissatisfaction ("bad experience", "worst ever") rather than one fault.
 COMPLAINT_CONFIG = {
     "Food & Grocery": {
         "k": 6,
         "labels": [
             "Order Cancellation & Refund",
-            "Customer Support & Bot Loop",
-            "Excessive Delivery & Handling Charges",
-            "Poor Food Quality & Stale Items",
-            "Delivery Delays & Rider Tracking",
-            "COD & Payment Option Failures",
+            "Poor Customer Support",
+            "High Delivery & Handling Charges",
+            "General Bad Service & Quality",
+            "Late Delivery & Delivery Partners",
+            "Cash on Delivery Not Available",
         ],
     },
     "Shopping": {
         "k": 6,
         "labels": [
-            "Return Rejection & Defective Products",
-            "Customer Service & Escalation Failure",
-            "Courier Delays & Delivery Agent Issues",
-            "Poor Shopping Experience & Fabric Quality",
-            "Extreme Dissatisfaction & Scam Allegations",
-            "Order Cancellation & Rescheduling",
+            "Returns, Refunds & Product Quality",
+            "Unhelpful Customer Care",
+            "Delivery Delays & Delivery Agents",
+            "General Bad Experience",
+            "Worst-Ever Experience",
+            "Order Cancelled or Not Delivered",
         ],
     },
     "Payments": {
         "k": 5,
         "labels": [
-            "Failed Transfers & Debited Amounts",
-            "App Crashes & Update Regressions",
-            "Device Environment & Security Scan Errors",
-            "Account Blocking & AutoPay Issues",
-            "Customer Support Unresponsiveness",
+            "Payment, UPI & Bank Account Problems",
+            "App or Scanner Not Working",
+            "Device Environment Error",
+            "Unresponsive Customer Support",
+            "Cashback & Rewards Not Given",
         ],
     },
 }
@@ -108,88 +111,45 @@ PRAISE_CONFIG = {
     "Food & Grocery": {
         "k": 4,
         "labels": [
-            "Lightning Fast Delivery",
-            "Helpful Service & Fresh Quality",
-            "Tasty Food & Great Orders",
-            "Top-Tier Overall Experience",
+            "Fast Delivery",
+            "Good Service",
+            "Good Food",
+            "Best Service Ever",
         ],
     },
     "Shopping": {
         "k": 4,
         "labels": [
-            "Great Product & Prompt Service",
-            "Trusted Online Shopping Platform",
-            "High Fabric & Build Quality",
-            "Pleasant Buying Experience",
+            "Good Products & Service",
+            "Best Online Shopping App",
+            "Good Quality for the Price",
+            "Nice Products",
         ],
     },
     "Payments": {
         "k": 4,
         "labels": [
-            "Smooth & Reliable Experience",
-            "Fast UPI & Digital Transactions",
-            "Effortless & Intuitive UI",
-            "Trusted Cashless Convenience",
+            "Good Service, Works Well",
+            "Best for UPI & Online Payments",
+            "Easy, Fast & Secure",
+            "Nice & Works",
         ],
     },
 }
 
 
 # =============================================================================
-# Helper: Text cleaning for new reviews (identical to scripts/16_text_preprocessing.py)
+# Helper: Text cleaning for new reviews (the same rules as scripts/16_text_preprocessing.py)
 # =============================================================================
 def _get_cleaner():
-    import nltk
-    for res, p in [("wordnet", "corpora/wordnet"), ("stopwords", "corpora/stopwords")]:
-        try:
-            nltk.data.find(p)
-        except LookupError:
-            nltk.download(res, quiet=True)
-    from nltk.corpus import stopwords
-    from nltk.stem import WordNetLemmatizer
-    negations = {"not", "no", "never", "nor", "none", "nothing", "nobody", "cannot", "without"}
-    brands = {"swiggy", "zomato", "blinkit", "grofers", "domino", "dominos", "myntra", "flipkart", "amazon", "meesho",
-              "paytm", "phonepe", "phonpe", "gpay", "googlepay", "instamart", "zepto", "amazonpay"}
-    brand_phrases = r"\b(google\s*pay|phone\s*pe|amazon\s*pay|g\s*pay)\b"
-    extra_stop = {"app", "application", "apps", "pls", "plz", "please", "also", "even", "ok", "okay", "u", "ur",
-                  "dont", "doesnt", "didnt", "isnt", "wasnt", "cant", "wont", "im", "ive", "thats", "hai", "h", "soo"}
-    hinglish_not = {"nahi", "nahin", "nhi", "nai", "nahee", "nahiin", "mat"}
-    hinglish_stop = {"hai", "hain", "ho", "hua", "hui", "hue", "raha", "rahi", "rahe", "ka", "ki", "ke", "ko", "se", "me",
-                     "mein", "main", "mai", "mera", "meri", "mere", "bhi", "aur", "ye", "yeh", "wo", "woh", "to", "hi", "tha",
-                     "thi", "the", "kar", "karo", "karna", "kiya", "kya", "kyon", "kyu", "kyun", "par", "per", "ek", "koi",
-                     "sab", "bahut", "bhai", "aap", "apna", "apne", "tum", "hum", "ham", "kuch", "ab", "jo", "liye", "gaya",
-                     "gayi", "ja", "jata", "jati", "rha", "rhi", "hota", "hoti", "kr", "ke", "bhi", "ji", "sir", "mam"}
-    contractions = [
-        (r"\bcan'?t\b", "can not"), (r"\bwon'?t\b", "will not"), (r"\bshan'?t\b", "shall not"),
-        (r"\b(do|does|did|is|are|was|were|has|have|had|should|would|could|must|need)n'?t\b", r"\1 not"),
-        (r"n't\b", " not"), (r"'re\b", " are"), (r"'ve\b", " have"), (r"'ll\b", " will"), (r"'d\b", " would"),
-        (r"'m\b", " am"), (r"'s\b", ""),
-    ]
-    stop = (set(stopwords.words("english")) | extra_stop | brands | hinglish_stop) - negations
-    lemmatizer = WordNetLemmatizer()
-    lemma_cache = {}
-
-    def _lemma(w):
-        if w not in lemma_cache:
-            lemma_cache[w] = lemmatizer.lemmatize(lemmatizer.lemmatize(w, "v"), "n")
-        return lemma_cache[w]
-
-    def _clean(text):
-        t = str(text).lower().replace("’", "'")
-        t = re.sub(r"https?://\S+|www\.\S+|\S+@\S+", " ", t)
-        t = re.sub(brand_phrases, " ", t)
-        for pat, rep in contractions:
-            t = re.sub(pat, rep, t)
-        t = re.sub(r"\b(dont|doesnt|didnt|isnt|wasnt|cant|wont|havent|hasnt|shouldnt|wouldnt|couldnt)\b",
-                   lambda m: {"cant": "can", "wont": "will"}.get(m.group(1), m.group(1)[:-2]) + " not", t)
-        t = re.sub(r"[^a-z\s]", " ", t)
-        t = re.sub(r"(.)\1{2,}", r"\1\1", t)
-        words = ["not" if w in hinglish_not else w for w in t.split()]
-        words = [w for w in words if len(w) > 1 and w not in stop]
-        words = [_lemma(w) for w in words]
-        return " ".join([w for w in words if len(w) > 1 and w not in stop])
-
-    return _clean
+    """The cleaner of scripts/16_text_preprocessing.py, returning one string, so a new review is cleaned exactly
+    like the training corpus (one copy of the rules, so a fix in 16 also applies here and in the dashboard)."""
+    import importlib
+    scripts_dir = str(Path(__file__).resolve().parent)
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+    prep = importlib.import_module("16_text_preprocessing")
+    return lambda text: " ".join(prep.clean(text))
 
 
 # =============================================================================
@@ -372,11 +332,14 @@ def evaluate_complaint_topics(complaint_models):
         norm_W = np.divide(W, row_sums, out=np.zeros_like(W), where=row_sums > 0)
         dominant_idx = np.argmax(W, axis=1)
         max_weight = np.max(norm_W, axis=1)
+        # A review whose words all fall outside the vocabulary has zero weight on every topic; argmax would
+        # silently give it topic 1, so it is marked Unassigned (topic 0), as the dashboard does for new reviews.
+        has_topic = row_sums.ravel() > 0
 
         rows["domain"] = domain
         rows["group"] = "complaint"
-        rows["dominant_topic_id"] = dominant_idx + 1
-        rows["dominant_topic_label"] = [labels[i] for i in dominant_idx]
+        rows["dominant_topic_id"] = np.where(has_topic, dominant_idx + 1, 0)
+        rows["dominant_topic_label"] = [labels[i] if ok else UNASSIGNED for i, ok in zip(dominant_idx, has_topic)]
         rows["topic_confidence"] = np.round(max_weight, 4)
 
         # Merge sentiment and content from corpus
@@ -424,18 +387,20 @@ def evaluate_complaint_topics(complaint_models):
     pd.DataFrame(topics_rows).to_csv(DATA_DIR / "topics.csv", index=False)
     print(f"  saved topics table -> data/textmining/topics.csv")
 
-    # Aggregate sentiment by topic and app
+    # Aggregate sentiment by topic and app (Unassigned reviews are not part of any topic)
     assigned_df["strongly_neg"] = assigned_df["sentiment_compound"] <= -0.5
     assigned_df["neg"] = assigned_df["sentiment_compound"] <= -0.05
+    topic_df = assigned_df[assigned_df["dominant_topic_id"] > 0]
+    print(f"  {len(assigned_df) - len(topic_df)} reviews have no topic (no vocabulary term) and are marked Unassigned")
 
-    agg_topic = assigned_df.groupby(["domain", "dominant_topic_id", "dominant_topic_label"], observed=True).agg(
+    agg_topic = topic_df.groupby(["domain", "dominant_topic_id", "dominant_topic_label"], observed=True).agg(
         reviews=("review_id", "count"),
         mean_sentiment=("sentiment_compound", "mean"),
         pct_strongly_neg=("strongly_neg", lambda x: round(x.mean() * 100, 2)),
         pct_neg=("neg", lambda x: round(x.mean() * 100, 2)),
     ).reset_index()
 
-    agg_app = assigned_df.groupby(["domain", "dominant_topic_id", "dominant_topic_label", "app_name"], observed=True).agg(
+    agg_app = topic_df.groupby(["domain", "dominant_topic_id", "dominant_topic_label", "app_name"], observed=True).agg(
         reviews=("review_id", "count"),
         mean_sentiment=("sentiment_compound", "mean"),
         pct_strongly_neg=("strongly_neg", lambda x: round(x.mean() * 100, 2)),
@@ -488,7 +453,7 @@ def generate_charts(complaint_models, praise_models, distinctive_df, agg_topic):
     fig.savefig(p2, dpi=160)
     plt.close(fig)
     print(f"  saved {p2.relative_to(REPO_ROOT)}")
-    charts_metadata.append({"file": str(p2.relative_to(REPO_ROOT)), "title": title, "subtitle": sub})
+    charts_metadata.append({"file": p2.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub})
 
     # Chart 3: Distinctive Terms per App (Monroe et al. Log-Odds)
     fig, axes = plt.subplots(3, 4, figsize=(19, 11))
@@ -527,7 +492,7 @@ def generate_charts(complaint_models, praise_models, distinctive_df, agg_topic):
     fig.savefig(p3, dpi=160)
     plt.close(fig)
     print(f"  saved {p3.relative_to(REPO_ROOT)}")
-    charts_metadata.append({"file": str(p3.relative_to(REPO_ROOT)), "title": title, "subtitle": sub})
+    charts_metadata.append({"file": p3.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub})
 
     # Chart 4: Praise Topics as a Contrast (4–5★ Reviews)
     fig, axes = plt.subplots(3, 4, figsize=(16, 9))
@@ -553,7 +518,7 @@ def generate_charts(complaint_models, praise_models, distinctive_df, agg_topic):
     fig.savefig(p4, dpi=160)
     plt.close(fig)
     print(f"  saved {p4.relative_to(REPO_ROOT)}")
-    charts_metadata.append({"file": str(p4.relative_to(REPO_ROOT)), "title": title, "subtitle": sub})
+    charts_metadata.append({"file": p4.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub})
 
     # Chart 5: Topic Sentiment & Severity Hierarchy
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 7))
@@ -590,7 +555,7 @@ def generate_charts(complaint_models, praise_models, distinctive_df, agg_topic):
     fig.savefig(p5, dpi=160)
     plt.close(fig)
     print(f"  saved {p5.relative_to(REPO_ROOT)}")
-    charts_metadata.append({"file": str(p5.relative_to(REPO_ROOT)), "title": title, "subtitle": sub})
+    charts_metadata.append({"file": p5.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub})
 
     return charts_metadata
 
@@ -643,7 +608,8 @@ def main():
     summary = {
         "status": "completed",
         "stage": "Review 2, Stage 2 (Issue #134)",
-        "models_saved": [str(p.relative_to(REPO_ROOT)) for p in MODELS_DIR.glob("*.pkl")],
+        "models_saved": sorted(p.relative_to(REPO_ROOT).as_posix() for p in MODELS_DIR.glob("*.pkl")),
+        "unassigned_complaint_reviews": int((assigned_df["dominant_topic_id"] == 0).sum()),
         "complaint_topics": {
             d: [
                 {"id": t["topic_id"], "label": t["label"], "top_terms": t["top_terms"][:10]}

@@ -33,8 +33,8 @@
     ]
   },
   "interval_coverage_check": {
-    "nominal_80": 0.814,
-    "nominal_95": 0.927,
+    "nominal_80": 0.826,
+    "nominal_95": 0.939,
     "note": "share of backtest days inside the interval, pooled over apps; the full check is in #137"
   },
   "large_week1_changes": {
@@ -45,7 +45,7 @@
   },
   "mae_all_horizons": {
     "Swiggy": {
-      "ARIMA": 27.6,
+      "ARIMA": 28.08,
       "Holt-Winters": 27.36,
       "Seasonal naive": 34.64
     },
@@ -65,12 +65,12 @@
       "Seasonal naive": 18.34
     },
     "Myntra": {
-      "ARIMA": 10.47,
+      "ARIMA": 12.21,
       "Holt-Winters": 12.85,
       "Seasonal naive": 13.91
     },
     "Flipkart": {
-      "ARIMA": 38.13,
+      "ARIMA": 52.68,
       "Holt-Winters": 54.72,
       "Seasonal naive": 56.01
     },
@@ -85,7 +85,7 @@
       "Seasonal naive": 19.3
     },
     "Paytm": {
-      "ARIMA": 8.56,
+      "ARIMA": 7.59,
       "Holt-Winters": 7.9,
       "Seasonal naive": 8.79
     },

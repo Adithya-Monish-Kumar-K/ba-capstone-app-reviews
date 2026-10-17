@@ -59,6 +59,10 @@ FORECAST_UP_PCT = 5        # week-1 forecast at least 5% above the last 4 weeks
 UNUSUAL_DAYS_MIN = 5       # at least 5 distinct days above the 95% forecast interval in the backtest
 UNRELIABLE_CHANGE_PCT = 30 # week-1 forecast this far from the last 4 weeks: read with care (Stage 3 rule)
 MIN_TOPIC_SHARE = 10       # a topic needs at least 10% of the app's complaints to be called its most severe
+# Topics made of general dissatisfaction words ("bad experience", "worst ever"; names from scripts/17_topic_modelling.py)
+# name no fault to fix, and they are the most negative by construction, so they are never picked as the complaint
+# to fix first or as the most damaging one. Their shares still count in every denominator.
+GENERAL_TOPICS = {"General Bad Service & Quality", "General Bad Experience", "Worst-Ever Experience"}
 PRIORITY_RULES = {
     "sig_high_volume": "1–2★ reviews per day above the median of the 11 apps",
     "sig_high_share": "share of 1–2★ reviews (feed-gap days excluded) above the all-app share",
@@ -135,8 +139,10 @@ def topics():
     m = share.merge(sent[["app_name", "topic_label", "mean_sentiment", "pct_strongly_neg"]], on=["app_name", "topic_label"], how="left")
     rows = {}
     for app, g in m.groupby("app_name"):
-        top = g.sort_values("share_pct", ascending=False).iloc[0]
-        sev = g[g["share_pct"] >= MIN_TOPIC_SHARE].sort_values("mean_sentiment").iloc[0]
+        specific = g[~g["topic_label"].isin(GENERAL_TOPICS)]
+        top = specific.sort_values("share_pct", ascending=False).iloc[0]
+        big_enough = specific[specific["share_pct"] >= MIN_TOPIC_SHARE]
+        sev = (big_enough if len(big_enough) else specific).sort_values("mean_sentiment").iloc[0]
         rows[app] = {"top_topic": top["topic_label"], "top_topic_share_pct": top["share_pct"],
                      "top_topic_sentiment": top["mean_sentiment"], "top_topic_strongly_neg_pct": top["pct_strongly_neg"],
                      "most_severe_topic": sev["topic_label"], "most_severe_topic_share_pct": sev["share_pct"],
@@ -277,14 +283,15 @@ def domain_recommendations(t):
     for dom in DOMAINS:
         d = t[t["domain"] == dom]
         s = sent[sent["domain"] == dom]
-        big = s.sort_values("reviews", ascending=False).iloc[0]
-        worst = s.sort_values("mean_sentiment").iloc[0]
+        specific = s[~s["dominant_topic_label"].isin(GENERAL_TOPICS)]
+        big = specific.sort_values("reviews", ascending=False).iloc[0]
+        worst = specific.sort_values("mean_sentiment").iloc[0]
         share = 100 * big["reviews"] / s["reviews"].sum()
         recs.append({"level": "Domain", "domain": dom, "app_name": "", "priority": "", "type": "Fix first",
                      "action": f"Across {dom}, '{big['dominant_topic_label']}' is the most common complaint; fix it in every app.",
                      "evidence": f"{share:.0f}% of the domain's topic-assigned 1–2★ reviews ({int(big['reviews']):,}); sentiment {big['mean_sentiment']:+.2f}"})
         recs.append({"level": "Domain", "domain": dom, "app_name": "", "priority": "", "type": "Most damaging",
-                     "action": f"'{worst['dominant_topic_label']}' produces the angriest reviews in {dom}.",
+                     "action": f"'{worst['dominant_topic_label']}' produces the angriest reviews about a specific fault in {dom}.",
                      "evidence": f"Mean sentiment {worst['mean_sentiment']:+.2f}; {worst['pct_strongly_neg']:.0f}% strongly negative"})
         hi = d[d["priority"] == "High"]["app_name"].tolist()
         lead = d.sort_values("neg_per_day", ascending=False).iloc[0]

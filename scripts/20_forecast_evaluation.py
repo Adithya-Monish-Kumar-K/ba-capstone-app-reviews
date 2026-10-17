@@ -32,16 +32,20 @@ def main():
     orders = pd.read_csv(TS / "arima_orders.csv")
     forecasts["error"] = forecasts["actual"] - forecasts["forecast"]
 
-    # MASE scaling uses the first 84 days, matching the initial backtest training window.
-    scale = {}
-    for app, group in daily.groupby("app_name"):
-        y = (group.sort_values("day")["neg_reviews_filled"]
-             .astype(float).iloc[:84].to_numpy())
-        scale[app] = float(np.mean(np.abs(y[SEASON:] - y[:-SEASON])))
+    # MASE (Hyndman & Koehler, 2006): each error is scaled by the in-sample error of the seasonal-naive forecast on
+    # the training window of ITS OWN origin (every day up to the origin), as usual for a rolling-origin backtest.
+    # A single scale from the first 84 days would misstate apps whose level changed later (Google Pay).
+    series = {app: g.sort_values("day").set_index("day")["neg_reviews_filled"].astype(float)
+              for app, g in daily.groupby("app_name")}
+    scales = {}
+    for app, origin in forecasts[["app_name", "origin"]].drop_duplicates().itertuples(index=False):
+        y = series[app].loc[:origin].to_numpy()
+        scales[(app, origin)] = float(np.mean(np.abs(y[SEASON:] - y[:-SEASON])))
+    forecasts["scale"] = [scales[k] for k in zip(forecasts["app_name"], forecasts["origin"])]
+    forecasts["scaled_error"] = forecasts["error"].abs() / forecasts["scale"]
 
     metric_rows = []
     for (app, model), g in forecasts.groupby(["app_name", "model"]):
-        denom = scale[app]
         metric_rows.append({
             "app_name": app,
             "model": model,
@@ -49,10 +53,13 @@ def main():
             "origins": g["origin"].nunique(),
             "MAE": mae(g["actual"], g["forecast"]),
             "RMSE": rmse(g["actual"], g["forecast"]),
-            "MASE": mae(g["actual"], g["forecast"]) / denom if denom else np.nan,
-            "seasonal_naive_scale": denom,
+            "MASE": float(g["scaled_error"].mean()),
+            "seasonal_naive_scale": float(g["scale"].mean()),
         })
     metrics = pd.DataFrame(metric_rows)
+    # MAE relative to the seasonal-naive forecast on the same backtest days: below 1 = beats "same weekday last week".
+    naive_mae = metrics[metrics["model"].eq("Seasonal naive")].set_index("app_name")["MAE"]
+    metrics["MAE_vs_seasonal_naive"] = metrics["MAE"] / metrics["app_name"].map(naive_mae)
     metrics.to_csv(TS / "evaluation_metrics_by_app.csv", index=False)
 
     # Horizon-band metrics support checking whether performance worsens further out.
@@ -67,7 +74,7 @@ def main():
                 "app_name": app, "model": model, "horizon_band": label,
                 "forecast_rows": len(h), "MAE": mae(h.actual, h.forecast),
                 "RMSE": rmse(h.actual, h.forecast),
-                "MASE": mae(h.actual, h.forecast) / scale[app] if scale[app] else np.nan,
+                "MASE": float(h["scaled_error"].mean()),
             })
     pd.DataFrame(band_rows).to_csv(TS / "evaluation_metrics_by_horizon.csv", index=False)
 
@@ -170,7 +177,7 @@ def main():
     acf_df.to_csv(TS / "residual_acf.csv", index=False)
 
     CHARTS.mkdir(parents=True, exist_ok=True)
-    overall = metrics.groupby("model")[["MAE", "RMSE", "MASE"]].mean().sort_values("MAE")
+    overall = metrics.groupby("model")[["MAE", "RMSE", "MASE", "MAE_vs_seasonal_naive"]].mean().sort_values("MAE")
     fig, ax = plt.subplots(figsize=(9, 5))
     overall["MAE"].plot(kind="bar", ax=ax)
     ax.set_title("Mean absolute error by forecasting model")
@@ -215,6 +222,8 @@ def main():
     print("Unusual-day alerts:", TS / "unusual_day_alerts.csv", f"({len(alerts)} forecast rows)")
     print("Residual diagnostics:", TS / "residual_diagnostics.csv")
     print("Charts:", CHARTS / "ts_08_evaluation_mae.png, ts_09_interval_coverage.png, ts_10_residual_acf.png")
+    print("\nMean over the 11 apps:")
+    print(overall.round(3).to_string())
     print("\nOverall interval coverage:")
     print(coverage[coverage["app_name"].eq("ALL_APPS")].to_string(index=False))
     print("\nResidual diagnostics:")

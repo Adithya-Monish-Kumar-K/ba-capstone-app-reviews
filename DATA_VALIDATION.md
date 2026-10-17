@@ -53,7 +53,7 @@ All 18 checks passed.
 |---|---|
 | Unit 1 (EDA) | all 1,137,987 reviews, 29 columns, 11 apps, 173 days |
 | Unit 2 (classifier) | target is_problematic = score ≤ 2: 221,581 positives (19.5%); inputs: content, 9 issue flags, 4 VADER scores, review_length, thumbs_up |
-| Unit 3, text mining | content of the 221,581 1–2★ reviews (167,357 with ≥ 3 content words) and 871,380 4–5★ reviews as a contrast |
+| Unit 3, text mining | content of the 221,581 1–2★ reviews (167,303 with ≥ 3 content words) and 871,380 4–5★ reviews as a contrast |
 | Unit 3, time series | review_date + score: daily 1–2★ counts for 11 apps × 173 days; app_version for release events (2,507 app versions, 224 new releases) |
 
 ## Rows per app

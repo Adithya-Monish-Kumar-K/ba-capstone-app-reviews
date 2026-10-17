@@ -182,9 +182,11 @@ mt = T["metrics"][T["metrics"]["app_name"].isin(f.apps)]
 fig = go.Figure()
 for model, col in [("ARIMA", "#2a78d6"), ("Holt-Winters", "#eb6834"), ("Seasonal naive", "#8a8985")]:
     s = mt[mt["model"] == model].set_index("app_name").reindex([a for a in f.apps if a in set(mt["app_name"])])
-    fig.add_trace(go.Bar(x=s.index, y=s["MASE"], name=model, marker_color=col,
-                         customdata=s[["MAE"]], hovertemplate="%{x}: MASE %{y:.2f}, MAE %{customdata[0]:.1f}<extra>" + model + "</extra>"))
+    fig.add_trace(go.Bar(x=s.index, y=s["MAE_vs_seasonal_naive"], name=model, marker_color=col,
+                         customdata=s[["MAE", "MASE"]],
+                         hovertemplate="%{x}: %{y:.2f} × the baseline error (MAE %{customdata[0]:.1f}, MASE %{customdata[1]:.2f})"
+                                       "<extra>" + model + "</extra>"))
 fig.add_hline(y=1, line=dict(color=INK2, width=1, dash="dot"))
-fig.update_layout(barmode="group", title="Backtest error by model (MASE: below 1 = better than 'same weekday last week')",
-                  legend=dict(orientation="h", y=-0.2, x=0), yaxis_title="MASE")
+fig.update_layout(barmode="group", title="Backtest error relative to 'same weekday last week' (below 1 = better than the baseline)",
+                  legend=dict(orientation="h", y=-0.2, x=0), yaxis_title="MAE ÷ seasonal-naive MAE")
 st.plotly_chart(style(fig, 360), width="stretch", config={"displayModeBar": False})

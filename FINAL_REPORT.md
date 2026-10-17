@@ -29,8 +29,8 @@ Team number: 10
 
 We collected every Play Store review of 11 Indian consumer apps from 1 April to 20 September 2026 (1,137,987 reviews after cleaning). Review 1 cleaned the data, tagged 9 issue types, scored sentiment and built a classifier that flags problem reviews. Review 2 applies two Unit 3 methods to the same data and combines everything into recommendations and a live dashboard.
 
-- **Method 1, text mining.** NMF topic models on 167,357 complaint reviews find 17 complaint topics across the three domains. They agree with the keyword tags where they should, and they also cover the 43% of complaints (71,929) that match no keyword tag. Refund and cancellation problems lead Food & Grocery (35% of complaints), returns and defective products lead Shopping (25%), and failed transfers lead Payments (52%). The angriest topics are about loss and broken trust, such as scam allegations (mean VADER −0.61) and poor quality (−0.60). Technical faults are reported calmly (−0.09).
-- **Method 2, time series.** ARIMA/SARIMA models forecast the daily number of 1–2★ reviews per app. On a rolling-origin backtest of 252 forecasts per app, ARIMA beats the seasonal-naive baseline for 10 of 11 apps (mean MASE 0.88 against 1.08). Its 80% and 95% intervals contain 81% and 93% of the days, and no app has autocorrelation left in its residuals. The forecast flags 83 unusual days. Of 205 testable app releases, 196 changed nothing measurable, 5 made things better and 4 made things worse. Only one, Paytm 10.84.5, is confirmed at the app level: Paytm's 1–2★ reviews per day went from 34 to 66.
+- **Method 1, text mining.** NMF topic models on 167,303 complaint reviews find 17 complaint topics across the three domains; on held-out reviews NMF is more coherent and more distinct than LDA in every domain. The topics agree with the keyword tags where they should, and they also cover the 43% of complaints (71,775) that match no keyword tag. Refund and cancellation problems lead Food & Grocery (35% of complaints), returns, refunds and product quality lead Shopping (25%), and payment, UPI and bank-account problems lead Payments (49%). Among specific faults, poor support draws the angriest reviews (mean VADER −0.40 in food apps); technical faults are reported calmly (−0.09).
+- **Method 2, time series.** ARIMA/SARIMA models forecast the daily number of 1–2★ reviews per app. On a rolling-origin backtest of 252 forecasts per app, with every modelling choice made on the training days only, ARIMA beats the seasonal-naive baseline for 10 of 11 apps (mean MASE 0.93 against 1.08) and is as accurate as Holt-Winters; it is kept for its prediction intervals. Its 80% and 95% intervals contain 83% and 94% of the days, and no app has autocorrelation left in its residuals. The forecast flags 77 unusual days. Of 205 testable app releases, 196 changed nothing measurable, 5 made things better and 4 made things worse. Only one, Paytm 10.84.5, is confirmed at the app level: Paytm's 1–2★ reviews per day went from 34 to 66.
 - **Combined insights.** Six warning signs, drawn from every stage, give each app a priority. Swiggy, Flipkart, Amazon and Paytm are High priority. The signs also produce 65 recommendations, each backed by a number.
 - **Dashboard.** One Streamlit app with six pages, deployed publicly. It covers the overview, text mining, forecasting, update impact, recommendations and checking a single review.
 
@@ -145,13 +145,13 @@ Code: `scripts/16_text_preprocessing.py`, `17_topic_modelling.py`, `18_topic_eva
 
 | Corpus | Reviews | Kept | Median kept length |
 |---|---:|---:|---:|
-| Complaints (1–2★) | 221,581 | 167,357 (75.5%) | 11 words |
-| Praise (4–5★), as a contrast | 871,380 | 166,929 (19.2%) | 4 words |
+| Complaints (1–2★) | 221,581 | 167,303 (75.5%) | 11 words |
+| Praise (4–5★), as a contrast | 871,380 | 166,635 (19.1%) | 4 words |
 
 **Cleaning steps:**
 
 1. Lowercase the text and remove links, e-mail addresses, emojis and digits.
-2. Remove two-word brand names as phrases ("google pay", "phone pe"), so that "pay" and "google" stay usable on their own.
+2. Remove two-word brand names as phrases ("google pay", "phone pe", "phone pay"), so that "pay" and "google" stay usable on their own. ("phone pay", a common spelling of PhonePe, otherwise forms a topic of its own.)
 3. Expand contractions, with or without the apostrophe ("didnt" → "did not").
 4. Drop stop words but **keep negations**, so that "not delivered" keeps its meaning.
 5. Map Hinglish negations ("nahi", "nhi") to "not", and drop Hinglish filler words.
@@ -164,19 +164,20 @@ For example, "PLEASE STOP CHEATING US BY CHARGING DELIVERY CHARGES FOR ORDERS AB
 
 | Matrix | Reviews | Terms |
 |---|---:|---:|
-| Complaints · Food & Grocery | 82,603 | 17,448 |
-| Complaints · Shopping | 71,413 | 18,665 |
-| Complaints · Payments | 13,341 | 2,982 |
-| Praise · Food & Grocery | 74,647 | 6,875 |
-| Praise · Shopping | 75,672 | 7,097 |
-| Praise · Payments | 16,610 | 1,763 |
+| Complaints · Food & Grocery | 82,602 | 17,447 |
+| Complaints · Shopping | 71,412 | 18,664 |
+| Complaints · Payments | 13,289 | 2,974 |
+| Praise · Food & Grocery | 74,647 | 6,876 |
+| Praise · Shopping | 75,671 | 7,097 |
+| Praise · Payments | 16,317 | 1,745 |
 
 ### 3.2 Implementation: NMF topic models
 
 - **Model.** The counts are converted to TF-IDF weights. Non-negative Matrix Factorisation splits each domain's matrix into document-topic weights and topic-term weights (V ≈ W × H) [6].
-- **Why NMF and not LDA.** On very short, informal reviews, LDA tends to mix themes. NMF with the `nndsvda` start is deterministic and fits 167,357 reviews in seconds.
+- **Why NMF and not LDA.** NMF with the `nndsvda` start is deterministic and fits 167,303 reviews in seconds; §3.3 compares it with LDA on held-out reviews.
 - **One model per domain.** The models use K = 6 for Food & Grocery, 6 for Shopping and 5 for Payments (chosen in §3.3).
-- **Topic and sentiment for every review.** Every review gets its dominant topic. Its VADER compound score then gives each topic a mean sentiment and a share of strongly negative reviews (compound ≤ −0.5).
+- **Topic and sentiment for every review.** Every review gets its dominant topic. Its VADER compound score then gives each topic a mean sentiment and a share of strongly negative reviews (compound ≤ −0.5). The 105 reviews with no vocabulary term have zero weight on every topic and are marked Unassigned.
+- **Topic names** describe each topic's top terms. Three topics are general dissatisfaction ("bad experience", "worst ever") rather than one fault, and are named so.
 - **Praise contrast.** A second NMF model (K = 4 per domain) on the 4–5★ reviews shows what satisfied users mention.
 - **Saved pipelines.** Each fitted model is saved with its vectoriser in `models/textmining/`, so the dashboard can give a new review its topic.
 
@@ -184,23 +185,23 @@ The 17 complaint topics (`data/textmining/topic_sentiment.csv`):
 
 | Domain | Topic | Reviews | Share of domain | Mean VADER | Strongly negative |
 |---|---|---:|---:|---:|---:|
-| Food & Grocery | Order Cancellation & Refund | 28,656 | 35% | −0.27 | 36% |
-| | Customer Support & Bot Loop | 15,640 | 19% | −0.40 | 56% |
-| | Delivery Delays & Rider Tracking | 14,856 | 18% | −0.29 | 39% |
-| | Poor Food Quality & Stale Items | 10,412 | 13% | −0.44 | 59% |
-| | Excessive Delivery & Handling Charges | 8,730 | 11% | −0.21 | 24% |
-| | COD & Payment Option Failures | 4,309 | 5% | −0.12 | 18% |
-| Shopping | Return Rejection & Defective Products | 18,156 | 25% | −0.23 | 33% |
-| | Order Cancellation & Rescheduling | 15,824 | 22% | −0.31 | 41% |
-| | Customer Service & Escalation Failure | 13,121 | 18% | −0.24 | 41% |
-| | Courier Delays & Delivery Agent Issues | 11,147 | 16% | −0.29 | 41% |
-| | Extreme Dissatisfaction & Scam Allegations | 6,973 | 10% | −0.61 | 80% |
-| | Poor Shopping Experience & Fabric Quality | 6,192 | 9% | −0.60 | 81% |
-| Payments | Failed Transfers & Debited Amounts | 6,909 | 52% | −0.15 | 27% |
-| | Customer Support Unresponsiveness | 2,404 | 18% | −0.23 | 40% |
-| | Device Environment & Security Scan Errors | 1,382 | 10% | −0.11 | 18% |
-| | Account Blocking & AutoPay Issues | 1,379 | 10% | −0.13 | 21% |
-| | App Crashes & Update Regressions | 1,267 | 9% | −0.09 | 16% |
+| Food & Grocery | Order Cancellation & Refund | 28,653 | 35% | −0.27 | 36% |
+| | Poor Customer Support | 15,641 | 19% | −0.40 | 56% |
+| | Late Delivery & Delivery Partners | 14,861 | 18% | −0.29 | 39% |
+| | General Bad Service & Quality | 10,394 | 13% | −0.44 | 59% |
+| | High Delivery & Handling Charges | 8,724 | 11% | −0.21 | 24% |
+| | Cash on Delivery Not Available | 4,304 | 5% | −0.12 | 18% |
+| Shopping | Returns, Refunds & Product Quality | 18,123 | 25% | −0.23 | 33% |
+| | Order Cancelled or Not Delivered | 15,812 | 22% | −0.31 | 41% |
+| | Unhelpful Customer Care | 13,120 | 18% | −0.24 | 41% |
+| | Delivery Delays & Delivery Agents | 11,150 | 16% | −0.29 | 41% |
+| | Worst-Ever Experience | 6,976 | 10% | −0.61 | 80% |
+| | General Bad Experience | 6,195 | 9% | −0.59 | 81% |
+| Payments | Payment, UPI & Bank Account Problems | 6,443 | 49% | −0.15 | 25% |
+| | Unresponsive Customer Support | 2,410 | 18% | −0.23 | 41% |
+| | Cashback & Rewards Not Given | 1,941 | 15% | −0.15 | 28% |
+| | App or Scanner Not Working | 1,305 | 10% | −0.09 | 16% |
+| | Device Environment Error | 1,146 | 9% | −0.13 | 19% |
 
 ![Complaint topics per domain](data/charts/textmining/tm_02_complaint_topics.png)
 
@@ -208,26 +209,27 @@ The 17 complaint topics (`data/textmining/topic_sentiment.csv`):
 
 **Number of topics (coherence).** NPMI coherence [7] was computed for K = 3 to 10 in each domain (`coherence_scores.csv`):
 
-- **Food & Grocery.** Coherence has a clear peak at K = 6 (0.195), which is the value chosen.
-- **Shopping and Payments.** The curves are almost flat, from 0.155 to 0.186 and from 0.181 to 0.212. The highest values sit at the edges of the range (K = 10 for Shopping, K = 3 for Payments). At K = 3 the Payments topics merge different failures into one. At larger K the Shopping topics split delivery and support into near-duplicates. We therefore took the K at which every topic is distinct and can be named: 6 for Shopping and 5 for Payments.
+- **Food & Grocery.** Coherence peaks at K = 6 (0.195), the value chosen.
+- **Payments.** Coherence peaks at K = 5 (0.242), the value chosen.
+- **Shopping.** The curve is almost flat from K = 3 to 8 (0.156–0.168); the highest values sit at the edge of the range (K = 9–10). We took K = 6, at which every topic is distinct and can be named.
 
-Coherence is therefore a guide here rather than the only criterion.
+Coherence decides K for Food & Grocery and Payments; for Shopping it is a guide.
 
-**NMF compared with LDA** (`scripts/23_topic_model_comparison.py`, `data/textmining/topic_model_comparison.csv`). Both models were given the same document-term matrix and the same K for each domain. Each was fitted on 80% of the domain's complaint reviews (133,884 in total), and its topics were scored on the unseen 20% (33,473):
+**NMF compared with LDA** (`scripts/23_topic_model_comparison.py`, `data/textmining/topic_model_comparison.csv`). Both models were given the same document-term matrix and the same K for each domain. Each was fitted on 80% of the domain's complaint reviews (133,841 in total), and its topics were scored on the unseen 20% (33,462):
 
 - **Held-out NPMI:** how often each topic's top 10 terms appear together in unseen reviews.
 - **Topic diversity:** the share of distinct terms among all topics' top 10 terms.
 
 | Domain | Model | Held-out NPMI ↑ | Topic diversity ↑ | Largest topic's share of reviews | Fit time |
 |---|---|---:|---:|---:|---:|
-| Food & Grocery | **NMF (TF-IDF)** | **0.192** | **0.92** | 34% | 1 s |
-| | LDA (counts) | 0.117 | 0.68 | 23% | 42 s |
-| Shopping | **NMF (TF-IDF)** | **0.164** | **0.88** | 26% | 1 s |
-| | LDA (counts) | 0.120 | 0.73 | 26% | 39 s |
-| Payments | **NMF (TF-IDF)** | **0.152** | **0.94** | 50% | 0.1 s |
-| | LDA (counts) | 0.076 | 0.76 | 29% | 7 s |
+| Food & Grocery | **NMF (TF-IDF)** | **0.190** | **0.92** | 35% | 2 s |
+| | LDA (counts) | 0.111 | 0.68 | 30% | 41 s |
+| Shopping | **NMF (TF-IDF)** | **0.157** | **0.88** | 25% | 1 s |
+| | LDA (counts) | 0.108 | 0.63 | 24% | 41 s |
+| Payments | **NMF (TF-IDF)** | **0.188** | **0.90** | 55% | 0.1 s |
+| | LDA (counts) | 0.103 | 0.80 | 28% | 7 s |
 
-NMF's topics are more coherent and more distinct in every domain, which confirms the choice. LDA spreads reviews more evenly across topics, but its topics share many of the same top terms.
+NMF's topics are more coherent and more distinct in every domain, which confirms the choice. LDA spreads reviews more evenly across topics, but its topics share many of the same top terms. K was chosen for NMF and LDA used default settings, so the comparison favours NMF slightly; the gap in held-out NPMI (0.05–0.09) is large compared with the differences between values of K.
 
 ![NMF vs LDA](data/charts/textmining/tm_10_nmf_vs_lda.png)
 
@@ -237,25 +239,25 @@ NMF's topics are more coherent and more distinct in every domain, which confirms
 
 | Topic | Matching keyword tag | Share of the topic's reviews with that tag |
 |---|---|---:|
-| Customer Support & Bot Loop (food) | Customer Support | 71% |
-| Customer Service & Escalation Failure (shopping) | Customer Support | 76% |
-| Delivery Delays & Rider Tracking | Delivery Delay | 51% |
-| Device Environment & Security Scan Errors | Crash & Stability | 46% |
-| Return Rejection; Order Cancellation & Rescheduling | Cancellation & Return | 31–39% |
+| Poor Customer Support (food) | Customer Support | 71% |
+| Unhelpful Customer Care (shopping) | Customer Support | 76% |
+| Late Delivery & Delivery Partners (food) | Delivery Delay | 51% |
+| Device Environment Error (payments) | Crash & Stability | 50% |
+| Returns, Refunds & Product Quality; Order Cancelled or Not Delivered | Cancellation & Return | 31–39% |
 
-The topics also split themes that the keyword rules keep together. For example, food quality is separated from delivery speed, and delivery charges are separated from other pricing complaints.
+The topics also find themes that no keyword category covers: cash on delivery not being available (80% of its reviews untagged) and cashback or rewards not given (77% untagged).
 
-**What the keyword rules miss.** 71,929 of the 167,357 kept complaints (43.0%) match none of the 9 keyword tags. The topic models give every one of them a theme:
+**What the keyword rules miss.** 71,775 of the 167,198 complaints with a topic (42.9%) match none of the 9 keyword tags. The topic models give every one of them a theme:
 
 | Topic | Untagged reviews | Share of the topic that is untagged |
 |---|---:|---:|
-| Order Cancellation & Refund | 13,073 | 46% |
-| Return Rejection & Defective Products | 8,275 | 46% |
-| Poor Food Quality & Stale Items | 6,089 | 58% |
-| Delivery Delays & Rider Tracking | 5,854 | 39% |
-| Order Cancellation & Rescheduling | 5,625 | 36% |
+| Order Cancellation & Refund | 13,060 | 46% |
+| Returns, Refunds & Product Quality | 8,242 | 45% |
+| General Bad Service & Quality | 6,081 | 59% |
+| Late Delivery & Delivery Partners | 5,857 | 39% |
+| Order Cancelled or Not Delivered | 5,618 | 36% |
 
-The untagged share is highest for COD & Payment Option Failures (80%) and Failed Transfers & Debited Amounts (72%). These complaints are often written in Hinglish or informal wording ("paisa fas gaya"), which a keyword list does not cover.
+The untagged share is highest for Cash on Delivery Not Available (80%), Cashback & Rewards Not Given and App or Scanner Not Working (77% each) and Payment, UPI & Bank Account Problems (71%): their wording is not in the keyword lists.
 
 ![Untagged reviews by topic](data/charts/textmining/tm_08_untagged_topics_breakdown.png)
 
@@ -263,9 +265,10 @@ The untagged share is highest for COD & Payment Option Failures (80%) and Failed
 
 **Sentiment by topic.**
 
-- **Loss and broken trust produce the angriest reviews.** The two most negative topics are both in Shopping: scam allegations (−0.61, 80% strongly negative) and poor product quality (−0.60, 81%). In food apps, stale or wrong food (−0.44) angers users far more than late food (−0.29).
-- **Technical faults are reported calmly.** In Payments, app crashes (−0.09) and device-environment errors (−0.11) are described factually ("app closes after update"). A mild VADER score is therefore not a sign of a mild problem.
-- **In Payments, the anger is aimed at support.** Unanswered support (−0.23) draws more anger than the failed transfer itself (−0.15).
+- **The most negative topics are the general ones.** Worst-Ever Experience (−0.61, 80% strongly negative) and General Bad Experience (−0.59) in Shopping, and General Bad Service & Quality (−0.44) in food apps, are made of words like "worst" and "bad". They measure anger, not a fault to fix.
+- **Among specific faults, support draws the most anger.** Poor Customer Support in food apps (−0.40, 56% strongly negative) and Unresponsive Customer Support in payment apps (−0.23) are the angriest specific topics; in Shopping it is Order Cancelled or Not Delivered (−0.31).
+- **Technical faults are reported calmly.** In Payments, app or scanner failures (−0.09) and device-environment errors (−0.13) are described factually ("app not working after update"). A mild VADER score is therefore not a sign of a mild problem.
+- **In Payments, the anger is aimed at support.** Unanswered support (−0.23) draws more anger than the payment problem itself (−0.15). Cashback and rewards that were promised but not given form their own topic (15% of payment complaints).
 
 ![Sentiment by topic](data/charts/textmining/tm_05_topic_sentiment.png)
 
@@ -282,7 +285,7 @@ The untagged share is highest for COD & Payment Option Failures (80%) and Failed
 | Amazon | prime, membership, device, refund | Prime membership and refund disputes |
 | Meesho | account, verification, block | Account verification and blocking |
 | Paytm | device, error, correct | "Device environment not correct" security errors |
-| PhonePe | charge, wallet, fee | Fees on recharges and payments |
+| PhonePe | charge, wallet, fee, block | Charges and fees, the wallet, blocked accounts |
 | Google Pay | reward, pocket, bug | Rewards and app bugs |
 
 **Praise as a contrast.** Satisfied users mention fast delivery (food), product quality and price (shopping), and easy UPI payments (payments).
@@ -291,7 +294,7 @@ The untagged share is highest for COD & Payment Option Failures (80%) and Failed
 
 - Order Cancellation & Refund stays at 34–36% of food complaints.
 - Customer support rises slightly in Food & Grocery (18% to 20%) and in Payments (18% to 20%).
-- Failed transfers fall from 54% to 49% of payment complaints.
+- Payment, UPI and bank-account problems move between 46% and 52% of payment complaints.
 
 ---
 
@@ -335,10 +338,10 @@ Code: `scripts/15_time_series_data.py`, `19_forecasting.py`, `20_forecast_evalua
 
 **Choosing the orders:**
 
-1. d comes from the ADF test, and D = 0 for every app.
-2. The ACF and PACF propose p and q up to 3, and a seasonal AR or MA term at lag 7.
-3. The lowest AICc wins. If several orders are within 2 points of the lowest, the one with the fewest terms is taken. In total, 378 candidate fits were tried.
-4. There is no look-ahead: in the backtest, the orders are chosen on the first 84 days only.
+1. d comes from the ADF test on the training days, and D = 0 for every app.
+2. The ACF and PACF propose p and q up to 3, and a seasonal AR or MA term at lag 7 (always tried when the training days show a strong weekday effect).
+3. The lowest AICc wins. If several orders are within 2 points of the lowest, the one with the fewest terms is taken. In total, 384 candidate fits were tried, and all converged.
+4. There is no look-ahead: in the backtest, d, the weekday check and the orders are all chosen on the first 84 days only. On 84 days the ADF test asks for differencing for six apps, on all 173 days only for Zomato and Blinkit.
 
 | App | Final order (p,d,q)(P,D,Q)₇ | Feed-gap input |
 |---|---|---|
@@ -354,7 +357,7 @@ Code: `scripts/15_time_series_data.py`, `19_forecasting.py`, `20_forecast_evalua
 | PhonePe | (1,0,0) | |
 | Google Pay | (1,0,0) | |
 
-Only the food apps need seasonal terms, which matches their Sunday peak. Forcing seasonal terms onto the other apps changed their backtest error by less than 1.5 reviews a day.
+Only the food apps need seasonal terms, which matches their Sunday peak.
 
 **Rolling-origin backtest.** Each model is trained on the first 84 days and forecasts the next 28. The origin then moves one week and every model is refitted. This gives 9 origins (23 June to 18 August) and 252 forecasts per app and model.
 
@@ -362,51 +365,51 @@ Only the food apps need seasonal terms, which matches their Sunday peak. Forcing
 
 ### 4.3 Evaluation
 
-**Accuracy.** MAE and RMSE are in reviews per day. MASE is scaled by the seasonal-naive error on the training data [11]. Values are means over the 11 apps:
+**Accuracy.** MAE and RMSE are in reviews per day. MASE divides each error by the seasonal-naive error on the training days of its own origin [11]. The relative MAE divides a model's MAE by the seasonal-naive MAE on the same backtest days, so below 1 means the model beats the baseline. Values are means over the 11 apps:
 
-| Model | MAE | RMSE | MASE | Lower MAE than seasonal naive |
-|---|---:|---:|---:|---|
-| **ARIMA** | **17.95** | **24.95** | **0.88** | **10 of 11 apps** |
-| Holt-Winters | 19.14 | 26.66 | 0.93 | – |
-| Seasonal naive | 21.99 | 31.07 | 1.08 | baseline |
+| Model | MAE | RMSE | MASE | MAE ÷ seasonal-naive MAE | Lower MAE than seasonal naive |
+|---|---:|---:|---:|---:|---|
+| **ARIMA** | **19.39** | **26.74** | **0.93** | **0.93** | **10 of 11 apps** |
+| Holt-Winters | 19.14 | 26.66 | 0.93 | 0.88 | 10 of 11 apps |
+| Seasonal naive | 21.99 | 31.07 | 1.08 | 1.00 | baseline |
 
 ARIMA's MAE per app, against the seasonal-naive baseline:
 
 | App | ARIMA | Seasonal naive | Holt-Winters |
 |---|---:|---:|---:|
-| Swiggy | 27.6 | 34.6 | 27.4 |
+| Swiggy | 28.1 | 34.6 | 27.4 |
 | Zomato | 22.8 | 23.9 | 21.5 |
 | Blinkit | 28.8 | 33.8 | 26.8 |
 | Domino's | 15.8 | 18.3 | 14.4 |
-| Myntra | 10.5 | 13.9 | 12.8 |
-| Flipkart | 38.1 | 56.0 | 54.7 |
+| Myntra | 12.2 | 13.9 | 12.8 |
+| Flipkart | 52.7 | 56.0 | 54.7 |
 | Amazon | 12.9 | 16.9 | 14.5 |
 | Meesho | 13.6 | 19.3 | 15.1 |
-| Paytm | 8.6 | 8.8 | 7.9 |
+| Paytm | 7.6 | 8.8 | 7.9 |
 | PhonePe | 7.9 | 10.0 | 8.0 |
 | Google Pay | 10.9 | 6.2 | 7.5 |
 
-- **Where ARIMA gains most.** The largest gains are for apps with a trend or a slowly moving level: Flipkart −32%, Meesho −29%, Myntra −25% and Amazon −24% against the baseline.
-- **Google Pay is the exception.** Its level is low and noisy and it shifted after training, so "same day last week" adapts faster.
-- **Holt-Winters.** It has a lower MAE than ARIMA for six apps (the four food apps, Paytm and Google Pay) but a higher average. ARIMA stays the main model because it is the only one with prediction intervals and with the feed gap as an input.
+- **Where ARIMA gains most.** Meesho −29%, Amazon −24%, PhonePe −21% and Swiggy −19% against the baseline.
+- **Google Pay is the exception.** Its level is low and noisy and it shifted after training, so "same day last week" adapts faster. Its MASE is still below 1 (0.64) because its training windows were noisier than the backtest days; the relative MAE (1.76) shows the baseline wins.
+- **ARIMA and Holt-Winters are equally accurate.** ARIMA has the lower MAE for six apps (Amazon, Flipkart, Meesho, Myntra, Paytm, PhonePe), Holt-Winters for the four food apps; the means are 19.4 and 19.1. ARIMA stays the main model because it is the only one with prediction intervals, which the alerts and capacity planning need, and the only one that takes the feed gap as an input.
 
-**Prediction intervals.** Across 2,772 backtest forecasts, 81.4% of days fell inside the 80% interval and 92.7% inside the 95% interval. The 80% interval is well calibrated and the 95% interval is slightly narrow. Because rolling windows overlap, this is a descriptive check rather than an independent test.
+**Prediction intervals.** Across 2,772 backtest forecasts, 82.7% of days fell inside the 80% interval and 93.9% inside the 95% interval, close to nominal. By app, the 95% interval is too narrow for the shopping apps (Amazon 86%, Meesho 89%, Myntra 89%). Because rolling windows overlap, this is a descriptive check rather than an independent test.
 
 **Residuals.** The Ljung–Box test at lag 14 [12] gives p > 0.05 for all 11 final models, so no autocorrelation is left at that lag. This does not prove that the residuals are random.
 
 **Unusual-day alerts.** A forecast is flagged when the actual count falls outside its 95% interval:
 
-- **Volume.** 201 forecasts were flagged. Because origins overlap, they cover 83 distinct app-days (67 above the interval, 16 below).
-- **Apps with the most alerts.** Flipkart has the most (18), followed by Myntra (13), Amazon (11), Meesho (11), Swiggy (10) and Paytm (10).
-- **Largest alerts.** Swiggy on 24 July (469 against 157 expected, upper limit 202), Flipkart on 4 July (451 against 264) and Blinkit on 28 August (387 against 247).
+- **Volume.** 169 forecasts were flagged. Because origins overlap, they cover 77 distinct app-days (56 above the interval, 21 below).
+- **Apps with the most alerts.** Myntra has the most (15, ten of them below the interval), followed by Flipkart, Amazon and Meesho (11 each), Paytm (10) and Swiggy (9).
+- **Largest alerts.** Swiggy on 24 July (469 against 136 expected, upper limit 177), Flipkart on 4 July (451 against 258) and Blinkit on 28 August (387 against 247).
 - **What an alert means.** An alert marks an unexpected count. It does not prove a cause.
 
 ### 4.4 Interpretation: which apps can be predicted
 
 | Group | Apps | Evidence |
 |---|---|---|
-| Predictable | Zomato, Blinkit, Domino's | A steady weekly rhythm. The 95% interval holds 99% of days for Zomato, 97% for Blinkit and 95% for Domino's. Swiggy shares the rhythm but has short spikes (24 July), so its 95% interval holds 90%. |
-| Hard to predict | Flipkart, Amazon, Meesho, Myntra | Level shifts. The 80% interval holds only 64–71% of days, and these apps have the most alerts. |
+| Predictable | Zomato, Blinkit, Domino's | A steady weekly rhythm. The 95% interval holds 99% of days for Zomato, 97% for Blinkit and 95% for Domino's. Swiggy shares the rhythm but has short spikes (24 July), so its 95% interval holds 92%. |
+| Hard to predict | Flipkart, Amazon, Meesho, Myntra | Level shifts. The 80% interval holds only 64–74% of days, and these apps have the most alerts. |
 | Use with care | Google Pay, Paytm | Google Pay is low and noisy (the baseline wins). Paytm jumped to about 80 a day in September, so its week-1 forecast (−61%) is unreliable. |
 
 **Forecast for 21–27 September** (1–2★ reviews in the week after the data):
@@ -501,26 +504,28 @@ A forecast counts as **reliable** only if ARIMA beat the baseline in the backtes
 | App | Domain | Priority | 1–2★ / day | 1–2★ share | Trend | Largest complaint topic | Days above interval | Worse releases |
 |---|---|---|---:|---:|---:|---|---:|---|
 | Swiggy | Food & Grocery | **High (4)** | 151 | 33.4% | −16% | Order Cancellation & Refund (37%) | 4 | 2 |
-| Flipkart | Shopping | **High (3)** | 282 | 17.7% | +5% | Return Rejection & Defective Products (25%) | 18 | 1 |
-| Amazon | Shopping | **High (3)** | 103 | 53.4% | +14% | Customer Service & Escalation Failure (24%) | 9 | 0 |
-| Paytm | Payments | **High (3)** | 38 | 14.6% | +60% | Failed Transfers & Debited Amounts (44%) | 10 | 1 (confirmed) |
+| Flipkart | Shopping | **High (3)** | 282 | 17.7% | +5% | Returns, Refunds & Product Quality (25%) | 11 | 1 |
+| Amazon | Shopping | **High (3)** | 103 | 53.4% | +14% | Unhelpful Customer Care (24%) | 9 | 0 |
+| Paytm | Payments | **High (3)** | 38 | 14.6% | +60% | Payment, UPI & Bank Account Problems (36%) | 10 | 1 (confirmed) |
 | Blinkit | Food & Grocery | Medium (2) | 251 | 18.4% | +13% | Order Cancellation & Refund (33%) | 3 | 0 |
-| Meesho | Shopping | Medium (2) | 104 | 17.6% | +2% | Return Rejection & Defective Products (28%) | 9 | 0 |
+| Meesho | Shopping | Medium (2) | 104 | 17.6% | +2% | Returns, Refunds & Product Quality (28%) | 9 | 0 |
 | Domino's | Food & Grocery | Medium (2) | 60 | 22.6% | −18% | Order Cancellation & Refund (41%) | 4 | 0 |
-| Myntra | Shopping | Medium (2) | 51 | 10.3% | +22% | Return Rejection & Defective Products (26%) | 9 | 0 |
+| Myntra | Shopping | Medium (2) | 51 | 10.3% | +22% | Returns, Refunds & Product Quality (26%) | 5 | 0 |
 | Zomato | Food & Grocery | Low (1) | 164 | 18.8% | −11% | Order Cancellation & Refund (33%) | 0 | 0 |
-| Google Pay | Payments | Low (1) | 27 | 23.2% | −20% | Failed Transfers & Debited Amounts (59%) | 0 | 0 |
-| PhonePe | Payments | Low (0) | 50 | 9.8% | +3% | Failed Transfers & Debited Amounts (54%) | 1 | 0 |
+| Google Pay | Payments | Low (1) | 27 | 23.2% | −20% | Payment, UPI & Bank Account Problems (54%) | 0 | 0 |
+| PhonePe | Payments | Low (0) | 50 | 9.8% | +3% | Payment, UPI & Bank Account Problems (57%) | 1 | 0 |
 
 ![Priority overview](data/charts/combined/ci_01_priority_overview.png)
 
 ### 5.3 Recommendations per domain
 
-| Domain | Fix first (most common complaint) | Most damaging (angriest complaint) | Focus |
+| Domain | Fix first (most common complaint) | Most damaging (angriest specific complaint) | Focus |
 |---|---|---|---|
-| Food & Grocery | **Refund and cancellation flow**: 35% of the domain's complaints (28,656), the largest topic in every food app | **Food quality**: −0.44, 59% strongly negative; act fast on stale or wrong food | Swiggy (High). Blinkit has the most complaints, 251 a day |
-| Shopping | **Return rejections and defective products**: 25% (18,156), the largest topic in Flipkart, Meesho and Myntra | **Scam allegations**: −0.61, 80% strongly negative; answer quickly and visibly | Flipkart and Amazon (High) |
-| Payments | **Money debited but not received**: 52% (6,909) | **Unanswered support**: −0.23, angrier than the failure itself (−0.15) | Paytm (High). PhonePe has the most complaints, 50 a day, but only 9.8% of its reviews |
+| Food & Grocery | **Refund and cancellation flow**: 35% of the domain's complaints (28,653), the largest topic in every food app | **Customer support**: −0.40, 56% strongly negative | Swiggy (High). Blinkit has the most complaints, 251 a day |
+| Shopping | **Returns, refunds and product quality**: 25% (18,123), the largest topic in Flipkart, Meesho and Myntra | **Orders cancelled or not delivered**: −0.31, 41% strongly negative | Flipkart and Amazon (High) |
+| Payments | **Payment, UPI and bank-account problems**: 49% (6,443) | **Unanswered support**: −0.23, angrier than the payment problem itself (−0.15) | Paytm (High). PhonePe has the most complaints, 50 a day, but only 9.8% of its reviews |
+
+"Most damaging" is the most negative topic that names a fault; the general "bad" and "worst ever" topics are angrier but say only that users are unhappy.
 
 ### 5.4 Recommendations for the High-priority apps
 
@@ -532,19 +537,20 @@ A forecast counts as **reliable** only if ARIMA beat the baseline in the backtes
 
 **Flipkart (3 signs)**
 
-- Fix return rejections and defective products first: 25% of its complaints.
-- Set a daily alert. Flipkart had 18 days above the forecast interval, the most of any app; the largest was 451 against 264 expected on 4 July.
+- Fix returns, refunds and product quality first: 25% of its complaints.
+- Set a daily alert. Flipkart had 11 days above the forecast interval, the most of any app; the largest was 451 against 258 expected on 4 July.
 - Review version 9.3, after which support and return complaints rose.
 
 **Amazon (3 signs)**
 
-- Fix escalations in customer service first: 24% of its complaints.
+- Fix customer care first: unhelpful customer care is 24% of its complaints.
 - Amazon has the highest 1–2★ share of all 11 apps (53%), and it is rising (+14%).
 - Use the Review 1 classifier to triage reviews: it is most useful here, with 91% precision and 96% recall.
 
 **Paytm (3 signs)**
 
 - Investigate version 10.84.5 first. It is the only release confirmed at the app level, and it took 1–2★ reviews from 34 to 66 a day.
+- Pay out promised cashback and rewards: it is Paytm's angriest specific complaint (18% of its complaints, −0.23).
 - Plan capacity on last week's level, not on the ARIMA forecast, which is unreliable after the September jump.
 - Have a person check flagged reviews, because the classifier's precision is lowest here (66%).
 
@@ -562,7 +568,7 @@ Every page shares the same sidebar filters: domain, app, date range, and an opti
 |---|---|---|
 | Overview | Headline numbers, 1–2★ reviews per day by domain (four measures, 7-day smoothing), share and count of 1–2★ reviews by app, top keyword issues, table with CSV download | Aditya |
 | Text mining | Topic explorer with top terms, sentiment and real example reviews (189 readable examples); keyword-tag overlap; topic × app heatmap; topic share over time; distinctive terms per app | Akshay |
-| Forecasting | ARIMA forecast per app with 80% and 95% intervals, optional baseline comparison, unusual days above and below the interval, release markers (red = made things worse), weekly forecast table and backtest error | Kanishka |
+| Forecasting | ARIMA forecast per app with 80% and 95% intervals, optional baseline comparison, unusual days above and below the interval, release markers (red = made things worse), weekly forecast table and backtest error relative to the seasonal-naive baseline | Kanishka |
 | Update impact | Verdict for every release, new-vs-older gap against the app's usual gap, daily series with releases, before/after detail and issue mix of any release, CSV download | Kanishka |
 | Recommendations | Priority counts, warning-sign grid, priority table and recommendations, filtered by domain and app, with downloads | Kanishka |
 | Check a review | Paste any review: the Review 1 classifiers' problem probability with an adjustable threshold, the complaint topic from the saved NMF model, VADER scores and keyword tags | Harshini |
@@ -576,7 +582,9 @@ Every page shares the same sidebar filters: domain, app, date range, and an opti
 - **Short window.** Only 173 days of data are available, so there is no yearly pattern and the backtest has only 9 origins.
 - **Counts depend on things the models do not see.** Review counts follow app traffic and campaigns. The forecast answers "what if the next weeks look like the recent past".
 - **A 1–2★ review is a judgement, not a confirmed defect.** It is the user's own judgement. The issue mix in the update-impact test uses keyword tags, which miss complaints worded differently.
-- **Topic names are our reading of the top terms.** Some topics have general top terms; for example, "Poor Food Quality & Stale Items" leads with "bad", "not good" and "quality". The example reviews on the dashboard let a reader check each name.
+- **Topic names are our reading of the top terms.** Three topics are general dissatisfaction ("bad", "not good", "worst ever") rather than one fault; they are named so and are not used to pick what to fix. The example reviews on the dashboard let a reader check each name.
+- **Keyword tags are broad.** The 9 keyword tags (Review 1) match some praise too: 11.6% of all tags fall on 4–5★ reviews (for example "delivery boy was good" counts as a delivery mention). Text mining therefore uses only 1–2★ reviews, and its topics do not depend on the tags.
+- **Forecast intervals are narrow for shopping apps.** The 95% interval holds 86–89% of days for Amazon, Meesho and Myntra, so these apps raise more alerts than a well-calibrated model would.
 - **VADER underrates calm technical complaints.** Sentiment shows how users feel, not how severe a fault is.
 - **Users choose when to update.** Early updaters may differ from late ones, which is why each release is compared with its app's usual gap. Three of the four worse releases have windows that overlap the feed gap.
 - **The priority score is simple.** It weights every sign equally and uses fixed thresholds. Each sign is shown separately, so the reason for a priority is always visible.
@@ -607,9 +615,9 @@ The detailed contribution summary is `docs/Review_2_Contribution_Summary.md`.
 
 ## 9. Conclusion
 
-- **Users complain mostly about service, not about the app software.** Refunds and cancellations, returns, failed transfers and support lead every domain. The most damaging complaints are about loss and broken trust.
-- **Text mining finds what keyword rules miss.** The topic models agree with the keyword tags where both apply, and they give a theme to the 43% of complaints that no keyword matched.
-- **Daily complaints can be forecast well enough to plan support.** ARIMA beats the baseline for 10 of 11 apps with honest intervals. Its alerts mark days that need a look. Shopping apps with level shifts, Google Pay and Paytm need more care.
+- **Users complain mostly about service, not about the app software.** Refunds and cancellations, returns, payment problems and support lead every domain. Among specific faults, unanswered support draws the angriest reviews.
+- **Text mining finds what keyword rules miss.** NMF beats LDA on held-out coherence in every domain. The topics agree with the keyword tags where both apply, and they give a theme to the 43% of complaints that no keyword matched, including cash on delivery and unpaid cashback, which have no keyword category.
+- **Daily complaints can be forecast well enough to plan support.** ARIMA beats the baseline for 10 of 11 apps, is as accurate as Holt-Winters, and adds intervals that hold 94% of days at the 95% level. Its alerts mark days that need a look. Shopping apps with level shifts, Google Pay and Paytm need more care.
 - **Most app updates do not hurt.** Of 205 testable releases, 196 changed nothing measurable. Paytm 10.84.5 clearly made things worse, and the forecast caught it independently.
 - **Fix first:** Swiggy, Flipkart, Amazon and Paytm. The live dashboard puts all of this, and a check for any single review, in front of a product or support team.
 

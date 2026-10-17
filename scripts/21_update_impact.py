@@ -37,7 +37,7 @@ Output: data/update_impact/
           release_issue_changes.csv one row per release and issue: share on the new vs older versions, test
           worse_releases.csv        the releases that made things worse, per app, worst first
           impact_by_app.csv         per app: releases tested, worse, better, typical change
-        data/charts/update_impact/  ui_01 to ui_04
+        data/charts/update_impact/  01 to 04
         data/update_impact_summary.json
 
 Run from the repository root:  python scripts/21_update_impact.py  
@@ -322,7 +322,7 @@ def chart_verdicts(res):
     ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.45, -0.1), fontsize=8.5)
     n_worse = int(res["made_worse"].sum())
     n_test = int(res["testable"].sum())
-    save(fig, CHARTS_DIR / "ui_01_release_verdicts_by_app.png",
+    save(fig, CHARTS_DIR / "01_release_verdicts_by_app.png",
          f"{n_worse} of {n_test} testable releases made things worse; most releases changed nothing measurable",
          f"Verdict for each of the {len(res)} release events. 'Worse' = over the same 7 days, the new version's share of 1–2★ reviews "
          f"exceeds older versions' by at least {MIN_SHARE_DIFF_PP:.0f} points more than the app's usual new-version gap (Benjamini–Hochberg "
@@ -360,7 +360,7 @@ def chart_effects(res):
             ax.xaxis.set_major_formatter(mdates.DateFormatter("%b"))
             ax.tick_params(labelsize=8.5)
         axes[i][0].set_ylabel(f"{dom}\nnew − older versions\n(points of 1–2★ share)", fontsize=9)
-    save(fig, CHARTS_DIR / "ui_02_release_effects.png",
+    save(fig, CHARTS_DIR / "02_release_effects.png",
          "How each release compares with the versions it replaced",
          "One dot per release: share of 1–2★ reviews on the new version minus the share on older versions, over the same 7 days "
          "from the release, with its 95% interval. Dashed line = the app's usual gap (median over its releases); grey band = within ±5 points of it. "
@@ -395,7 +395,7 @@ def chart_examples(res, daily, reviews, n=4):
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%d %b"))
         ax.tick_params(labelsize=8, axis="x", rotation=30)
     axes[0].set_ylabel("1–2★ reviews per day")
-    save(fig, CHARTS_DIR / "ui_03_worst_release_examples.png",
+    save(fig, CHARTS_DIR / "03_worst_release_examples.png",
          "Releases that made things worse: daily 1–2★ reviews around the release",
          "Grey band = the 7 days before the release; coloured band = the 7 days from the release (dotted line = release day). "
          "The worst release of each app among those flagged as worse.")
@@ -428,7 +428,7 @@ def chart_issue_mix(res, issues):
     ax.grid(False)
     cb = fig.colorbar(im, ax=ax, fraction=0.025, pad=0.01)
     cb.set_label("new − older (points)", fontsize=8.5)
-    save(fig, CHARTS_DIR / "ui_04_issue_mix_of_worse_releases.png",
+    save(fig, CHARTS_DIR / "04_issue_mix_of_worse_releases.png",
          "What got worse: issue mix of the releases that made things worse",
          "Share of reviews mentioning each issue on the new version minus older versions, same 7 days (keyword tags; a review can have "
          f"several). * = significant increase (q < {ALPHA}, at least {MIN_ISSUE_DIFF_PP:.0f} points). Red = more on the new version.")
