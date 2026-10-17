@@ -214,13 +214,12 @@ ba-capstone-app-reviews/
 │   └── Review_2.ipynb
 │
 ├── docs/
-│   ├── Review_1_Presentation.pptx
+│   ├── Review_1_Presentation.pptx   # with PDF copy
 │   ├── Review_1_Contribution_Summary.md
 │   ├── Review_2_Presentation.pptx   # with PDF copy
 │   ├── Review_2_Contribution_Summary.md
+│   ├── Review_2_Board.png           # project board, Review 2 tasks
 │   └── Final_Report.pdf
-│
-└── review_2_prep/               # Review 2 workspace
 ```
 
 ---
@@ -375,14 +374,13 @@ The cleaning step keeps a review when at least 85% of its letters are Latin (a�
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
 | [`FINAL_REPORT.md`](FINAL_REPORT.md)                                | Final project report, Units 1–3 (PDF: `docs/Final_Report.pdf`) |
-| [`Review_2.ipynb`](notebooks/Review_2.ipynb)                        | Review 2 final notebook (executed, HTML copy included) |
+| [`Review_2.ipynb`](notebooks/Review_2.ipynb)                        | Final notebook, Units 1–3 (executed end to end, HTML copy included) |
 | [`Review_2_Presentation.pptx`](docs/Review_2_Presentation.pptx)     | Final presentation on the course template (PDF copy included) |
 | [`Review_2_Contribution_Summary.md`](docs/Review_2_Contribution_Summary.md) | Review 2 individual contribution summary |
 | [`TIME_SERIES.md`](TIME_SERIES.md)                                  | Review 2 Method 2: time-series analysis      |
 | [`TEXT_MINING.md`](TEXT_MINING.md)                                  | Review 2 Method 1: text mining               |
 | [`COMBINED_INSIGHTS.md`](COMBINED_INSIGHTS.md)                      | Review 2 combined insights and recommendations |
 | [`dashboard/README.md`](dashboard/README.md)                        | Review 2 interactive dashboard ([live](https://team10-app-reviews.streamlit.app/)) |
-| [`review_2_prep/`](review_2_prep/)                                  | Review 2 workspace                           |
 
 ---
 
