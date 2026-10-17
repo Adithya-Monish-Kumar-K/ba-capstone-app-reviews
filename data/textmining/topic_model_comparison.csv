@@ -1,0 +1,7 @@
+domain,model,k,train_reviews,test_reviews,heldout_npmi,topic_diversity,largest_topic_share,fit_seconds
+Food & Grocery,NMF (TF-IDF),6,66082,16521,0.1923,0.917,0.341,1.2
+Food & Grocery,LDA (counts),6,66082,16521,0.1168,0.683,0.228,42.1
+Shopping,NMF (TF-IDF),6,57130,14283,0.1635,0.883,0.262,0.9
+Shopping,LDA (counts),6,57130,14283,0.1197,0.733,0.263,39.3
+Payments,NMF (TF-IDF),5,10672,2669,0.1523,0.94,0.498,0.1
+Payments,LDA (counts),5,10672,2669,0.0759,0.76,0.286,7.2
