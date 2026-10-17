@@ -1,18 +1,18 @@
 domain,dominant_topic_label,untagged_reviews,mean_sentiment,total_reviews,pct_of_topic_untagged
-Food & Grocery,Order Cancellation & Refund,13073,-0.1406,28656,45.6
-Shopping,Return Rejection & Defective Products,8275,-0.0573,18156,45.6
-Food & Grocery,Poor Food Quality & Stale Items,6089,-0.3517,10412,58.5
-Food & Grocery,Delivery Delays & Rider Tracking,5854,-0.1585,14856,39.4
-Shopping,Order Cancellation & Rescheduling,5625,-0.1283,15824,35.5
-Food & Grocery,Excessive Delivery & Handling Charges,5257,-0.1477,8730,60.2
-Payments,Failed Transfers & Debited Amounts,4970,-0.1079,6909,71.9
-Shopping,Courier Delays & Delivery Agent Issues,4168,-0.1292,11147,37.4
-Food & Grocery,Customer Support & Bot Loop,3597,-0.3977,15640,23.0
-Food & Grocery,COD & Payment Option Failures,3443,-0.0826,4309,79.9
-Shopping,Poor Shopping Experience & Fabric Quality,2839,-0.5298,6192,45.8
-Shopping,Extreme Dissatisfaction & Scam Allegations,2818,-0.5092,6973,40.4
-Shopping,Customer Service & Escalation Failure,2357,-0.1051,13121,18.0
-Payments,Account Blocking & AutoPay Issues,1056,-0.0924,1379,76.6
-Payments,App Crashes & Update Regressions,981,-0.0732,1267,77.4
-Payments,Customer Support Unresponsiveness,854,-0.2513,2404,35.5
-Payments,Device Environment & Security Scan Errors,673,-0.1091,1382,48.7
+Food & Grocery,Order Cancellation & Refund,13060,-0.1412,28653,45.6
+Shopping,"Returns, Refunds & Product Quality",8242,-0.0577,18123,45.5
+Food & Grocery,General Bad Service & Quality,6081,-0.3514,10394,58.5
+Food & Grocery,Late Delivery & Delivery Partners,5857,-0.1586,14861,39.4
+Shopping,Order Cancelled or Not Delivered,5618,-0.1281,15812,35.5
+Food & Grocery,High Delivery & Handling Charges,5253,-0.1478,8724,60.2
+Payments,"Payment, UPI & Bank Account Problems",4572,-0.1102,6443,71.0
+Shopping,Delivery Delays & Delivery Agents,4169,-0.1294,11150,37.4
+Food & Grocery,Poor Customer Support,3598,-0.3974,15641,23.0
+Food & Grocery,Cash on Delivery Not Available,3438,-0.0826,4304,79.9
+Shopping,General Bad Experience,2840,-0.5296,6195,45.8
+Shopping,Worst-Ever Experience,2820,-0.5091,6976,40.4
+Shopping,Unhelpful Customer Care,2356,-0.105,13120,18.0
+Payments,Cashback & Rewards Not Given,1502,-0.0847,1941,77.4
+Payments,App or Scanner Not Working,1010,-0.0785,1305,77.4
+Payments,Unresponsive Customer Support,839,-0.2604,2410,34.8
+Payments,Device Environment Error,520,-0.1213,1146,45.4
