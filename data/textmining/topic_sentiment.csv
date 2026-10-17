@@ -1,18 +1,18 @@
 domain,dominant_topic_id,dominant_topic_label,reviews,mean_sentiment,pct_strongly_neg,pct_neg
-Food & Grocery,1,Order Cancellation & Refund,28656,-0.2713,36.16,59.79
-Food & Grocery,2,Customer Support & Bot Loop,15640,-0.4024,55.58,77.29
-Food & Grocery,3,Excessive Delivery & Handling Charges,8730,-0.2135,24.39,57.56
-Food & Grocery,4,Poor Food Quality & Stale Items,10412,-0.4375,58.77,79.28
-Food & Grocery,5,Delivery Delays & Rider Tracking,14856,-0.2945,39.06,60.01
-Food & Grocery,6,COD & Payment Option Failures,4309,-0.1164,17.61,39.57
-Payments,1,Failed Transfers & Debited Amounts,6909,-0.154,27.44,50.24
-Payments,2,App Crashes & Update Regressions,1267,-0.0863,16.18,36.23
-Payments,3,Device Environment & Security Scan Errors,1382,-0.114,18.02,44.93
-Payments,4,Account Blocking & AutoPay Issues,1379,-0.1305,21.1,53.73
-Payments,5,Customer Support Unresponsiveness,2404,-0.225,39.98,63.48
-Shopping,1,Return Rejection & Defective Products,18156,-0.2287,33.05,54.55
-Shopping,2,Customer Service & Escalation Failure,13121,-0.2426,41.19,63.78
-Shopping,3,Courier Delays & Delivery Agent Issues,11147,-0.2949,40.54,61.35
-Shopping,4,Poor Shopping Experience & Fabric Quality,6192,-0.5948,81.2,91.91
-Shopping,5,Extreme Dissatisfaction & Scam Allegations,6973,-0.6134,79.56,90.61
-Shopping,6,Order Cancellation & Rescheduling,15824,-0.3101,40.74,65.61
+Food & Grocery,1,Order Cancellation & Refund,28653,-0.2717,36.2,59.86
+Food & Grocery,2,Poor Customer Support,15641,-0.4022,55.57,77.28
+Food & Grocery,3,High Delivery & Handling Charges,8724,-0.2135,24.38,57.58
+Food & Grocery,4,General Bad Service & Quality,10394,-0.4374,58.76,79.27
+Food & Grocery,5,Late Delivery & Delivery Partners,14861,-0.2945,39.07,60.01
+Food & Grocery,6,Cash on Delivery Not Available,4304,-0.1164,17.63,39.57
+Payments,1,"Payment, UPI & Bank Account Problems",6443,-0.1452,25.28,49.32
+Payments,2,App or Scanner Not Working,1305,-0.0925,16.32,37.7
+Payments,3,Device Environment Error,1146,-0.129,18.85,46.51
+Payments,4,Unresponsive Customer Support,2410,-0.2293,40.91,63.53
+Payments,5,Cashback & Rewards Not Given,1941,-0.1502,28.28,53.63
+Shopping,1,"Returns, Refunds & Product Quality",18123,-0.2291,33.11,54.65
+Shopping,2,Unhelpful Customer Care,13120,-0.2426,41.2,63.78
+Shopping,3,Delivery Delays & Delivery Agents,11150,-0.2949,40.54,61.36
+Shopping,4,General Bad Experience,6195,-0.5948,81.19,91.9
+Shopping,5,Worst-Ever Experience,6976,-0.6133,79.56,90.61
+Shopping,6,Order Cancelled or Not Delivered,15812,-0.3101,40.75,65.61
