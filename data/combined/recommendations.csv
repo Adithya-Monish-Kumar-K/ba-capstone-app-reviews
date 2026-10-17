@@ -1,66 +1,66 @@
 level,domain,app_name,priority,type,action,evidence
-Domain,Food & Grocery,,,Fix first,"Across Food & Grocery, 'Order Cancellation & Refund' is the most common complaint; fix it in every app.","35% of the domain's topic-assigned 1–2★ reviews (28,656); sentiment -0.27"
-Domain,Food & Grocery,,,Most damaging,'Poor Food Quality & Stale Items' produces the angriest reviews in Food & Grocery.,Mean sentiment -0.44; 59% strongly negative
+Domain,Food & Grocery,,,Fix first,"Across Food & Grocery, 'Order Cancellation & Refund' is the most common complaint; fix it in every app.","35% of the domain's topic-assigned 1–2★ reviews (28,653); sentiment -0.27"
+Domain,Food & Grocery,,,Most damaging,'Poor Customer Support' produces the angriest reviews about a specific fault in Food & Grocery.,Mean sentiment -0.40; 56% strongly negative
 Domain,Food & Grocery,,,Focus,Focus on Swiggy (High priority). Blinkit has the most 1–2★ reviews a day.,"Blinkit: 251 a day, 18.4% of its reviews"
-Domain,Shopping,,,Fix first,"Across Shopping, 'Return Rejection & Defective Products' is the most common complaint; fix it in every app.","25% of the domain's topic-assigned 1–2★ reviews (18,156); sentiment -0.23"
-Domain,Shopping,,,Most damaging,'Extreme Dissatisfaction & Scam Allegations' produces the angriest reviews in Shopping.,Mean sentiment -0.61; 80% strongly negative
+Domain,Shopping,,,Fix first,"Across Shopping, 'Returns, Refunds & Product Quality' is the most common complaint; fix it in every app.","25% of the domain's topic-assigned 1–2★ reviews (18,123); sentiment -0.23"
+Domain,Shopping,,,Most damaging,'Order Cancelled or Not Delivered' produces the angriest reviews about a specific fault in Shopping.,Mean sentiment -0.31; 41% strongly negative
 Domain,Shopping,,,Focus,"Focus on Flipkart, Amazon (High priority). Flipkart has the most 1–2★ reviews a day.","Flipkart: 282 a day, 17.7% of its reviews"
-Domain,Payments,,,Fix first,"Across Payments, 'Failed Transfers & Debited Amounts' is the most common complaint; fix it in every app.","52% of the domain's topic-assigned 1–2★ reviews (6,909); sentiment -0.15"
-Domain,Payments,,,Most damaging,'Customer Support Unresponsiveness' produces the angriest reviews in Payments.,Mean sentiment -0.23; 40% strongly negative
+Domain,Payments,,,Fix first,"Across Payments, 'Payment, UPI & Bank Account Problems' is the most common complaint; fix it in every app.","49% of the domain's topic-assigned 1–2★ reviews (6,443); sentiment -0.15"
+Domain,Payments,,,Most damaging,'Unresponsive Customer Support' produces the angriest reviews about a specific fault in Payments.,Mean sentiment -0.23; 41% strongly negative
 Domain,Payments,,,Focus,Focus on Paytm (High priority). PhonePe has the most 1–2★ reviews a day.,"PhonePe: 50 a day, 9.8% of its reviews"
 App,Food & Grocery,Swiggy,High,Fix first,Fix 'Order Cancellation & Refund' first: it is the largest complaint topic.,37% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.33
-App,Food & Grocery,Swiggy,High,Most damaging,Treat 'Customer Support & Bot Loop' as the most damaging complaint: smaller but angriest.,"23% of complaints, sentiment -0.43, 59% strongly negative"
+App,Food & Grocery,Swiggy,High,Most damaging,Treat 'Poor Customer Support' as the most damaging complaint: smaller but angriest.,"23% of complaints, sentiment -0.43, 59% strongly negative"
 App,Food & Grocery,Swiggy,High,Release check,Review release 4.107.1 (2026-04-19) and add a pre-release check for what it broke.,"60% of reviews on the new version rated 1–2★ vs 42% on older versions, +21 points above the app's usual gap (seen on the new version only; released during the late-April feed gap, so the shares are inflated, but both groups cover the same days); most elevated issue: Customer Support"
 App,Food & Grocery,Swiggy,High,Plan capacity,Staff the support queue for the forecast volume next week.,"1,037 1–2★ reviews expected 21–27 Sep (80% interval 889–1,180), +7% vs the last 4 weeks"
 App,Food & Grocery,Swiggy,High,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 38% of reviews; 87% of flags are real 1–2★ reviews and it finds 93% of them (test set)
-App,Shopping,Flipkart,High,Fix first,Fix 'Return Rejection & Defective Products' first: it is the largest complaint topic.,25% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.21
-App,Shopping,Flipkart,High,Most damaging,Treat 'Extreme Dissatisfaction & Scam Allegations' as the most damaging complaint: smaller but angriest.,"10% of complaints, sentiment -0.61, 81% strongly negative"
+App,Shopping,Flipkart,High,Fix first,"Fix 'Returns, Refunds & Product Quality' first: it is the largest complaint topic.",25% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.21
+App,Shopping,Flipkart,High,Most damaging,Treat 'Order Cancelled or Not Delivered' as the most damaging complaint: smaller but angriest.,"22% of complaints, sentiment -0.31, 40% strongly negative"
 App,Shopping,Flipkart,High,Release check,Review release 9.3 (2026-04-16) and add a pre-release check for what it broke.,"30% of reviews on the new version rated 1–2★ vs 16% on older versions, +8 points above the app's usual gap (seen on the new version only; released during the late-April feed gap, so the shares are inflated, but both groups cover the same days); most elevated issue: Customer Support"
 App,Shopping,Flipkart,High,Plan capacity,Staff the support queue for the forecast volume next week.,"1,830 1–2★ reviews expected 21–27 Sep (80% interval 1,596–2,056), -7% vs the last 4 weeks"
-App,Shopping,Flipkart,High,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",18 days above the 95% interval in the backtest; largest 2026-07-04 (451 vs 264 expected)
+App,Shopping,Flipkart,High,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",11 days above the 95% interval in the backtest; largest 2026-07-04 (451 vs 258 expected)
 App,Shopping,Flipkart,High,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 17% of reviews; 77% of flags are real 1–2★ reviews and it finds 74% of them (test set)
-App,Shopping,Amazon,High,Fix first,Fix 'Customer Service & Escalation Failure' first: it is the largest complaint topic.,24% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.21
-App,Shopping,Amazon,High,Most damaging,Treat 'Extreme Dissatisfaction & Scam Allegations' as the most damaging complaint: smaller but angriest.,"10% of complaints, sentiment -0.59, 77% strongly negative"
+App,Shopping,Amazon,High,Fix first,Fix 'Unhelpful Customer Care' first: it is the largest complaint topic.,24% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.21
+App,Shopping,Amazon,High,Most damaging,Treat 'Delivery Delays & Delivery Agents' as the most damaging complaint: smaller but angriest.,"16% of complaints, sentiment -0.30, 42% strongly negative"
 App,Shopping,Amazon,High,Plan capacity,Staff the support queue for the forecast volume next week.,"714 1–2★ reviews expected 21–27 Sep (80% interval 642–786), -6% vs the last 4 weeks"
 App,Shopping,Amazon,High,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",9 days above the 95% interval in the backtest; largest 2026-07-04 (142 vs 98 expected)
 App,Shopping,Amazon,High,Trend,Find what changed: complaints are rising.,Last 4 weeks +14% vs the first 4 weeks
 App,Shopping,Amazon,High,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 58% of reviews; 91% of flags are real 1–2★ reviews and it finds 96% of them (test set)
-App,Payments,Paytm,High,Fix first,Fix 'Failed Transfers & Debited Amounts' first: it is the largest complaint topic.,44% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.19
-App,Payments,Paytm,High,Most damaging,Treat 'Customer Support Unresponsiveness' as the most damaging complaint: smaller but angriest.,"20% of complaints, sentiment -0.22, 40% strongly negative"
+App,Payments,Paytm,High,Fix first,"Fix 'Payment, UPI & Bank Account Problems' first: it is the largest complaint topic.",36% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.14
+App,Payments,Paytm,High,Most damaging,Treat 'Cashback & Rewards Not Given' as the most damaging complaint: smaller but angriest.,"18% of complaints, sentiment -0.23, 35% strongly negative"
 App,Payments,Paytm,High,Release check,Review release 10.84.5 (2026-09-03) and add a pre-release check for what it broke.,"23% of reviews on the new version rated 1–2★ vs 13% on older versions, +8 points above the app's usual gap (confirmed: 1–2★ reviews per day also rose)"
 App,Payments,Paytm,High,Plan capacity,Do not plan on the ARIMA forecast alone; use last week's level and watch daily counts.,Forecast flagged as unreliable: week-1 forecast is -61% from the last 4 weeks
-App,Payments,Paytm,High,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",10 days above the 95% interval in the backtest; largest 2026-09-12 (80 vs 36 expected)
+App,Payments,Paytm,High,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",10 days above the 95% interval in the backtest; largest 2026-09-12 (80 vs 30 expected)
 App,Payments,Paytm,High,Trend,Find what changed: complaints are rising.,Last 4 weeks +60% vs the first 4 weeks
 App,Payments,Paytm,High,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 18% of reviews; 66% of flags are real 1–2★ reviews and it finds 84% of them (test set)
 App,Food & Grocery,Blinkit,Medium,Fix first,Fix 'Order Cancellation & Refund' first: it is the largest complaint topic.,33% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.22
-App,Food & Grocery,Blinkit,Medium,Most damaging,Treat 'Poor Food Quality & Stale Items' as the most damaging complaint: smaller but angriest.,"16% of complaints, sentiment -0.41, 55% strongly negative"
+App,Food & Grocery,Blinkit,Medium,Most damaging,Treat 'Poor Customer Support' as the most damaging complaint: smaller but angriest.,"15% of complaints, sentiment -0.37, 52% strongly negative"
 App,Food & Grocery,Blinkit,Medium,Plan capacity,Staff the support queue for the forecast volume next week.,"1,711 1–2★ reviews expected 21–27 Sep (80% interval 1,488–1,929), -8% vs the last 4 weeks"
 App,Food & Grocery,Blinkit,Medium,Trend,Find what changed: complaints are rising.,Last 4 weeks +13% vs the first 4 weeks
 App,Food & Grocery,Blinkit,Medium,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 26% of reviews; 66% of flags are real 1–2★ reviews and it finds 91% of them (test set)
-App,Shopping,Meesho,Medium,Fix first,Fix 'Return Rejection & Defective Products' first: it is the largest complaint topic.,28% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.26
-App,Shopping,Meesho,Medium,Most damaging,Treat 'Poor Shopping Experience & Fabric Quality' as the most damaging complaint: smaller but angriest.,"10% of complaints, sentiment -0.62, 83% strongly negative"
+App,Shopping,Meesho,Medium,Fix first,"Fix 'Returns, Refunds & Product Quality' first: it is the largest complaint topic.",28% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.26
+App,Shopping,Meesho,Medium,Most damaging,Treat 'Order Cancelled or Not Delivered' as the most damaging complaint: smaller but angriest.,"24% of complaints, sentiment -0.32, 41% strongly negative"
 App,Shopping,Meesho,Medium,Plan capacity,Staff the support queue for the forecast volume next week.,"737 1–2★ reviews expected 21–27 Sep (80% interval 676–801), +4% vs the last 4 weeks"
 App,Shopping,Meesho,Medium,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",9 days above the 95% interval in the backtest; largest 2026-08-18 (165 vs 104 expected)
 App,Shopping,Meesho,Medium,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 24% of reviews; 69% of flags are real 1–2★ reviews and it finds 94% of them (test set)
 App,Food & Grocery,Domino's,Medium,Fix first,Fix 'Order Cancellation & Refund' first: it is the largest complaint topic.,41% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.28
-App,Food & Grocery,Domino's,Medium,Most damaging,Treat 'Poor Food Quality & Stale Items' as the most damaging complaint: smaller but angriest.,"17% of complaints, sentiment -0.48, 64% strongly negative"
+App,Food & Grocery,Domino's,Medium,Most damaging,Treat 'Poor Customer Support' as the most damaging complaint: smaller but angriest.,"14% of complaints, sentiment -0.48, 64% strongly negative"
 App,Food & Grocery,Domino's,Medium,Plan capacity,Staff the support queue for the forecast volume next week.,"413 1–2★ reviews expected 21–27 Sep (80% interval 327–495), +7% vs the last 4 weeks"
 App,Food & Grocery,Domino's,Medium,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 27% of reviews; 78% of flags are real 1–2★ reviews and it finds 89% of them (test set)
-App,Shopping,Myntra,Medium,Fix first,Fix 'Return Rejection & Defective Products' first: it is the largest complaint topic.,26% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.32
-App,Shopping,Myntra,Medium,Most damaging,Treat 'Extreme Dissatisfaction & Scam Allegations' as the most damaging complaint: smaller but angriest.,"11% of complaints, sentiment -0.63, 81% strongly negative"
+App,Shopping,Myntra,Medium,Fix first,"Fix 'Returns, Refunds & Product Quality' first: it is the largest complaint topic.",26% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.32
+App,Shopping,Myntra,Medium,Most damaging,Treat 'Order Cancelled or Not Delivered' as the most damaging complaint: smaller but angriest.,"23% of complaints, sentiment -0.36, 47% strongly negative"
 App,Shopping,Myntra,Medium,Plan capacity,Staff the support queue for the forecast volume next week.,"371 1–2★ reviews expected 21–27 Sep (80% interval 318–424), -10% vs the last 4 weeks"
-App,Shopping,Myntra,Medium,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",9 days above the 95% interval in the backtest; largest 2026-08-18 (93 vs 50 expected)
+App,Shopping,Myntra,Medium,Monitor,"Set a daily alert when 1–2★ reviews leave the forecast interval, and investigate each alert.",5 days above the 95% interval in the backtest; largest 2026-08-18 (93 vs 52 expected)
 App,Shopping,Myntra,Medium,Trend,Find what changed: complaints are rising.,Last 4 weeks +22% vs the first 4 weeks
 App,Shopping,Myntra,Medium,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 15% of reviews; 65% of flags are real 1–2★ reviews and it finds 95% of them (test set)
 App,Food & Grocery,Zomato,Low,Fix first,Fix 'Order Cancellation & Refund' first: it is the largest complaint topic.,33% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.28
-App,Food & Grocery,Zomato,Low,Most damaging,Treat 'Customer Support & Bot Loop' as the most damaging complaint: smaller but angriest.,"23% of complaints, sentiment -0.39, 53% strongly negative"
+App,Food & Grocery,Zomato,Low,Most damaging,Treat 'Poor Customer Support' as the most damaging complaint: smaller but angriest.,"23% of complaints, sentiment -0.39, 53% strongly negative"
 App,Food & Grocery,Zomato,Low,Plan capacity,Staff the support queue for the forecast volume next week.,"977 1–2★ reviews expected 21–27 Sep (80% interval 811–1,151), -7% vs the last 4 weeks"
 App,Food & Grocery,Zomato,Low,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 22% of reviews; 74% of flags are real 1–2★ reviews and it finds 88% of them (test set)
-App,Payments,Google Pay,Low,Fix first,Fix 'Failed Transfers & Debited Amounts' first: it is the largest complaint topic.,59% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.13
-App,Payments,Google Pay,Low,Most damaging,Treat 'Customer Support Unresponsiveness' as the most damaging complaint: smaller but angriest.,"12% of complaints, sentiment -0.24, 39% strongly negative"
+App,Payments,Google Pay,Low,Fix first,"Fix 'Payment, UPI & Bank Account Problems' first: it is the largest complaint topic.",54% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.15
+App,Payments,Google Pay,Low,Most damaging,Treat 'Unresponsive Customer Support' as the most damaging complaint: smaller but angriest.,"11% of complaints, sentiment -0.23, 41% strongly negative"
 App,Payments,Google Pay,Low,Plan capacity,Do not plan on the ARIMA forecast alone; use last week's level and watch daily counts.,Forecast flagged as unreliable: ARIMA did not beat the seasonal-naive baseline (backtest MAE 10.9 vs 6.2 reviews a day)
 App,Payments,Google Pay,Low,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 29% of reviews; 68% of flags are real 1–2★ reviews and it finds 86% of them (test set)
-App,Payments,PhonePe,Low,Fix first,Fix 'Failed Transfers & Debited Amounts' first: it is the largest complaint topic.,54% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.14
-App,Payments,PhonePe,Low,Most damaging,Treat 'Customer Support Unresponsiveness' as the most damaging complaint: smaller but angriest.,"20% of complaints, sentiment -0.22, 40% strongly negative"
+App,Payments,PhonePe,Low,Fix first,"Fix 'Payment, UPI & Bank Account Problems' first: it is the largest complaint topic.",57% of the app's topic-assigned 1–2★ reviews; mean VADER sentiment -0.14
+App,Payments,PhonePe,Low,Most damaging,Treat 'Unresponsive Customer Support' as the most damaging complaint: smaller but angriest.,"21% of complaints, sentiment -0.23, 41% strongly negative"
 App,Payments,PhonePe,Low,Plan capacity,Staff the support queue for the forecast volume next week.,"348 1–2★ reviews expected 21–27 Sep (80% interval 270–431), -10% vs the last 4 weeks"
 App,Payments,PhonePe,Low,Triage,Route reviews flagged by the problem-review classifier to support first.,Flags 13% of reviews; 57% of flags are real 1–2★ reviews and it finds 75% of them (test set)
