@@ -178,7 +178,8 @@ ba-capstone-app-reviews/
 │   ├── 22_combined_insights.py  # Review 2: priority table and recommendations
 │   ├── 23_topic_model_comparison.py # NMF vs LDA on a 20% held-out split
 │   ├── 24_dataset_documentation.py  # data dictionary, sample dataset, validation summary
-│   └── 25_train_only_preprocessing_check.py # Unit 2 with preprocessing fitted on training rows only
+│   ├── 25_train_only_preprocessing_check.py # Unit 2 with preprocessing fitted on training rows only
+│   └── 26_slide_charts.py       # slide-sized charts for the Review 2 presentation (data/charts/slides/)
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
@@ -287,6 +288,7 @@ python scripts/22_combined_insights.py     # priority table and recommendations
 python scripts/23_topic_model_comparison.py   # NMF vs LDA comparison (~2 min)
 python scripts/24_dataset_documentation.py    # data dictionary, sample and validation summary
 python scripts/25_train_only_preprocessing_check.py  # Unit 2 re-check, preprocessing fitted on training rows (~15 min)
+python scripts/26_slide_charts.py             # charts used in docs/Review_2_Presentation.pptx (~1 min)
 streamlit run dashboard/app.py             # interactive dashboard
 ```
 
