@@ -177,7 +177,7 @@ def chart_coherence(coherence_df):
     fig.savefig(p6, dpi=160)
     plt.close(fig)
     print(f"  saved {p6.relative_to(REPO_ROOT)}")
-    return {"file": str(p6.relative_to(REPO_ROOT)), "title": title, "subtitle": sub}
+    return {"file": p6.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub}
 
 
 # =============================================================================
@@ -235,7 +235,7 @@ def chart_keyword_overlap(overlap_df):
     fig.savefig(p7, dpi=160)
     plt.close(fig)
     print(f"  saved {p7.relative_to(REPO_ROOT)}")
-    return {"file": str(p7.relative_to(REPO_ROOT)), "title": title, "subtitle": sub}
+    return {"file": p7.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub}
 
 
 # =============================================================================
@@ -301,7 +301,7 @@ def chart_untagged_reviews(untagged_breakdown):
     fig.savefig(p8, dpi=160)
     plt.close(fig)
     print(f"  saved {p8.relative_to(REPO_ROOT)}")
-    return {"file": str(p8.relative_to(REPO_ROOT)), "title": title, "subtitle": sub}
+    return {"file": p8.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub}
 
 
 # =============================================================================
@@ -386,7 +386,7 @@ def chart_monthly_trends(monthly_df):
     fig.savefig(p9, dpi=160)
     plt.close(fig)
     print(f"  saved {p9.relative_to(REPO_ROOT)}")
-    return {"file": str(p9.relative_to(REPO_ROOT)), "title": title, "subtitle": sub}
+    return {"file": p9.relative_to(REPO_ROOT).as_posix(), "title": title, "subtitle": sub}
 
 
 # =============================================================================
@@ -403,6 +403,7 @@ def main():
 
     # 2. Tag Overlap Evaluation
     review_topics = pd.read_csv(DATA_DIR / "review_topics.csv.gz")
+    review_topics = review_topics[review_topics["dominant_topic_id"] > 0]   # Unassigned reviews have no topic to compare
     merged_df, overlap_df = evaluate_keyword_overlap(review_topics)
     c7_meta = chart_keyword_overlap(overlap_df)
 

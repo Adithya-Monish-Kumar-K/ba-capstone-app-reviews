@@ -34,6 +34,7 @@ def mostly_ascii(text):
 
 def main():
     topics = pd.read_csv(TM_DIR / "review_topics.csv.gz")
+    topics = topics[topics["dominant_topic_id"] > 0]   # Unassigned reviews have no topic to illustrate
     print(f"{len(topics):,} complaint reviews with a topic")
     reviews = read_stage("tagged", columns=["review_id", "content", "review_date"])
     reviews["review_id"] = reviews["review_id"].astype(str)

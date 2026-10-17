@@ -1,64 +1,64 @@
 app_name,domain,topic_label,reviews,share_pct
-Swiggy,Food & Grocery,Order Cancellation & Refund,7856,37.33
-Swiggy,Food & Grocery,Customer Support & Bot Loop,4850,23.05
-Swiggy,Food & Grocery,Delivery Delays & Rider Tracking,4089,19.43
-Swiggy,Food & Grocery,Poor Food Quality & Stale Items,1861,8.84
-Swiggy,Food & Grocery,Excessive Delivery & Handling Charges,1751,8.32
-Swiggy,Food & Grocery,COD & Payment Option Failures,636,3.02
-Zomato,Food & Grocery,Order Cancellation & Refund,6891,32.67
-Zomato,Food & Grocery,Customer Support & Bot Loop,4902,23.24
-Zomato,Food & Grocery,Delivery Delays & Rider Tracking,3724,17.66
-Zomato,Food & Grocery,Excessive Delivery & Handling Charges,2385,11.31
-Zomato,Food & Grocery,Poor Food Quality & Stale Items,2100,9.96
-Zomato,Food & Grocery,COD & Payment Option Failures,1088,5.16
-Blinkit,Food & Grocery,Order Cancellation & Refund,10774,32.86
-Blinkit,Food & Grocery,Delivery Delays & Rider Tracking,5723,17.45
-Blinkit,Food & Grocery,Poor Food Quality & Stale Items,5124,15.63
-Blinkit,Food & Grocery,Customer Support & Bot Loop,4794,14.62
-Blinkit,Food & Grocery,Excessive Delivery & Handling Charges,4235,12.92
-Blinkit,Food & Grocery,COD & Payment Option Failures,2141,6.53
-Domino's,Food & Grocery,Order Cancellation & Refund,3135,40.83
-Domino's,Food & Grocery,Poor Food Quality & Stale Items,1327,17.28
-Domino's,Food & Grocery,Delivery Delays & Rider Tracking,1320,17.19
-Domino's,Food & Grocery,Customer Support & Bot Loop,1094,14.25
-Domino's,Food & Grocery,COD & Payment Option Failures,444,5.78
-Domino's,Food & Grocery,Excessive Delivery & Handling Charges,359,4.68
-Myntra,Shopping,Return Rejection & Defective Products,2056,26.41
-Myntra,Shopping,Order Cancellation & Rescheduling,1785,22.93
-Myntra,Shopping,Customer Service & Escalation Failure,1573,20.21
-Myntra,Shopping,Courier Delays & Delivery Agent Issues,955,12.27
-Myntra,Shopping,Extreme Dissatisfaction & Scam Allegations,832,10.69
-Myntra,Shopping,Poor Shopping Experience & Fabric Quality,584,7.5
-Flipkart,Shopping,Return Rejection & Defective Products,8142,24.94
-Flipkart,Shopping,Order Cancellation & Rescheduling,7346,22.5
-Flipkart,Shopping,Customer Service & Escalation Failure,5492,16.82
-Flipkart,Shopping,Courier Delays & Delivery Agent Issues,5428,16.62
-Flipkart,Shopping,Extreme Dissatisfaction & Scam Allegations,3266,10.0
-Flipkart,Shopping,Poor Shopping Experience & Fabric Quality,2976,9.11
-Amazon,Shopping,Customer Service & Escalation Failure,3752,23.61
-Amazon,Shopping,Return Rejection & Defective Products,3669,23.09
-Amazon,Shopping,Order Cancellation & Rescheduling,3134,19.72
-Amazon,Shopping,Courier Delays & Delivery Agent Issues,2608,16.41
-Amazon,Shopping,Extreme Dissatisfaction & Scam Allegations,1609,10.13
-Amazon,Shopping,Poor Shopping Experience & Fabric Quality,1119,7.04
-Meesho,Shopping,Return Rejection & Defective Products,4289,28.43
-Meesho,Shopping,Order Cancellation & Rescheduling,3559,23.59
-Meesho,Shopping,Customer Service & Escalation Failure,2304,15.27
-Meesho,Shopping,Courier Delays & Delivery Agent Issues,2156,14.29
-Meesho,Shopping,Poor Shopping Experience & Fabric Quality,1513,10.03
-Meesho,Shopping,Extreme Dissatisfaction & Scam Allegations,1266,8.39
-Paytm,Payments,Failed Transfers & Debited Amounts,2145,44.5
-Paytm,Payments,Customer Support Unresponsiveness,975,20.23
-Paytm,Payments,Device Environment & Security Scan Errors,945,19.61
-Paytm,Payments,App Crashes & Update Regressions,444,9.21
-Paytm,Payments,Account Blocking & AutoPay Issues,311,6.45
-PhonePe,Payments,Failed Transfers & Debited Amounts,2766,53.67
-PhonePe,Payments,Customer Support Unresponsiveness,1035,20.08
-PhonePe,Payments,Account Blocking & AutoPay Issues,788,15.29
-PhonePe,Payments,App Crashes & Update Regressions,359,6.97
-PhonePe,Payments,Device Environment & Security Scan Errors,206,4.0
-Google Pay,Payments,Failed Transfers & Debited Amounts,1998,59.34
-Google Pay,Payments,App Crashes & Update Regressions,464,13.78
-Google Pay,Payments,Customer Support Unresponsiveness,394,11.7
-Google Pay,Payments,Account Blocking & AutoPay Issues,280,8.32
-Google Pay,Payments,Device Environment & Security Scan Errors,231,6.86
+Swiggy,Food & Grocery,Order Cancellation & Refund,7858,37.35
+Swiggy,Food & Grocery,Poor Customer Support,4850,23.05
+Swiggy,Food & Grocery,Late Delivery & Delivery Partners,4089,19.44
+Swiggy,Food & Grocery,General Bad Service & Quality,1858,8.83
+Swiggy,Food & Grocery,High Delivery & Handling Charges,1750,8.32
+Swiggy,Food & Grocery,Cash on Delivery Not Available,634,3.01
+Zomato,Food & Grocery,Order Cancellation & Refund,6887,32.67
+Zomato,Food & Grocery,Poor Customer Support,4902,23.26
+Zomato,Food & Grocery,Late Delivery & Delivery Partners,3726,17.68
+Zomato,Food & Grocery,High Delivery & Handling Charges,2382,11.3
+Zomato,Food & Grocery,General Bad Service & Quality,2095,9.94
+Zomato,Food & Grocery,Cash on Delivery Not Available,1087,5.16
+Blinkit,Food & Grocery,Order Cancellation & Refund,10773,32.86
+Blinkit,Food & Grocery,Late Delivery & Delivery Partners,5725,17.46
+Blinkit,Food & Grocery,General Bad Service & Quality,5117,15.61
+Blinkit,Food & Grocery,Poor Customer Support,4795,14.63
+Blinkit,Food & Grocery,High Delivery & Handling Charges,4233,12.91
+Blinkit,Food & Grocery,Cash on Delivery Not Available,2140,6.53
+Domino's,Food & Grocery,Order Cancellation & Refund,3135,40.84
+Domino's,Food & Grocery,General Bad Service & Quality,1324,17.25
+Domino's,Food & Grocery,Late Delivery & Delivery Partners,1321,17.21
+Domino's,Food & Grocery,Poor Customer Support,1094,14.25
+Domino's,Food & Grocery,Cash on Delivery Not Available,443,5.77
+Domino's,Food & Grocery,High Delivery & Handling Charges,359,4.68
+Myntra,Shopping,"Returns, Refunds & Product Quality",2055,26.4
+Myntra,Shopping,Order Cancelled or Not Delivered,1784,22.92
+Myntra,Shopping,Unhelpful Customer Care,1573,20.21
+Myntra,Shopping,Delivery Delays & Delivery Agents,955,12.27
+Myntra,Shopping,Worst-Ever Experience,832,10.69
+Myntra,Shopping,General Bad Experience,584,7.5
+Flipkart,Shopping,"Returns, Refunds & Product Quality",8125,24.9
+Flipkart,Shopping,Order Cancelled or Not Delivered,7337,22.48
+Flipkart,Shopping,Unhelpful Customer Care,5492,16.83
+Flipkart,Shopping,Delivery Delays & Delivery Agents,5431,16.64
+Flipkart,Shopping,Worst-Ever Experience,3268,10.02
+Flipkart,Shopping,General Bad Experience,2978,9.13
+Amazon,Shopping,Unhelpful Customer Care,3751,23.61
+Amazon,Shopping,"Returns, Refunds & Product Quality",3666,23.08
+Amazon,Shopping,Order Cancelled or Not Delivered,3133,19.72
+Amazon,Shopping,Delivery Delays & Delivery Agents,2608,16.42
+Amazon,Shopping,Worst-Ever Experience,1609,10.13
+Amazon,Shopping,General Bad Experience,1119,7.04
+Meesho,Shopping,"Returns, Refunds & Product Quality",4277,28.37
+Meesho,Shopping,Order Cancelled or Not Delivered,3558,23.6
+Meesho,Shopping,Unhelpful Customer Care,2304,15.28
+Meesho,Shopping,Delivery Delays & Delivery Agents,2156,14.3
+Meesho,Shopping,General Bad Experience,1514,10.04
+Meesho,Shopping,Worst-Ever Experience,1267,8.4
+Paytm,Payments,"Payment, UPI & Bank Account Problems",1720,35.77
+Paytm,Payments,Unresponsive Customer Support,963,20.02
+Paytm,Payments,Cashback & Rewards Not Given,842,17.51
+Paytm,Payments,Device Environment Error,827,17.2
+Paytm,Payments,App or Scanner Not Working,457,9.5
+PhonePe,Payments,"Payment, UPI & Bank Account Problems",2918,57.4
+PhonePe,Payments,Unresponsive Customer Support,1077,21.18
+PhonePe,Payments,Cashback & Rewards Not Given,542,10.66
+PhonePe,Payments,App or Scanner Not Working,387,7.61
+PhonePe,Payments,Device Environment Error,160,3.15
+Google Pay,Payments,"Payment, UPI & Bank Account Problems",1805,53.85
+Google Pay,Payments,Cashback & Rewards Not Given,557,16.62
+Google Pay,Payments,App or Scanner Not Working,461,13.75
+Google Pay,Payments,Unresponsive Customer Support,370,11.04
+Google Pay,Payments,Device Environment Error,159,4.74
