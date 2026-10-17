@@ -1,6 +1,6 @@
 # Mobile App Update Impact and Failure Detection
 
-**Final Project Report: Review 2**
+**Final Project Report (Units 1–3)**
 
 Course: 23CSE452 Business Analytics
 
@@ -94,6 +94,45 @@ There are two known data-quality points:
 - **Feed gap.** From 21 April to 5 May, the Play Store feed is missing most positive reviews for Swiggy, Blinkit, Domino's, Flipkart and Amazon.
 - **Zomato outage.** Zomato has no reviews from 23 July 22:00 to 25 July 12:30.
 
+### 2.1 Dataset documentation and validation
+
+| Item | File |
+|---|---|
+| Final validated dataset | `data/tagged/<app>.csv.gz` (11 files, 1,137,987 rows × 29 variables) |
+| Dataset description and collection method | `DATA_SOURCES.md` |
+| Data dictionary (every variable: type, range, missing share, meaning) | `DATA_DICTIONARY.md` |
+| Sample dataset (10 random reviews per app) | `data/sample/final_dataset_sample.csv` |
+| Validation summary | `DATA_VALIDATION.md`, `data/dataset_validation.json` |
+
+`scripts/24_dataset_documentation.py` re-checks the final dataset and regenerates these files. All 18 checks pass:
+
+- The row count matches the cleaning log, and the cleaned and tagged files hold the same reviews.
+- There are no duplicate reviews, and no missing values outside `app_version` (13.4% empty, kept, not a model input).
+- Ratings are 1–5, every date lies in the window, and every review contains letters.
+- Every derived field agrees with its source: month, word count, issue counts, sentiment labels.
+- VADER scores are in range. The 47 reviews made only of one-letter tokens ("o k") score 0 on all four, which is how VADER works.
+
+| Step | Reviews |
+|---|---:|
+| Raw reviews collected | 1,202,729 |
+| Empty or under 3 characters removed | 47,533 |
+| No letters (emoji or punctuation only) removed | 7,420 |
+| Non-English removed | 9,789 |
+| **Final validated reviews (94.6% retained)** | **1,137,987** |
+
+### 2.2 Units 1 and 2 in brief
+
+- **Unit 1 (preprocessing and EDA).** Cleaning, 9 keyword issue tags and VADER sentiment, then 15 EDA charts with bias checks (`EDA.md`). Apps differ widely even within a domain: 54% of Amazon's reviews are 1–2★ against 10% for Myntra. 91% of the 1–2★ reviews that name an issue describe a service problem, not an app fault.
+- **Unit 2 (predictive model).** Target: `is_problematic` = 1–2★ (19.5%). Inputs: 200 SVD components of TF-IDF text features plus 15 structural features. Logistic Regression and Random Forest were evaluated on 227,598 held-out reviews (stratified 80/20 split; `MODEL_EVALUATION.md`).
+
+  Review 1 fitted TF-IDF, SVD and the scaler on all rows before the split. `scripts/25_train_only_preprocessing_check.py` refits them on the 910,389 training reviews only and changes no metric by more than 0.003 (`data/model_train_only_preprocessing.csv`):
+
+| Model (preprocessing fitted on training rows only) | Precision | Recall | F1 | PR-AUC |
+|---|---:|---:|---:|---:|
+| Majority-class baseline | 0.000 | 0.000 | 0.000 | 0.195 |
+| Logistic Regression | 0.770 | 0.858 | 0.811 | 0.871 |
+| Random Forest | 0.736 | 0.870 | 0.798 | 0.874 |
+
 ---
 
 ## 3. Method 1: Text Mining
@@ -173,6 +212,24 @@ The 17 complaint topics (`data/textmining/topic_sentiment.csv`):
 - **Shopping and Payments.** The curves are almost flat, from 0.155 to 0.186 and from 0.181 to 0.212. The highest values sit at the edges of the range (K = 10 for Shopping, K = 3 for Payments). At K = 3 the Payments topics merge different failures into one. At larger K the Shopping topics split delivery and support into near-duplicates. We therefore took the K at which every topic is distinct and can be named: 6 for Shopping and 5 for Payments.
 
 Coherence is therefore a guide here rather than the only criterion.
+
+**NMF compared with LDA** (`scripts/23_topic_model_comparison.py`, `data/textmining/topic_model_comparison.csv`). Both models were given the same document-term matrix and the same K for each domain. Each was fitted on 80% of the domain's complaint reviews (133,884 in total), and its topics were scored on the unseen 20% (33,473):
+
+- **Held-out NPMI:** how often each topic's top 10 terms appear together in unseen reviews.
+- **Topic diversity:** the share of distinct terms among all topics' top 10 terms.
+
+| Domain | Model | Held-out NPMI ↑ | Topic diversity ↑ | Largest topic's share of reviews | Fit time |
+|---|---|---:|---:|---:|---:|
+| Food & Grocery | **NMF (TF-IDF)** | **0.192** | **0.92** | 34% | 1 s |
+| | LDA (counts) | 0.117 | 0.68 | 23% | 42 s |
+| Shopping | **NMF (TF-IDF)** | **0.164** | **0.88** | 26% | 1 s |
+| | LDA (counts) | 0.120 | 0.73 | 26% | 39 s |
+| Payments | **NMF (TF-IDF)** | **0.152** | **0.94** | 50% | 0.1 s |
+| | LDA (counts) | 0.076 | 0.76 | 29% | 7 s |
+
+NMF's topics are more coherent and more distinct in every domain, which confirms the choice. LDA spreads reviews more evenly across topics, but its topics share many of the same top terms.
+
+![NMF vs LDA](data/charts/textmining/tm_10_nmf_vs_lda.png)
 
 ![Coherence by K](data/charts/textmining/tm_06_coherence_evaluation.png)
 
@@ -526,7 +583,7 @@ Every page shares the same sidebar filters: domain, app, date range, and an opti
 
 ---
 
-## 8. Project Tracking and Individual Contributions (Review 2)
+## 8. Project Tracking and Individual Contributions
 
 **Board.** The GitHub Projects board (https://github.com/users/Adithya-Monish-Kumar-K/projects/4) uses the stages Backlog → To Do → In Progress → Review/Testing → Completed.
 
@@ -575,6 +632,9 @@ python scripts/19_forecasting.py           # ARIMA/SARIMAX, baselines, rolling b
 python scripts/20_forecast_evaluation.py   # MAE/RMSE/MASE, interval coverage, Ljung-Box, alerts
 python scripts/21_update_impact.py         # before/after and new-vs-older tests per release
 python scripts/22_combined_insights.py     # priority table and recommendations
+python scripts/23_topic_model_comparison.py   # NMF vs LDA on a 20% held-out split (~2 min)
+python scripts/24_dataset_documentation.py    # data dictionary, sample, validation summary
+python scripts/25_train_only_preprocessing_check.py  # Unit 2 with preprocessing fitted on training rows (~15 min)
 
 streamlit run dashboard/app.py             # the dashboard
 ```

@@ -139,6 +139,8 @@ ba-capstone-app-reviews/
 ├── REPORT.md                    # Review 1 report
 ├── FINAL_REPORT.md              # Review 2 final report
 ├── DATA_SOURCES.md
+├── DATA_DICTIONARY.md           # every variable of the final dataset
+├── DATA_VALIDATION.md           # validation summary (18 checks)
 ├── EDA.md
 ├── MODEL_EVALUATION.md
 ├── MODEL_EVALUATION_SUMMARY.md
@@ -173,13 +175,17 @@ ba-capstone-app-reviews/
 │   ├── 20_forecast_evaluation.py # Review 2: MAE/RMSE/MASE, interval coverage, Ljung-Box, alerts
 │   ├── 20_topic_examples.py     # Review 2: readable example reviews per topic for the dashboard
 │   ├── 21_update_impact.py      # Review 2: before/after and new-vs-older tests per release
-│   └── 22_combined_insights.py  # Review 2: priority table and recommendations
+│   ├── 22_combined_insights.py  # Review 2: priority table and recommendations
+│   ├── 23_topic_model_comparison.py # NMF vs LDA on a 20% held-out split
+│   ├── 24_dataset_documentation.py  # data dictionary, sample dataset, validation summary
+│   └── 25_train_only_preprocessing_check.py # Unit 2 with preprocessing fitted on training rows only
 │
 ├── data/
 │   ├── raw/<app>.csv.gz         # scraped reviews, one file per app
 │   ├── clean/<app>.csv.gz       # cleaned
 │   ├── tagged/<app>.csv.gz      # + issue tags and VADER sentiment (input to EDA and modelling)
 │   ├── app_metadata.csv
+│   ├── sample/final_dataset_sample.csv  # 110-row sample of the final dataset
 │   ├── charts/                  # sentiment charts (01–04), eda/, timeseries/ and textmining/
 │   ├── eda/                     # monthly, weekly and version tables
 │   ├── timeseries/              # Review 2: series, release events, forecasts, evaluation
@@ -208,13 +214,12 @@ ba-capstone-app-reviews/
 │   └── Review_2.ipynb
 │
 ├── docs/
-│   ├── Review_1_Presentation.pptx
+│   ├── Review_1_Presentation.pptx   # with PDF copy
 │   ├── Review_1_Contribution_Summary.md
 │   ├── Review_2_Presentation.pptx   # with PDF copy
 │   ├── Review_2_Contribution_Summary.md
+│   ├── Review_2_Board.png           # project board, Review 2 tasks
 │   └── Final_Report.pdf
-│
-└── review_2_prep/               # Review 2 workspace
 ```
 
 ---
@@ -279,6 +284,9 @@ python scripts/19_forecasting.py           # ARIMA forecasts and rolling backtes
 python scripts/20_forecast_evaluation.py   # forecast accuracy, interval coverage, residual checks, alerts
 python scripts/21_update_impact.py         # update impact of each release
 python scripts/22_combined_insights.py     # priority table and recommendations
+python scripts/23_topic_model_comparison.py   # NMF vs LDA comparison (~2 min)
+python scripts/24_dataset_documentation.py    # data dictionary, sample and validation summary
+python scripts/25_train_only_preprocessing_check.py  # Unit 2 re-check, preprocessing fitted on training rows (~15 min)
 streamlit run dashboard/app.py             # interactive dashboard
 ```
 
@@ -359,18 +367,20 @@ The cleaning step keeps a review when at least 85% of its letters are Latin (a�
 | [`Review_1_Presentation.pptx`](docs/Review_1_Presentation.pptx)     | Review 1 presentation                        |
 | [`Review_1_Contribution_Summary.md`](docs/Review_1_Contribution_Summary.md) | Review 1 individual contribution summary |
 | [`DATA_SOURCES.md`](DATA_SOURCES.md)                                | Data collection and sampling details         |
+| [`DATA_DICTIONARY.md`](DATA_DICTIONARY.md)                          | Data dictionary of the final dataset (29 variables) |
+| [`DATA_VALIDATION.md`](DATA_VALIDATION.md)                          | Validation summary of the final dataset      |
+| [`final_dataset_sample.csv`](data/sample/final_dataset_sample.csv)  | Sample of the final dataset (110 rows)       |
 | [`EDA.md`](EDA.md)                                                  | Exploratory data analysis                    |
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
-| [`FINAL_REPORT.md`](FINAL_REPORT.md)                                | Review 2 final report (PDF: `docs/Final_Report.pdf`) |
-| [`Review_2.ipynb`](notebooks/Review_2.ipynb)                        | Review 2 final notebook (executed, HTML copy included) |
-| [`Review_2_Presentation.pptx`](docs/Review_2_Presentation.pptx)     | Review 2 presentation (PDF copy included)    |
+| [`FINAL_REPORT.md`](FINAL_REPORT.md)                                | Final project report, Units 1–3 (PDF: `docs/Final_Report.pdf`) |
+| [`Review_2.ipynb`](notebooks/Review_2.ipynb)                        | Final notebook, Units 1–3 (executed end to end, HTML copy included) |
+| [`Review_2_Presentation.pptx`](docs/Review_2_Presentation.pptx)     | Final presentation on the course template (PDF copy included) |
 | [`Review_2_Contribution_Summary.md`](docs/Review_2_Contribution_Summary.md) | Review 2 individual contribution summary |
 | [`TIME_SERIES.md`](TIME_SERIES.md)                                  | Review 2 Method 2: time-series analysis      |
 | [`TEXT_MINING.md`](TEXT_MINING.md)                                  | Review 2 Method 1: text mining               |
 | [`COMBINED_INSIGHTS.md`](COMBINED_INSIGHTS.md)                      | Review 2 combined insights and recommendations |
 | [`dashboard/README.md`](dashboard/README.md)                        | Review 2 interactive dashboard ([live](https://team10-app-reviews.streamlit.app/)) |
-| [`review_2_prep/`](review_2_prep/)                                  | Review 2 workspace                           |
 
 ---
 

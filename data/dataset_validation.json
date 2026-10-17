@@ -1,0 +1,125 @@
+{
+  "final_dataset": "data/tagged/<app>.csv.gz (11 files)",
+  "rows": 1137987,
+  "columns": 29,
+  "checks": [
+    {
+      "check": "Row count matches the cleaning log",
+      "passed": true,
+      "detail": "1,137,987 tagged rows, 1,137,987 cleaned rows, 1,137,987 in cleaning_results.json"
+    },
+    {
+      "check": "Same reviews in the cleaned and tagged files",
+      "passed": true,
+      "detail": "review_id sets are identical"
+    },
+    {
+      "check": "No duplicate reviews",
+      "passed": true,
+      "detail": "0 duplicate review_id"
+    },
+    {
+      "check": "No missing values outside app_version",
+      "passed": true,
+      "detail": "0 missing in the other 28 columns"
+    },
+    {
+      "check": "app_version missing share is as documented",
+      "passed": true,
+      "detail": "152,017 missing (13.4%); kept, not used as a model input"
+    },
+    {
+      "check": "Ratings are 1–5",
+      "passed": true,
+      "detail": "min 1, max 5"
+    },
+    {
+      "check": "Helpful votes are not negative",
+      "passed": true,
+      "detail": "min 0, max 11,165"
+    },
+    {
+      "check": "Every review is inside 1 Apr – 20 Sep 2026",
+      "passed": true,
+      "detail": "01 Apr 2026 00:01 to 20 Sep 2026 23:59"
+    },
+    {
+      "check": "month agrees with review_date",
+      "passed": true,
+      "detail": "all rows"
+    },
+    {
+      "check": "review_length is the word count of content",
+      "passed": true,
+      "detail": "all rows"
+    },
+    {
+      "check": "Every review has letters",
+      "passed": true,
+      "detail": "emoji-only and punctuation-only reviews were removed in cleaning"
+    },
+    {
+      "check": "Domain matches the app",
+      "passed": true,
+      "detail": "per scripts/apps.py"
+    },
+    {
+      "check": "issue_count equals the sum of the 9 issue flags",
+      "passed": true,
+      "detail": "all rows"
+    },
+    {
+      "check": "has_issue agrees with issue_count",
+      "passed": true,
+      "detail": "all rows"
+    },
+    {
+      "check": "primary_issue is 'none' exactly when no tag matched",
+      "passed": true,
+      "detail": "all rows"
+    },
+    {
+      "check": "VADER scores are in range and neg + neu + pos ≈ 1",
+      "passed": true,
+      "detail": "compound -0.999 to 1.000; sums within 0.01 of 1, except 47 reviews made only of one-letter tokens (\"o k\"), which VADER scores 0 on all four (Neutral)"
+    },
+    {
+      "check": "sentiment_label follows the compound thresholds",
+      "passed": true,
+      "detail": "±0.05"
+    },
+    {
+      "check": "Daily coverage",
+      "passed": true,
+      "detail": "173 of 173 days for 10 apps; Zomato 172 (24 Jul missing in the Play Store itself)"
+    }
+  ],
+  "all_checks_passed": true,
+  "raw_to_final": {
+    "Raw reviews collected": 1202729,
+    "Duplicates removed": 0,
+    "Empty or under 3 characters removed": 47533,
+    "No letters (emoji or punctuation only) removed": 7420,
+    "Non-English removed": 9789,
+    "Final validated reviews": 1137987
+  },
+  "per_app_rows": {
+    "Flipkart": 266285,
+    "Blinkit": 228446,
+    "Zomato": 150560,
+    "Meesho": 102686,
+    "PhonePe": 88535,
+    "Myntra": 85347,
+    "Swiggy": 74768,
+    "Paytm": 44658,
+    "Domino's": 43629,
+    "Amazon": 32753,
+    "Google Pay": 20320
+  },
+  "unit_suitability": {
+    "Unit 1 (EDA)": "all 1,137,987 reviews, 29 columns, 11 apps, 173 days",
+    "Unit 2 (classifier)": "target is_problematic = score ≤ 2: 221,581 positives (19.5%); inputs: content, 9 issue flags, 4 VADER scores, review_length, thumbs_up",
+    "Unit 3, text mining": "content of the 221,581 1–2★ reviews (167,357 with ≥ 3 content words) and 871,380 4–5★ reviews as a contrast",
+    "Unit 3, time series": "review_date + score: daily 1–2★ counts for 11 apps × 173 days; app_version for release events (2,507 app versions, 224 new releases)"
+  }
+}
