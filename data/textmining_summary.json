@@ -42,6 +42,7 @@
     "brand_phrases_removed": [
       "google pay",
       "phone pe",
+      "phone pay",
       "amazon pay",
       "g pay"
     ],
@@ -60,15 +61,15 @@
   "selection": {
     "complaint": {
       "reviews": 221581,
-      "kept": 167357,
-      "dropped_too_short": 54224,
+      "kept": 167303,
+      "dropped_too_short": 54278,
       "kept_pct": 75.5
     },
     "praise": {
       "reviews": 871380,
-      "kept": 166929,
-      "dropped_too_short": 704451,
-      "kept_pct": 19.2
+      "kept": 166635,
+      "dropped_too_short": 704745,
+      "kept_pct": 19.1
     }
   },
   "median_tokens_kept": {
@@ -79,14 +80,14 @@
     "complaint": {
       "Swiggy": 21043,
       "Zomato": 21090,
-      "Blinkit": 32791,
+      "Blinkit": 32790,
       "Domino's": 7679,
       "Myntra": 7785,
       "Flipkart": 32650,
-      "Amazon": 15891,
+      "Amazon": 15890,
       "Meesho": 15087,
-      "Paytm": 4820,
-      "PhonePe": 5154,
+      "Paytm": 4818,
+      "PhonePe": 5104,
       "Google Pay": 3367
     },
     "praise": {
@@ -97,24 +98,24 @@
       "Myntra": 27108,
       "Flipkart": 22753,
       "Amazon": 2813,
-      "Meesho": 22998,
-      "Paytm": 4717,
-      "PhonePe": 9496,
-      "Google Pay": 2397
+      "Meesho": 22997,
+      "Paytm": 4710,
+      "PhonePe": 9215,
+      "Google Pay": 2392
     }
   },
   "document_term_matrices": {
     "complaint_food_grocery": {
       "group": "complaint",
       "domain": "Food & Grocery",
-      "reviews": 82603,
-      "terms": 17448,
-      "bigrams": 13193,
+      "reviews": 82602,
+      "terms": 17447,
+      "bigrams": 13192,
       "nonzero_per_review": 19.33,
       "top_terms_by_reviews": [
         [
           "not",
-          39839
+          39838
         ],
         [
           "order",
@@ -197,9 +198,9 @@
     "complaint_shopping": {
       "group": "complaint",
       "domain": "Shopping",
-      "reviews": 71413,
-      "terms": 18665,
-      "bigrams": 14446,
+      "reviews": 71412,
+      "terms": 18664,
+      "bigrams": 14445,
       "nonzero_per_review": 23.36,
       "top_terms_by_reviews": [
         [
@@ -236,7 +237,7 @@
         ],
         [
           "no",
-          11760
+          11759
         ],
         [
           "experience",
@@ -287,18 +288,18 @@
     "complaint_payments": {
       "group": "complaint",
       "domain": "Payments",
-      "reviews": 13341,
-      "terms": 2982,
-      "bigrams": 1543,
-      "nonzero_per_review": 12.83,
+      "reviews": 13289,
+      "terms": 2974,
+      "bigrams": 1537,
+      "nonzero_per_review": 12.77,
       "top_terms_by_reviews": [
         [
           "use",
-          2027
+          2025
         ],
         [
           "payment",
-          1940
+          1939
         ],
         [
           "no",
@@ -306,7 +307,7 @@
         ],
         [
           "work",
-          1639
+          1635
         ],
         [
           "money",
@@ -314,7 +315,7 @@
         ],
         [
           "account",
-          1468
+          1466
         ],
         [
           "show",
@@ -329,12 +330,12 @@
           1330
         ],
         [
-          "not work",
-          1238
+          "worst",
+          1236
         ],
         [
-          "worst",
-          1237
+          "not work",
+          1234
         ],
         [
           "get",
@@ -345,24 +346,16 @@
           1174
         ],
         [
-          "pay",
-          1117
-        ],
-        [
-          "phone",
-          1073
-        ],
-        [
           "support",
           1067
         ],
         [
           "service",
-          1004
+          1001
         ],
         [
           "bad",
-          995
+          994
         ],
         [
           "upi",
@@ -370,7 +363,15 @@
         ],
         [
           "open",
-          979
+          978
+        ],
+        [
+          "problem",
+          903
+        ],
+        [
+          "give",
+          902
         ]
       ]
     },
@@ -378,8 +379,8 @@
       "group": "praise",
       "domain": "Food & Grocery",
       "reviews": 74647,
-      "terms": 6875,
-      "bigrams": 4453,
+      "terms": 6876,
+      "bigrams": 4454,
       "nonzero_per_review": 8.08,
       "top_terms_by_reviews": [
         [
@@ -467,7 +468,7 @@
     "praise_shopping": {
       "group": "praise",
       "domain": "Shopping",
-      "reviews": 75672,
+      "reviews": 75671,
       "terms": 7097,
       "bigrams": 4709,
       "nonzero_per_review": 8.67,
@@ -518,7 +519,7 @@
         ],
         [
           "not",
-          4651
+          4650
         ],
         [
           "order",
@@ -557,54 +558,50 @@
     "praise_payments": {
       "group": "praise",
       "domain": "Payments",
-      "reviews": 16610,
-      "terms": 1763,
-      "bigrams": 814,
-      "nonzero_per_review": 6.36,
+      "reviews": 16317,
+      "terms": 1745,
+      "bigrams": 798,
+      "nonzero_per_review": 6.31,
       "top_terms_by_reviews": [
         [
           "good",
-          4289
+          4212
         ],
         [
           "payment",
-          3266
+          3258
         ],
         [
           "use",
-          2320
-        ],
-        [
-          "best",
-          2022
+          2311
         ],
         [
           "easy",
-          2012
+          2009
+        ],
+        [
+          "best",
+          1985
         ],
         [
           "not",
-          1990
+          1975
         ],
         [
           "nice",
-          1615
+          1593
         ],
         [
           "fast",
-          1507
+          1505
         ],
         [
           "upi",
-          1338
-        ],
-        [
-          "pay",
-          1258
+          1335
         ],
         [
           "transaction",
-          1156
+          1155
         ],
         [
           "money",
@@ -612,23 +609,19 @@
         ],
         [
           "work",
-          1077
+          1064
         ],
         [
           "service",
-          934
-        ],
-        [
-          "phone",
-          901
+          927
         ],
         [
           "thank",
-          837
+          810
         ],
         [
           "experience",
-          798
+          788
         ],
         [
           "easy use",
@@ -636,11 +629,19 @@
         ],
         [
           "secure",
-          705
+          703
+        ],
+        [
+          "pay",
+          701
         ],
         [
           "time",
           676
+        ],
+        [
+          "transfer",
+          673
         ]
       ]
     }

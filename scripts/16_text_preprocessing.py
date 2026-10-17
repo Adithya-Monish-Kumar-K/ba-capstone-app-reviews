@@ -63,7 +63,8 @@ CONTRACTIONS = [
 BRANDS = {"swiggy", "zomato", "blinkit", "grofers", "domino", "dominos", "myntra", "flipkart", "amazon", "meesho",
           "paytm", "phonepe", "phonpe", "gpay", "googlepay", "instamart", "zepto", "amazonpay"}
 # Two-word brand names are removed as phrases, so that "pay" and "google" stay usable on their own.
-BRAND_PHRASES = r"\b(google\s*pay|phone\s*pe|amazon\s*pay|g\s*pay)\b"
+# "phone pay" is how many users spell PhonePe.
+BRAND_PHRASES = r"\b(google\s*pay|phone\s*pe|phone\s*pay|amazon\s*pay|g\s*pay)\b"
 EXTRA_STOP = {"app", "application", "apps", "pls", "plz", "please", "also", "even", "ok", "okay", "u", "ur",
               "dont", "doesnt", "didnt", "isnt", "wasnt", "cant", "wont", "im", "ive", "thats", "hai", "h", "soo"}
 
@@ -217,7 +218,7 @@ def main():
         "input_reviews_1_2_and_4_5_star": int(len(df)),
         "rules": {"min_tokens": MIN_TOKENS, "min_df": MIN_DF, "max_df": MAX_DF, "ngram_range": list(NGRAMS),
                   "negations_kept": sorted(NEGATIONS), "brand_words_removed": sorted(BRANDS),
-                  "brand_phrases_removed": ["google pay", "phone pe", "amazon pay", "g pay"],
+                  "brand_phrases_removed": ["google pay", "phone pe", "phone pay", "amazon pay", "g pay"],
                   "hinglish_negations_to_not": sorted(HINGLISH_NOT), "hinglish_stop_words": len(HINGLISH_STOP),
                   "lemmatiser": "WordNet (verb, then noun)"},
         "selection": {g: {k: (int(v) if k != "kept_pct" else float(v)) for k, v in r.items()} for g, r in sel.iterrows()},
