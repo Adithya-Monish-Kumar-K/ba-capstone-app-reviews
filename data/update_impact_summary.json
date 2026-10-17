@@ -176,22 +176,22 @@
   },
   "charts": [
     {
-      "file": "data/charts/update_impact/ui_01_release_verdicts_by_app.png",
+      "file": "data/charts/update_impact/01_release_verdicts_by_app.png",
       "title": "4 of 205 testable releases made things worse; most releases changed nothing measurable",
       "subtitle": "Verdict for each of the 224 release events. 'Worse' = over the same 7 days, the new version's share of 1\u20132\u2605 reviews exceeds older versions' by at least 5 points more than the app's usual new-version gap (Benjamini\u2013Hochberg q < 0.05). 'Confirmed' = the app's 1\u20132\u2605 reviews per day also rose significantly against the week before."
     },
     {
-      "file": "data/charts/update_impact/ui_02_release_effects.png",
+      "file": "data/charts/update_impact/02_release_effects.png",
       "title": "How each release compares with the versions it replaced",
       "subtitle": "One dot per release: share of 1\u20132\u2605 reviews on the new version minus the share on older versions, over the same 7 days from the release, with its 95% interval. Dashed line = the app's usual gap (median over its releases); grey band = within \u00b15 points of it. Flipkart and Amazon users on the newest version are always more negative, so only releases well above that line count. Red = made things worse, blue = better, grey dots = no clear change."
     },
     {
-      "file": "data/charts/update_impact/ui_03_worst_release_examples.png",
+      "file": "data/charts/update_impact/03_worst_release_examples.png",
       "title": "Releases that made things worse: daily 1\u20132\u2605 reviews around the release",
       "subtitle": "Grey band = the 7 days before the release; coloured band = the 7 days from the release (dotted line = release day). The worst release of each app among those flagged as worse."
     },
     {
-      "file": "data/charts/update_impact/ui_04_issue_mix_of_worse_releases.png",
+      "file": "data/charts/update_impact/04_issue_mix_of_worse_releases.png",
       "title": "What got worse: issue mix of the releases that made things worse",
       "subtitle": "Share of reviews mentioning each issue on the new version minus older versions, same 7 days (keyword tags; a review can have several). * = significant increase (q < 0.05, at least 2 points). Red = more on the new version."
     }
