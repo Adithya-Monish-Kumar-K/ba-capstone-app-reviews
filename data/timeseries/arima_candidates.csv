@@ -1,20 +1,36 @@
 app_name,stage,order,seasonal_order,aicc,aic,converged,chosen
-Swiggy,backtest,"(0, 0, 0)","(0, 0, 0, 7)",822.795,822.495,True,False
-Swiggy,backtest,"(0, 0, 0)","(0, 0, 1, 7)",810.675,810.169,True,False
-Swiggy,backtest,"(0, 0, 0)","(1, 0, 0, 7)",802.546,802.039,True,False
-Swiggy,backtest,"(0, 0, 0)","(1, 0, 1, 7)",794.449,793.68,True,False
-Swiggy,backtest,"(0, 0, 1)","(0, 0, 0, 7)",821.682,821.176,True,False
-Swiggy,backtest,"(0, 0, 1)","(0, 0, 1, 7)",809.009,808.24,True,False
-Swiggy,backtest,"(0, 0, 1)","(1, 0, 0, 7)",801.101,800.332,True,False
-Swiggy,backtest,"(0, 0, 1)","(1, 0, 1, 7)",789.482,788.392,True,False
-Swiggy,backtest,"(1, 0, 0)","(0, 0, 0, 7)",821.879,821.372,True,False
-Swiggy,backtest,"(1, 0, 0)","(0, 0, 1, 7)",808.885,808.115,True,False
-Swiggy,backtest,"(1, 0, 0)","(1, 0, 0, 7)",800.948,800.179,True,False
-Swiggy,backtest,"(1, 0, 0)","(1, 0, 1, 7)",786.856,785.766,True,True
-Swiggy,backtest,"(1, 0, 1)","(0, 0, 0, 7)",822.76,821.99,True,False
-Swiggy,backtest,"(1, 0, 1)","(0, 0, 1, 7)",812.123,811.032,True,False
-Swiggy,backtest,"(1, 0, 1)","(1, 0, 0, 7)",803.268,802.177,True,False
-Swiggy,backtest,"(1, 0, 1)","(1, 0, 1, 7)",799.857,798.383,True,False
+Swiggy,backtest,"(0, 1, 0)","(0, 0, 0, 7)",849.452,849.302,True,False
+Swiggy,backtest,"(0, 1, 0)","(0, 0, 1, 7)",835.571,835.268,True,False
+Swiggy,backtest,"(0, 1, 0)","(1, 0, 0, 7)",828.713,828.409,True,False
+Swiggy,backtest,"(0, 1, 0)","(1, 0, 1, 7)",804.551,804.038,True,False
+Swiggy,backtest,"(0, 1, 1)","(0, 0, 0, 7)",811.698,811.394,True,False
+Swiggy,backtest,"(0, 1, 1)","(0, 0, 1, 7)",801.13,800.617,True,False
+Swiggy,backtest,"(0, 1, 1)","(1, 0, 0, 7)",793.775,793.262,True,False
+Swiggy,backtest,"(0, 1, 1)","(1, 0, 1, 7)",771.473,770.693,True,True
+Swiggy,backtest,"(1, 1, 0)","(0, 0, 0, 7)",837.906,837.602,True,False
+Swiggy,backtest,"(1, 1, 0)","(0, 0, 1, 7)",824.084,823.572,True,False
+Swiggy,backtest,"(1, 1, 0)","(1, 0, 0, 7)",816.851,816.338,True,False
+Swiggy,backtest,"(1, 1, 0)","(1, 0, 1, 7)",791.35,790.571,True,False
+Swiggy,backtest,"(1, 1, 1)","(0, 0, 0, 7)",813.458,812.945,True,False
+Swiggy,backtest,"(1, 1, 1)","(0, 0, 1, 7)",801.99,801.211,True,False
+Swiggy,backtest,"(1, 1, 1)","(1, 0, 0, 7)",794.271,793.492,True,False
+Swiggy,backtest,"(1, 1, 1)","(1, 0, 1, 7)",773.318,772.213,True,False
+Swiggy,backtest,"(2, 1, 0)","(0, 0, 0, 7)",830.078,829.565,True,False
+Swiggy,backtest,"(2, 1, 0)","(0, 0, 1, 7)",818.086,817.307,True,False
+Swiggy,backtest,"(2, 1, 0)","(1, 0, 0, 7)",810.761,809.982,True,False
+Swiggy,backtest,"(2, 1, 0)","(1, 0, 1, 7)",784.038,782.933,True,False
+Swiggy,backtest,"(2, 1, 1)","(0, 0, 0, 7)",814.081,813.301,True,False
+Swiggy,backtest,"(2, 1, 1)","(0, 0, 1, 7)",803.965,802.859,True,False
+Swiggy,backtest,"(2, 1, 1)","(1, 0, 0, 7)",796.472,795.366,True,False
+Swiggy,backtest,"(2, 1, 1)","(1, 0, 1, 7)",775.343,773.849,True,False
+Swiggy,backtest,"(3, 1, 0)","(0, 0, 0, 7)",827.554,826.774,True,False
+Swiggy,backtest,"(3, 1, 0)","(0, 0, 1, 7)",815.31,814.205,True,False
+Swiggy,backtest,"(3, 1, 0)","(1, 0, 0, 7)",807.443,806.338,True,False
+Swiggy,backtest,"(3, 1, 0)","(1, 0, 1, 7)",780.042,778.548,True,False
+Swiggy,backtest,"(3, 1, 1)","(0, 0, 0, 7)",816.033,814.928,True,False
+Swiggy,backtest,"(3, 1, 1)","(0, 0, 1, 7)",806.308,804.815,True,False
+Swiggy,backtest,"(3, 1, 1)","(1, 0, 0, 7)",798.859,797.366,True,False
+Swiggy,backtest,"(3, 1, 1)","(1, 0, 1, 7)",779.98,778.034,True,False
 Swiggy,final,"(0, 0, 0)","(0, 0, 0, 7)",1762.678,1762.536,True,False
 Swiggy,final,"(0, 0, 0)","(0, 0, 1, 7)",1758.715,1758.477,True,False
 Swiggy,final,"(0, 0, 0)","(1, 0, 0, 7)",1756.452,1756.214,True,False
@@ -179,30 +195,12 @@ Domino's,final,"(1, 0, 1)","(0, 0, 0, 7)",1556.096,1555.737,True,False
 Domino's,final,"(1, 0, 1)","(0, 0, 1, 7)",1554.52,1554.014,True,False
 Domino's,final,"(1, 0, 1)","(1, 0, 0, 7)",1553.35,1552.844,True,False
 Domino's,final,"(1, 0, 1)","(1, 0, 1, 7)",1558.658,1557.98,True,False
-Myntra,backtest,"(0, 0, 0)","(0, 0, 0, 7)",644.314,644.166,True,False
-Myntra,backtest,"(0, 0, 0)","(0, 0, 1, 7)",627.157,626.857,True,False
-Myntra,backtest,"(0, 0, 1)","(0, 0, 0, 7)",624.148,623.848,True,False
-Myntra,backtest,"(0, 0, 1)","(0, 0, 1, 7)",616.188,615.682,True,False
-Myntra,backtest,"(0, 0, 2)","(0, 0, 0, 7)",615.846,615.339,True,False
-Myntra,backtest,"(0, 0, 2)","(0, 0, 1, 7)",612.281,611.512,True,False
-Myntra,backtest,"(0, 0, 3)","(0, 0, 0, 7)",612.783,612.014,True,False
-Myntra,backtest,"(0, 0, 3)","(0, 0, 1, 7)",612.704,611.613,True,False
-Myntra,backtest,"(1, 0, 0)","(0, 0, 0, 7)",607.405,607.105,True,False
-Myntra,backtest,"(1, 0, 0)","(0, 0, 1, 7)",606.911,606.405,True,False
-Myntra,backtest,"(1, 0, 1)","(0, 0, 0, 7)",592.897,592.39,True,True
-Myntra,backtest,"(1, 0, 1)","(0, 0, 1, 7)",594.35,593.581,True,False
-Myntra,backtest,"(1, 0, 2)","(0, 0, 0, 7)",595.142,594.373,True,False
-Myntra,backtest,"(1, 0, 2)","(0, 0, 1, 7)",596.67,595.579,True,False
-Myntra,backtest,"(1, 0, 3)","(0, 0, 0, 7)",597.016,595.925,True,False
-Myntra,backtest,"(1, 0, 3)","(0, 0, 1, 7)",598.288,596.815,True,False
-Myntra,backtest,"(2, 0, 0)","(0, 0, 0, 7)",600.219,599.713,True,False
-Myntra,backtest,"(2, 0, 0)","(0, 0, 1, 7)",601.991,601.222,True,False
-Myntra,backtest,"(2, 0, 1)","(0, 0, 0, 7)",595.144,594.375,True,False
-Myntra,backtest,"(2, 0, 1)","(0, 0, 1, 7)",596.67,595.579,True,False
-Myntra,backtest,"(2, 0, 2)","(0, 0, 0, 7)",597.386,596.295,True,False
-Myntra,backtest,"(2, 0, 2)","(0, 0, 1, 7)",599.001,597.527,True,False
-Myntra,backtest,"(2, 0, 3)","(0, 0, 0, 7)",599.566,598.093,True,False
-Myntra,backtest,"(2, 0, 3)","(0, 0, 1, 7)",597.418,595.498,True,False
+Myntra,backtest,"(0, 1, 0)","(0, 0, 0, 7)",614.089,614.039,True,False
+Myntra,backtest,"(0, 1, 1)","(0, 0, 0, 7)",583.305,583.155,True,True
+Myntra,backtest,"(1, 1, 0)","(0, 0, 0, 7)",596.869,596.719,True,False
+Myntra,backtest,"(1, 1, 1)","(0, 0, 0, 7)",585.458,585.154,True,False
+Myntra,backtest,"(2, 1, 0)","(0, 0, 0, 7)",592.496,592.192,True,False
+Myntra,backtest,"(2, 1, 1)","(0, 0, 0, 7)",587.493,586.98,True,False
 Myntra,final,"(0, 0, 0)","(0, 0, 0, 7)",1365.254,1365.184,True,False
 Myntra,final,"(0, 0, 0)","(0, 0, 1, 7)",1343.149,1343.007,True,False
 Myntra,final,"(0, 0, 1)","(0, 0, 0, 7)",1325.0,1324.858,True,False
@@ -235,30 +233,10 @@ Myntra,final,"(3, 0, 2)","(0, 0, 0, 7)",1270.689,1270.011,True,True
 Myntra,final,"(3, 0, 2)","(0, 0, 1, 7)",1272.495,1271.617,True,False
 Myntra,final,"(3, 0, 3)","(0, 0, 0, 7)",1270.643,1269.765,True,False
 Myntra,final,"(3, 0, 3)","(0, 0, 1, 7)",1270.961,1269.857,True,False
-Flipkart,backtest,"(0, 0, 0)","(0, 0, 0, 7)",817.668,817.368,True,False
-Flipkart,backtest,"(0, 0, 0)","(0, 0, 1, 7)",814.773,814.267,True,False
-Flipkart,backtest,"(0, 0, 1)","(0, 0, 0, 7)",807.579,807.073,True,False
-Flipkart,backtest,"(0, 0, 1)","(0, 0, 1, 7)",808.209,807.44,True,False
-Flipkart,backtest,"(0, 0, 2)","(0, 0, 0, 7)",803.201,802.431,True,False
-Flipkart,backtest,"(0, 0, 2)","(0, 0, 1, 7)",804.577,803.486,True,False
-Flipkart,backtest,"(0, 0, 3)","(0, 0, 0, 7)",805.208,804.117,True,False
-Flipkart,backtest,"(0, 0, 3)","(0, 0, 1, 7)",806.675,805.202,True,False
-Flipkart,backtest,"(1, 0, 0)","(0, 0, 0, 7)",799.913,799.407,True,False
-Flipkart,backtest,"(1, 0, 0)","(0, 0, 1, 7)",801.86,801.091,True,False
-Flipkart,backtest,"(1, 0, 1)","(0, 0, 0, 7)",793.246,792.476,True,True
-Flipkart,backtest,"(1, 0, 1)","(0, 0, 1, 7)",795.441,794.35,True,False
-Flipkart,backtest,"(1, 0, 2)","(0, 0, 0, 7)",795.543,794.452,True,False
-Flipkart,backtest,"(1, 0, 2)","(0, 0, 1, 7)",797.817,796.343,True,False
-Flipkart,backtest,"(1, 0, 3)","(0, 0, 0, 7)",797.831,796.358,True,False
-Flipkart,backtest,"(1, 0, 3)","(0, 0, 1, 7)",800.165,798.245,True,False
-Flipkart,backtest,"(2, 0, 0)","(0, 0, 0, 7)",796.741,795.971,True,False
-Flipkart,backtest,"(2, 0, 0)","(0, 0, 1, 7)",798.694,797.603,True,False
-Flipkart,backtest,"(2, 0, 1)","(0, 0, 0, 7)",795.545,794.455,True,False
-Flipkart,backtest,"(2, 0, 1)","(0, 0, 1, 7)",806.621,805.147,True,False
-Flipkart,backtest,"(2, 0, 2)","(0, 0, 0, 7)",796.343,794.87,True,False
-Flipkart,backtest,"(2, 0, 2)","(0, 0, 1, 7)",798.714,796.794,True,False
-Flipkart,backtest,"(2, 0, 3)","(0, 0, 0, 7)",800.371,798.451,True,False
-Flipkart,backtest,"(2, 0, 3)","(0, 0, 1, 7)",802.785,800.352,True,False
+Flipkart,backtest,"(0, 1, 0)","(0, 0, 0, 7)",802.939,802.789,True,False
+Flipkart,backtest,"(0, 1, 1)","(0, 0, 0, 7)",782.97,782.667,True,True
+Flipkart,backtest,"(1, 1, 0)","(0, 0, 0, 7)",791.252,790.948,True,False
+Flipkart,backtest,"(1, 1, 1)","(0, 0, 0, 7)",785.055,784.542,True,False
 Flipkart,final,"(0, 0, 0)","(0, 0, 0, 7)",1764.172,1764.03,True,False
 Flipkart,final,"(0, 0, 0)","(0, 0, 1, 7)",1747.433,1747.195,True,False
 Flipkart,final,"(0, 0, 1)","(0, 0, 0, 7)",1706.556,1706.318,True,False
@@ -329,18 +307,10 @@ Meesho,final,"(1, 0, 2)","(0, 0, 0, 7)",1429.619,1429.26,True,False
 Meesho,final,"(2, 0, 0)","(0, 0, 0, 7)",1428.456,1428.218,True,False
 Meesho,final,"(2, 0, 1)","(0, 0, 0, 7)",1430.249,1429.89,True,False
 Meesho,final,"(2, 0, 2)","(0, 0, 0, 7)",1432.385,1431.879,True,False
-Paytm,backtest,"(0, 0, 0)","(0, 0, 0, 7)",645.738,645.589,True,False
-Paytm,backtest,"(0, 0, 1)","(0, 0, 0, 7)",626.609,626.309,True,False
-Paytm,backtest,"(0, 0, 2)","(0, 0, 0, 7)",618.164,617.658,True,False
-Paytm,backtest,"(0, 0, 3)","(0, 0, 0, 7)",610.91,610.141,True,False
-Paytm,backtest,"(1, 0, 0)","(0, 0, 0, 7)",607.876,607.576,True,False
-Paytm,backtest,"(1, 0, 1)","(0, 0, 0, 7)",601.049,600.542,True,False
-Paytm,backtest,"(1, 0, 2)","(0, 0, 0, 7)",600.366,599.597,True,False
-Paytm,backtest,"(1, 0, 3)","(0, 0, 0, 7)",601.624,600.533,True,False
-Paytm,backtest,"(2, 0, 0)","(0, 0, 0, 7)",600.149,599.643,True,True
-Paytm,backtest,"(2, 0, 1)","(0, 0, 0, 7)",601.701,600.932,True,False
-Paytm,backtest,"(2, 0, 2)","(0, 0, 0, 7)",601.646,600.555,True,False
-Paytm,backtest,"(2, 0, 3)","(0, 0, 0, 7)",603.905,602.431,True,False
+Paytm,backtest,"(0, 1, 0)","(0, 0, 0, 7)",609.925,609.876,True,False
+Paytm,backtest,"(0, 1, 1)","(0, 0, 0, 7)",593.581,593.431,True,True
+Paytm,backtest,"(1, 1, 0)","(0, 0, 0, 7)",594.253,594.103,True,False
+Paytm,backtest,"(1, 1, 1)","(0, 0, 0, 7)",594.422,594.119,True,False
 Paytm,final,"(0, 0, 0)","(0, 0, 0, 7)",1373.078,1373.007,True,False
 Paytm,final,"(0, 0, 0)","(0, 0, 1, 7)",1349.643,1349.501,True,False
 Paytm,final,"(0, 0, 1)","(0, 0, 0, 7)",1299.984,1299.842,True,False
@@ -392,9 +362,21 @@ PhonePe,final,"(1, 0, 0)","(0, 0, 0, 7)",1414.555,1414.413,True,True
 PhonePe,final,"(1, 0, 1)","(0, 0, 0, 7)",1415.307,1415.069,True,False
 PhonePe,final,"(1, 0, 2)","(0, 0, 0, 7)",1416.273,1415.914,True,False
 Google Pay,backtest,"(0, 0, 0)","(0, 0, 0, 7)",825.728,825.58,True,False
+Google Pay,backtest,"(0, 0, 0)","(0, 0, 1, 7)",827.431,827.131,True,False
+Google Pay,backtest,"(0, 0, 0)","(1, 0, 0, 7)",827.436,827.136,True,False
+Google Pay,backtest,"(0, 0, 0)","(1, 0, 1, 7)",829.638,829.131,True,False
 Google Pay,backtest,"(0, 0, 1)","(0, 0, 0, 7)",819.073,818.773,True,False
+Google Pay,backtest,"(0, 0, 1)","(0, 0, 1, 7)",821.132,820.626,True,False
+Google Pay,backtest,"(0, 0, 1)","(1, 0, 0, 7)",821.137,820.631,True,False
+Google Pay,backtest,"(0, 0, 1)","(1, 0, 1, 7)",823.388,822.619,True,False
 Google Pay,backtest,"(1, 0, 0)","(0, 0, 0, 7)",818.134,817.834,True,True
+Google Pay,backtest,"(1, 0, 0)","(0, 0, 1, 7)",820.274,819.768,True,False
+Google Pay,backtest,"(1, 0, 0)","(1, 0, 0, 7)",820.276,819.769,True,False
+Google Pay,backtest,"(1, 0, 0)","(1, 0, 1, 7)",822.536,821.767,True,False
 Google Pay,backtest,"(1, 0, 1)","(0, 0, 0, 7)",820.338,819.832,True,False
+Google Pay,backtest,"(1, 0, 1)","(0, 0, 1, 7)",822.535,821.766,True,False
+Google Pay,backtest,"(1, 0, 1)","(1, 0, 0, 7)",822.533,821.764,True,False
+Google Pay,backtest,"(1, 0, 1)","(1, 0, 1, 7)",824.852,823.761,True,False
 Google Pay,final,"(0, 0, 0)","(0, 0, 0, 7)",1591.016,1590.945,True,False
 Google Pay,final,"(0, 0, 1)","(0, 0, 0, 7)",1570.413,1570.271,True,False
 Google Pay,final,"(0, 0, 2)","(0, 0, 0, 7)",1569.07,1568.832,True,False
