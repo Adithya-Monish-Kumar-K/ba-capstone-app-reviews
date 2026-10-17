@@ -1,0 +1,5 @@
+model,preprocessing,accuracy,precision,recall,f1_score,roc_auc,pr_auc
+logistic_regression,fitted on all rows (Review 1),0.9216,0.7672,0.8579,0.81,0.94,0.871
+logistic_regression,fitted on training rows only,0.9223,0.7698,0.8575,0.8113,0.9402,0.8711
+random_forest,fitted on all rows (Review 1),0.9143,0.7372,0.8701,0.7982,0.9411,0.8735
+random_forest,fitted on training rows only,0.9141,0.7364,0.8703,0.7978,0.941,0.8739
