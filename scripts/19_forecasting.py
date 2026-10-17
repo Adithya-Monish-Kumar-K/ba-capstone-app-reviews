@@ -10,7 +10,8 @@ and Holt-Winters exponential smoothing (damped additive trend, additive weekly s
 Method
   1. Orders are chosen per app from the ACF/PACF of the training series (which lags are significant
      decide how many AR, MA and seasonal terms are tried) and then by the corrected AIC (AICc); among orders within 2 AICc points of the best, the one with the fewest terms is taken.
-     The differencing order d comes from the ADF test in data/timeseries/patterns_by_app.csv.
+     The differencing order d comes from an ADF test, and the strong-weekday flag from the weekday effect, both on the
+     same training days (the rules of scripts/15_time_series_data.py), so no choice looks at later data.
   2. Rolling-origin backtest: the models are fitted on the first 12 weeks (84 days), forecast the next
      28 days, then the origin moves forward one week and the models are refitted, until the data end.
      The orders are chosen on the first 84 days only, so the backtest never uses future data.
@@ -18,7 +19,7 @@ Method
      2026, four Monday-Sunday weeks) are forecast with 80% and 95% prediction intervals. Weekly totals
      and their intervals come from 2,000 simulated future paths.
 
-Input:  data/timeseries/daily_app.csv, data/timeseries/patterns_by_app.csv  (from 15_time_series_data.py)
+Input:  data/timeseries/daily_app.csv  (from 15_time_series_data.py)
 Output: data/timeseries/
           arima_orders.csv        the chosen orders per app, for the backtest and the final forecast
           arima_candidates.csv    every order tried with its AICc, so the choice can be checked
@@ -46,7 +47,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from statsmodels.tsa.holtwinters import ExponentialSmoothing
-from statsmodels.tsa.stattools import acf, pacf
+from statsmodels.tsa.stattools import acf, adfuller, pacf
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -115,21 +116,30 @@ def domain_apps(domain):
 def load():
     """Daily series per app: the count to forecast and the feed-gap dummy (None for apps without a gap)."""
     daily = pd.read_csv(TS_DIR / "daily_app.csv", parse_dates=["day"])
-    patterns = pd.read_csv(TS_DIR / "patterns_by_app.csv").set_index("app_name")
     series = {}
     for app in APP_NAMES:
         d = daily[daily["app_name"] == app].sort_values("day").set_index("day").asfreq("D")
         y = d["neg_reviews_filled"].astype(float)
         exog = d[["feed_gap"]].astype(float) if app in GAP_APPS else None
-        weekday = patterns.loc[app, [f"weekday_{d}_pct" for d in ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")]]
-        series[app] = {"y": y, "exog": exog, "d": int(patterns.loc[app, "suggested_d"]),
-                       "weekly_pattern": bool(weekday.abs().max() >= STRONG_WEEKDAY_PCT)}
+        series[app] = {"y": y, "exog": exog, "data_gap": (d["feed_gap"] | d["source_gap"]).astype(bool)}
     return series
 
 
 # ----------------------------------------------------------------------------
 # 2. Order selection (ACF/PACF to propose, AICc to choose)
 # ----------------------------------------------------------------------------
+def training_d_and_weekly(s, n_train):
+    """d and the strong-weekday flag from the first n_train days only, with the rules of scripts/15_time_series_data.py:
+    d = 1 when the ADF test cannot reject a unit root at 5%; the weekly pattern is strong when some weekday is at least
+    STRONG_WEEKDAY_PCT % away from the centred 7-day mean (feed-gap and source-gap days left out)."""
+    y = s["y"].iloc[:n_train]
+    d = int(adfuller(y.to_numpy(), autolag="AIC")[1] >= 0.05)
+    ratio = y / y.rolling(SEASON, center=True).mean()
+    keep = ~s["data_gap"].iloc[:n_train]
+    effect = ratio[keep].groupby(ratio[keep].index.dayofweek).mean()
+    return d, bool(((effect - 1).abs() * 100).max() >= STRONG_WEEKDAY_PCT)
+
+
 def propose_orders(y, d, weekly_pattern):
     """Candidate (p, d, q)(P, 0, Q, 7) orders from the ACF/PACF of the (differenced) training series.
 
@@ -160,7 +170,9 @@ def select_orders(app, s, n_train, stage):
     """Fit every proposed order on the first n_train days and keep the one with the lowest AICc."""
     y = s["y"].iloc[:n_train]
     exog = None if s["exog"] is None else s["exog"].iloc[:n_train]
-    cands, info = propose_orders(y, s["d"], s["weekly_pattern"])
+    d, weekly_pattern = training_d_and_weekly(s, n_train)
+    cands, info = propose_orders(y, d, weekly_pattern)
+    info["strong_weekday"] = weekly_pattern
     rows = []
     for order, seasonal in cands:
         try:
