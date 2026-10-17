@@ -1,7 +1,7 @@
 # Time-Series Analysis — Review 2, Method 2
 
 **Capstone Project — Review 2 (Unit 3): Time-Series Analysis**
-_Input: `data/tagged/_.csv.gz` (1,137,987 reviews, 11 apps, 1 Apr – 20 Sep 2026)\*
+_Input: `data/tagged/<app>.csv.gz` (1,137,987 reviews, 11 apps, 1 Apr – 20 Sep 2026)_
 
 The question: how many 1–2★ reviews will each app get in the coming weeks, and did a new app version make things worse? This document grows stage by stage: data preparation (#131), ARIMA forecasting (#135), forecast evaluation (#137) and update impact (#138).
 
@@ -86,10 +86,10 @@ Forecasts and interval limits below zero are set to 0, because counts cannot be 
 
 ### 2.2 How the orders were chosen (`arima_orders.csv`, `arima_candidates.csv`)
 
-1. **d** is fixed from the ADF test of Stage 1: 1 for Zomato and Blinkit, 0 for the rest; **D = 0** everywhere (seasonal strength is below 0.64). A constant is included only when d = 0.
-2. **ACF/PACF propose.** On the (differenced) training series, p goes up to the last PACF lag outside ±1.96/√n among lags 1–3, q up to the last significant ACF lag among 1–3, and a seasonal AR (or MA) term at lag 7 is tried if the PACF (or ACF) is significant at lag 7 **or** the app has a strong weekday effect in Stage 1 (a weekday 15% or more away from the weekly mean: the four food apps, +22% to +38% on Sundays; every other app is below 15%). This gives 6 to 36 candidate orders per app.
-3. **AICc chooses.** Every candidate is fitted and the lowest corrected AIC wins; any order within 2 AICc points of the minimum counts as equally good and the one with the fewest terms is taken. All 378 candidate fits converged, and every candidate with its AICc is in `arima_candidates.csv`.
-4. **No look-ahead.** For the backtest the orders are chosen on the **first 84 days only**; for the final forecast they are chosen again on all 173 days. Both choices are in `arima_orders.csv` (`stage` = `backtest` or `final`).
+1. **d** comes from an ADF test on the training days (d = 1 when a unit root cannot be rejected at 5%); **D = 0** everywhere (seasonal strength is below 0.64). A constant is included only when d = 0.
+2. **ACF/PACF propose.** On the (differenced) training series, p goes up to the last PACF lag outside ±1.96/√n among lags 1–3, q up to the last significant ACF lag among 1–3, and a seasonal AR (or MA) term at lag 7 is tried if the PACF (or ACF) is significant at lag 7 **or** the app has a strong weekday effect on the training days (a weekday 15% or more away from the centred weekly mean; on all 173 days these are the four food apps, +22% to +38% on Sundays). This gives 4 to 36 candidate orders per app.
+3. **AICc chooses.** Every candidate is fitted and the lowest corrected AIC wins; any order within 2 AICc points of the minimum counts as equally good and the one with the fewest terms is taken. All 384 candidate fits converged, and every candidate with its AICc is in `arima_candidates.csv`.
+4. **No look-ahead.** For the backtest, d, the weekday flag and the orders are all chosen on the **first 84 days only**; for the final forecast they are chosen again on all 173 days. Both choices are in `arima_orders.csv` (`stage` = `backtest` or `final`). On 84 days the ADF test asks for differencing for six apps (Swiggy, Zomato, Blinkit, Myntra, Flipkart, Paytm), on 173 days only for Zomato and Blinkit; a short window often looks non-stationary.
 
 Final orders (p, d, q)(P, 0, Q)₇:
 
@@ -107,7 +107,7 @@ Final orders (p, d, q)(P, 0, Q)₇:
 |                | PhonePe    | (1,0,0)        |                                                                  |
 |                | Google Pay | (1,0,0)        |                                                                  |
 
-The four food apps are the only ones with seasonal terms, which matches the Sunday peak found in Stage 1. Shopping and payment apps need only short-memory terms. As a check, forcing seasonal terms onto those seven apps changed their backtest error by less than 1.5 reviews a day (Paytm, PhonePe and Google Pay: no change; Myntra and Meesho slightly worse), so plain ARIMA is enough for them.
+The four food apps are the only ones with seasonal terms, which matches the Sunday peak found in Stage 1. Shopping and payment apps need only short-memory terms.
 
 ### 2.3 Rolling-origin backtest (`backtest_forecasts.csv`, `backtest_summary.csv`, `ts_06_rolling_backtest.png`)
 
@@ -121,38 +121,44 @@ Mean absolute error over all 28 forecast days, in reviews per day (lower is bett
 
 | App        |    ARIMA | Seasonal naive | Holt-Winters |
 | ---------- | -------: | -------------: | -----------: |
-| Swiggy     |     27.6 |           34.6 |     **27.4** |
+| Swiggy     |     28.1 |           34.6 |     **27.4** |
 | Zomato     |     22.8 |           23.9 |     **21.5** |
 | Blinkit    |     28.8 |           33.8 |     **26.8** |
 | Domino's   |     15.8 |           18.3 |     **14.4** |
-| Myntra     | **10.5** |           13.9 |         12.8 |
-| Flipkart   | **38.1** |           56.0 |         54.7 |
+| Myntra     | **12.2** |           13.9 |         12.8 |
+| Flipkart   | **52.7** |           56.0 |         54.7 |
 | Amazon     | **12.9** |           16.9 |         14.5 |
 | Meesho     | **13.6** |           19.3 |         15.1 |
-| Paytm      |      8.6 |            8.8 |      **7.9** |
+| Paytm      |  **7.6** |            8.8 |          7.9 |
 | PhonePe    |  **7.9** |           10.0 |          8.0 |
 | Google Pay |     10.9 |        **6.2** |          7.5 |
 
-- **ARIMA beats the seasonal-naive baseline for 10 of 11 apps.** The largest gains are for Flipkart (−32%), Meesho (−30%), Myntra (−24%), Amazon (−24%) and PhonePe (−21%), the apps with a trend or slow-moving level that "same day last week" misses.
-- **It does not beat the baseline for Google Pay.** Google Pay has a low, noisy level with short spikes (mid-May and September) and its level shifts, so a model that returns to the training mean is a poor guide, while last week's value adapts faster. For Google Pay ARIMA forecasts about 28 a day while the actual level over the backtest was about 20.
-- **Holt-Winters is as good as or better than ARIMA for the four Food & Grocery apps and for Paytm** (Domino's: 14.4 against 15.8), and clearly worse for Flipkart and Myntra. ARIMA stays the main model because it is the only one with prediction intervals and because it takes the feed gap as an input.
-- Error grows with the horizon for the trending apps (Flipkart ARIMA 31.8 in days 1–7, 37.1 in days 15–28), but not for apps that are already close to their mean.
-
-The 80% and 95% intervals contained 81% and 93% of the backtest days, close to their nominal levels (a first check only; the formal coverage test is #137).
+- **ARIMA beats the seasonal-naive baseline for 10 of 11 apps.** The largest gains are for Meesho (−29%), Amazon (−24%), PhonePe (−21%) and Swiggy (−19%).
+- **It does not beat the baseline for Google Pay.** Google Pay has a low, noisy level with short spikes (mid-May and September) and its level shifts, so a model that returns to the training mean is a poor guide, while last week's value adapts faster. ARIMA forecasts about 30 a day on average while the actual level over the backtest was about 20.
+- **ARIMA and Holt-Winters are about equally accurate.** ARIMA is better for 6 apps (Amazon, Flipkart, Meesho, Myntra, Paytm, PhonePe), Holt-Winters for the four Food & Grocery apps. ARIMA stays the main model because it is the only one with prediction intervals (needed for the unusual-day alerts and for capacity planning) and because it takes the feed gap as an input.
+- Error grows with the horizon for Flipkart (ARIMA 32.0 in days 1–7, 59.2 in days 15–28): with the orders chosen on 84 days its series is differenced, so a forecast follows the last level, and Flipkart's level moved during the backtest.
 
 ![Backtest error](data/charts/timeseries/ts_07_backtest_mae_vs_baseline.png)
 
 ### 2.5 Formal forecast evaluation and unusual-day alerts (#137)
 
-The rolling-origin backtest was evaluated using mean absolute error (MAE), root mean squared error (RMSE), and mean absolute scaled error (MASE). MASE was scaled using the mean absolute seven-day seasonal-naive difference from the first 84 days of each app's series. Lower values indicate better forecast accuracy.
+The rolling-origin backtest is evaluated with mean absolute error (MAE), root mean squared error (RMSE), mean absolute scaled error (MASE) and the MAE relative to the seasonal-naive forecast. For MASE each error is divided by the in-sample error of "same weekday last week" on the training window of its own origin (Hyndman and Koehler, 2006). The relative MAE compares the models on exactly the same backtest days: below 1 means the model beats the baseline. The two can disagree: Google Pay's MASE is 0.64, because its training windows were noisier than the backtest days, yet its relative MAE is 1.76, so the baseline wins. Lower is better for all four.
 
-**Overall model comparison.** Across the 11 apps, ARIMA achieved a mean MAE of 17.950 and RMSE of 24.950 reviews per day, compared with 19.143 and 26.661 for Holt–Winters and 21.985 and 31.068 for seasonal naive. Mean MASE was 0.883 for ARIMA, 0.931 for Holt–Winters and 1.081 for seasonal naive. ARIMA outperformed seasonal naive on 10 of 11 apps; Google Pay was the exception, where seasonal naive performed better. These are unweighted averages across apps, so each app contributes equally.
+**Overall model comparison** (unweighted means over the 11 apps, reviews per day):
 
-**Prediction-interval coverage.** Across the 2,772 ARIMA backtest forecast rows with available intervals, the empirical coverage was 81.42% for nominal 80% intervals and 92.75% for nominal 95% intervals. The 80% interval coverage was close to its nominal level, while the 95% intervals under-covered slightly. Because rolling forecast windows overlap, these observations are not independent; coverage should be interpreted as a descriptive backtest measure rather than an independent-sample calibration test.
+| Model | MAE | RMSE | MASE | MAE ÷ seasonal-naive MAE | Beats the baseline |
+|---|---:|---:|---:|---:|---|
+| ARIMA / SARIMA | 19.39 | 26.74 | 0.93 | 0.93 | 10 of 11 apps |
+| Holt-Winters | 19.14 | 26.66 | 0.93 | 0.88 | 10 of 11 apps |
+| Seasonal naive | 21.99 | 31.07 | 1.08 | 1.00 | – |
+
+ARIMA and Holt-Winters are equally accurate on average and both clearly beat the baseline; Google Pay is the exception for both. ARIMA is kept as the main model for its prediction intervals and the feed-gap input.
+
+**Prediction-interval coverage.** Across the 2,772 ARIMA backtest forecast rows, the 80% intervals contained 82.7% of the actual counts and the 95% intervals 93.9%, close to their nominal levels. By app the 95% coverage ranges from 85.7% (Amazon) to 100% (Google Pay); the four shopping apps are lowest (Amazon 85.7%, Meesho 88.5%, Myntra 88.9%, Flipkart 92.9%), so their intervals are somewhat too narrow and they raise more alerts. Because rolling forecast windows overlap, these observations are not independent; coverage is a descriptive backtest measure rather than an independent-sample calibration test.
 
 **Residual diagnostics.** Ljung–Box tests were applied to the final fitted ARIMA/SARIMAX residuals at lag 14. All 11 apps had p-values above 0.05, so the tests did not detect statistically significant residual autocorrelation at that lag. This does not prove that residuals are fully random or that the models capture every pattern.
 
-**Unusual-day alerts.** A forecast row was flagged when its observed negative-review count fell outside the ARIMA 95% prediction interval. The evaluation produced 201 flagged forecast rows. Since multiple rolling origins can forecast the same app and calendar day, the unique app-day summary is used to distinguish individual unusual days from repeated alerts for the same event. For example, Swiggy's 24 July 2026 spike was flagged by multiple forecast origins. Such alerts indicate unexpected observations, not proof that an app update or a particular event caused the spike.
+**Unusual-day alerts.** A forecast row was flagged when its observed negative-review count fell outside the ARIMA 95% prediction interval. The evaluation produced 169 flagged forecast rows on 77 distinct app-days (56 above the interval, 21 below). Since multiple rolling origins can forecast the same app and calendar day, the unique app-day summary is used to distinguish individual unusual days from repeated alerts for the same event. For example, Swiggy's 23–25 July spike (469 1–2★ reviews on 24 July) was flagged by four forecast origins. Alerts come from forecasts 1 to 28 days ahead, so a lasting level shift raises several in a row (Paytm: 10 days from 4 September). Such alerts indicate unexpected observations, not proof that an app update or a particular event caused the spike.
 
 Evaluation outputs are saved under `data/timeseries/`: `evaluation_metrics_by_app.csv`, `evaluation_metrics_by_horizon.csv`, `prediction_interval_coverage.csv`, `residual_diagnostics.csv`, `residual_acf.csv`, `unusual_day_alerts.csv` and `unusual_days_unique.csv`. The associated charts are `ts_08_evaluation_mae.png`, `ts_09_interval_coverage.png` and `ts_10_residual_acf.png` in `data/charts/timeseries/`.
 
@@ -230,7 +236,7 @@ View B is the main test because both groups cover the same days, so weekends, sa
 
 Usual gaps by app (points of 1–2★ share, new minus older): Amazon +6.7, Flipkart +6.3, Paytm +2.7, Myntra +1.6, Blinkit +1.6, Google Pay +1.4, PhonePe −0.5, Domino's −1.3, Meesho −1.7, Zomato −1.8, Swiggy −3.2.
 
-### 3.2 Results (`release_impact.csv`, `impact_by_app.csv`, `ui_01_release_verdicts_by_app.png`, `ui_02_release_effects.png`)
+### 3.2 Results (`release_impact.csv`, `impact_by_app.csv`, `01_release_verdicts_by_app.png`, `02_release_effects.png`)
 
 | Verdict | Releases |
 | ------- | -------: |
@@ -247,7 +253,7 @@ Most releases change nothing measurable: 196 of the 205 testable releases (96%) 
 
 ![Release effects](data/charts/update_impact/02_release_effects.png)
 
-### 3.3 Releases that made things worse (`worse_releases.csv`, `ui_03_worst_release_examples.png`, `ui_04_issue_mix_of_worse_releases.png`)
+### 3.3 Releases that made things worse (`worse_releases.csv`, `03_worst_release_examples.png`, `04_issue_mix_of_worse_releases.png`)
 
 | App | Version | Release day | 1–2★ share new vs older | Usual gap | Excess | q | 1–2★ per day before → after | Elevated issue | Verdict |
 | --- | ------- | ----------- | ----------------------- | --------: | -----: | -: | --------------------------- | -------------- | ------- |
