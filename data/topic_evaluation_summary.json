@@ -65,7 +65,7 @@
     {
       "file": "data/charts/textmining/tm_08_untagged_topics_breakdown.png",
       "title": "Untagged 1–2★ Reviews Uncovered by Topic Modelling",
-      "subtitle": "71,929 complaint reviews (43.0% of kept complaints) triggered zero rule-based tags. NMF rescues these reviews into concrete failure modes."
+      "subtitle": "71,775 topic-assigned complaint reviews triggered zero rule-based tags. NMF assigns them themes; the topic assignments are not human-validated failure labels."
     },
     {
       "file": "data/charts/textmining/tm_09_topic_trends_over_time.png",

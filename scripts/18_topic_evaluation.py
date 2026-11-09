@@ -292,7 +292,9 @@ def chart_untagged_reviews(untagged_breakdown):
     ax2.grid(axis="y", visible=False)
 
     title = "Untagged 1–2★ Reviews Uncovered by Topic Modelling"
-    sub = "71,929 complaint reviews (43.0% of kept complaints) triggered zero rule-based tags. NMF rescues these reviews into concrete failure modes."
+    total_untagged = int(untagged_breakdown["untagged_reviews"].sum())
+    sub = (f"{total_untagged:,} topic-assigned complaint reviews triggered zero rule-based tags. "
+           "NMF assigns them themes; the topic assignments are not human-validated failure labels.")
     fig.tight_layout(rect=[0, 0.02, 1, 0.94])
     fig.text(0.015, 0.98, title, ha="left", va="top", fontsize=13, fontweight="bold", color=INK)
     fig.text(0.015, 0.95, sub, ha="left", va="top", fontsize=9, color=INK2)
