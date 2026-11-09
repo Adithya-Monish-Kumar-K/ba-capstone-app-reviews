@@ -38,6 +38,7 @@ if not (UI_DIR / "release_impact.csv").exists():
 RES, ISSUES = load_tables()
 
 st.title("Update impact")
+st.info("The date range selects release dates. Each release keeps its original seven-day comparison windows; the feed-gap toggle does not recalculate the statistical tests.")
 st.caption("Did a new app version make things worse? Each release is checked two ways: the app's 1–2★ reviews in the week before "
            "and the week from the release, and reviews on the new version against reviews on older versions over the same days. "
            "A release counts as **worse** when its new-version gap is at least 5 points above the app's usual gap and significant "

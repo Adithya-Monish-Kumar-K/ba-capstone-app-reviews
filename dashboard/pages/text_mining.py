@@ -46,6 +46,7 @@ for _, r in T["topic_share_by_app"][["app_name", "domain"]].drop_duplicates().it
     APP_DOMAIN[r["app_name"]] = r["domain"]
 
 st.title("Text mining")
+st.info("Topic totals and examples use the full study period for the selected apps. The date range limits the monthly trend below; the feed-gap toggle does not refit or recalculate the topic summaries.")
 st.caption("What do unhappy users write about? The 1–2★ reviews of each domain were split into topics (NMF on TF-IDF, scikit-learn), "
            "and every review was given the topic it fits best. Sentiment is the VADER score from –1 (very negative) to +1.")
 

@@ -33,6 +33,7 @@ if not (CI_DIR / "priority_table.csv").exists():
 TABLE, RECS, SUMMARY = load_tables()
 
 st.title("Recommendations")
+st.info("Priorities and recommendations use the full study period. Domain and app selections filter this page; date and feed-gap selections do not recalculate the saved priorities.")
 st.caption("All stages joined into one priority table: volume and trend (time series), complaint topics and their sentiment "
            "(text mining), the forecast and its alerts, releases that made things worse (update impact) and the problem-review "
            "classifier. Each app scores one point per warning sign; 3 or more = High priority.")
