@@ -12,6 +12,9 @@ daily = apply_filters(load_daily_app(), f)
 if daily.empty:
     st.warning("No days left for this selection.")
     st.stop()
+if daily["reviews"].sum() == 0:
+    st.info("No reviews were collected for this app and date selection. Widen the date range to see results.")
+    st.stop()
 
 st.title("Overview")
 st.caption(f"{len(f.apps)} app(s) · {f.start:%d %b} – {f.end:%d %b %Y}"
