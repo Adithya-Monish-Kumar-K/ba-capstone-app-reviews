@@ -10,7 +10,7 @@ This project analyzes Google Play Store reviews from 11 major Indian consumer ap
 
 This repository covers **Review 1** (data collection, preprocessing, exploratory data analysis and predictive modelling) and **Review 2** (text mining, time-series forecasting, update impact, combined recommendations and an interactive dashboard).
 
-**Live dashboard:** https://team10-app-reviews.streamlit.app/ · **Final report:** [`FINAL_REPORT.md`](FINAL_REPORT.md)
+**Live dashboard:** https://team10-app-reviews.streamlit.app/ · **Final report:** [PDF](report/Team10_Capstone_Final_Report.pdf)
 
 ### Project Pipeline
 
@@ -137,7 +137,7 @@ ba-capstone-app-reviews/
 │
 ├── README.md
 ├── REPORT.md                    # Review 1 report
-├── FINAL_REPORT.md              # Review 2 final report
+├── FINAL_REPORT.md              # Review 2 analysis narrative
 ├── DATA_SOURCES.md
 ├── DATA_DICTIONARY.md           # every variable of the final dataset
 ├── DATA_VALIDATION.md           # validation summary (18 checks)
@@ -214,13 +214,15 @@ ba-capstone-app-reviews/
 │   ├── Review_1_Analysis.ipynb
 │   └── Review_2.ipynb
 │
-├── docs/
-│   ├── Review_1_Presentation.pptx   # with PDF copy
-│   ├── Review_1_Contribution_Summary.md
-│   ├── Review_2_Presentation.pptx   # with PDF copy
-│   ├── Review_2_Contribution_Summary.md
-│   ├── Review_2_Board.png           # project board, Review 2 tasks
-│   └── Final_Report.pdf
+├── report/
+│   └── Team10_Capstone_Final_Report.pdf  # Final submitted report, Units 1–3
+│
+└── docs/
+    ├── Review_1_Presentation.pptx   # with PDF copy
+    ├── Review_1_Contribution_Summary.md
+    ├── Review_2_Presentation.pptx   # with PDF copy
+    ├── Review_2_Contribution_Summary.md
+    └── Review_2_Board.png           # project board, Review 2 tasks
 ```
 
 ---
@@ -292,7 +294,7 @@ python scripts/26_slide_charts.py             # charts used in docs/Review_2_Pre
 streamlit run dashboard/app.py             # interactive dashboard
 ```
 
-Method details: `TEXT_MINING.md`, `TIME_SERIES.md` and `COMBINED_INSIGHTS.md`; everything together in `FINAL_REPORT.md`. Dashboard structure and how to add a page: `dashboard/README.md`.
+Method details: `TEXT_MINING.md`, `TIME_SERIES.md` and `COMBINED_INSIGHTS.md`. The final report is available as a [PDF](report/Team10_Capstone_Final_Report.pdf). Dashboard structure and how to add a page: `dashboard/README.md`.
 
 ### VADER Setup
 
@@ -375,7 +377,7 @@ The cleaning step keeps a review when at least 85% of its letters are Latin (a�
 | [`EDA.md`](EDA.md)                                                  | Exploratory data analysis                    |
 | [`MODEL_EVALUATION.md`](MODEL_EVALUATION.md)                        | Predictive modelling methodology and results |
 | [`MODEL_EVALUATION_SUMMARY.md`](MODEL_EVALUATION_SUMMARY.md)        | Short model evaluation summary               |
-| [`FINAL_REPORT.md`](FINAL_REPORT.md)                                | Final project report, Units 1–3 (PDF: `docs/Final_Report.pdf`) |
+| [Final report PDF](report/Team10_Capstone_Final_Report.pdf)           | Final submitted report, Units 1–3            |
 | [`Review_2.ipynb`](notebooks/Review_2.ipynb)                        | Final notebook, Units 1–3 (executed end to end, HTML copy included) |
 | [`Review_2_Presentation.pptx`](docs/Review_2_Presentation.pptx)     | Final presentation on the course template (PDF copy included) |
 | [`Review_2_Contribution_Summary.md`](docs/Review_2_Contribution_Summary.md) | Review 2 individual contribution summary |
