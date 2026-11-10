@@ -12,6 +12,14 @@ This repository covers **Review 1** (data collection, preprocessing, exploratory
 
 **Live dashboard:** https://team10-app-reviews.streamlit.app/ · **Final report:** [PDF](report/Team10_Capstone_Final_Report.pdf)
 
+**Presentations:** [Review 1 PowerPoint](docs/Review_1_Presentation.pptx) · [Review 2 PowerPoint](docs/Review_2_Presentation.pptx)
+
+**Project board:** [GitHub Projects](https://github.com/users/Adithya-Monish-Kumar-K/projects/4)
+
+**Implementation and data:** [Datasets](data/) · [Units 1–3 notebooks](notebooks/) · [Dashboard code](dashboard/) · [Dependencies](requirements.txt)
+
+**Visualizations:** [Model figures](figures/) · [Project charts](data/charts/)
+
 ### Project Pipeline
 
 **Reviews → Cleaning → Issue Tagging & Sentiment → EDA → Predictive Modelling** (Review 1) → **Text Mining · Time-Series Forecasting · Update Impact → Combined Insights → Dashboard** (Review 2)
